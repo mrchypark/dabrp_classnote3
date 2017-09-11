@@ -1,0 +1,214 @@
+---
+title: "3기 1주차"
+author: "박찬엽"
+date: "2017년 9월 14일"
+output:
+  xaringan::moon_reader:
+    seal: FALSE
+    css: ["default", "class.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = T, fig.height = 5)
+```
+
+class: center, middle, title-slide
+
+## R 프로그래밍 중급으로 나아가기 위한 Level UP Skill
+#### step1. 작성과 관리를 위한 도구 연습
+### <https://mrchypark.github.io/dabrp_classnote3/class1>
+
+### 박찬엽
+
+### 2017년 9월 14일
+---
+
+목차
+
+1. 강사 소개
+
+1. 강의의 목표
+    - 분석을 위한 R 프로그래밍 능력 향상
+    - 나는 지금 어느 정도인가
+    - 프로그래밍을 배울 때 어려운 점
+    - 
+
+
+1. 수업의 목표
+    - rmarkdown 이란
+    - Markdown 문법
+    - Rmd에서 다른 점
+    - html 문서 만들기
+    - word 문서로 만들기
+    - pdf 문서로 만들기
+
+
+1. 과제
+---
+
+## 강사소개
+.center[
+  #### 질문 / 상담 / 잡담 대환영!
+]
+
+.pull-left[
+  .pull-right[
+<br>
+<br>
+    ![](https://avatars2.githubusercontent.com/u/6179259?v=4&s=460)
+  ]
+]
+.pull-right[
+### 박찬엽    
+#### - .yellow[**KAKAO**]@[알코홀릭](http://pf.kakao.com/_RXANd)
+#### - .blue[**FACEBOOK**]@[mrchypark](https://www.facebook.com/mrchypark)
+#### - .gray[**GITHUB**]@[mrchypark](https://github.com/mrchypark)
+#### - .gray[**PHONE**]+82-10-8720-6115
+]
+
+---
+
+class: center, middle, title-slide
+
+## 강의의 목표
+
+
+### 분석을 위한 R 프로그래밍 능력 향상
+
+
+#### 프로그래밍에 대해서 *얼마나* 알아야 하는가?
+
+#### 프로그래밍에 대해서 *무엇을* 알아야 하는가?
+
+---
+
+class: center, middle, title-slide
+
+### 나는 지금 어느 정도 인가?
+
+---
+
+## 드레이퍼스 기술 습득 모형
+
+드레이퍼스 모델(Dreyfus Model)은 철학자 드라이퍼스 (Hubert L. Dreyfus)가 그의 저서 Mind Over Machine의 도입부에서 제안한 기술 습득의 5단계 모델<sup>1</sup>.
+
+.center[
+![](https://i2.wp.com/www.terrancesmith.com/wp-content/uploads/2016/03/dreyfus-model2.jpg?fit=500%2C375)
+]
+
+.footnote[
+[1] [드레이퍼스 모델 소개글](http://blog.lastmind.io/archives/593)
+]
+
+---
+
+## 드레이퍼스 기술 습득 모형<sup>1</sup>
+
+1. Novice
+    경험이 없기 때문에, 상황에 상관 없이 적용할 수 있는, 다시 말하면, 상황에 따라 적절하지 않을 수 있는, 조리법(recipes) 즉, context-free한 규칙이 주어졌을 때 효과적으로 과업을 수행할 수 있다.
+    
+1. Advanced-beginner
+    여러 가지 상황에서 의미를 가지는 요소에 대해 인지하게 되고, 이러한 요소를 context-free한 규칙에 더해서 활용하게 된다.
+    
+1. Competent
+    경험이 쌓이면서, 상황 하에서 어떤 요소를 중요하게 고려해야 할 지, 상황을 분석하고 규칙에 따라 행동을 선택하여 결과적으로 스스로 문제를 해결(troubleshoot)할 수 있게 된다.
+    
+1. Proficient
+    Competent 단계에서 경험한 성공과 실패를 바탕으로, 상황에 따라 어떤 요소를 중요하게 고려해야 할 지를 결정한다.어떤 요소들이 더 중요하고, 어떤 요소들이 무시해도 되는가는 경험이 추가됨에 따라 직관적으로 변화한다. 반면에, 실제로 어떤 행동을 해야 할 것인가에 대해서는 분석적인 사고를 필요로 한다.
+    
+1. Expert
+    의식적인 사고나 규칙의 필요 없이, 직관적으로 어떤 요소를 중요하게 고려해야 할 지와 어떤 행동을 해야 할 것인가를 안다.
+
+.footnote[
+[1] [드레이퍼스 모델 소개글](http://blog.lastmind.io/archives/593)
+]
+
+---
+
+## novice를 벗어나기 위해서
+
+통계 패키지로 이해하고 있는 경우도 있지만, R은 프로그래밍 언어입니다. 다른 언어와 달리 일반 개발을 위한 용도로 시작하지 않아서 개발에 대한 요소를 전부 알아가며 공부를 할 필요는 없지만 공부하는데 비슷하게 어려운 부분이 있습니다.
+
+--
+
+### 절차적으로 생각하기
+
+제공되는 함수를 바탕으로 순서대로 동작해야 하는 활동들을 나열하여 연결하는 것. 사람은 학교에 간다 같이 세세한 부분을 한번에 뭉개서 생각하기 때문에 세부 사항을 절차적으로 나눠서 생각하는 것이 힘든 일입니다.
+
+<br>
+
+--
+
+.center[
+#### 학교에 간다
+
+#### 샤워를 한다 > 집을 나선다 > 버스를 이용한다 > 학교에 간다
+]
+
+
+.center[
+#### 버스를 이용한다
+
+#### 버스카드를 확인한다 > 버스 정류장을 찾는다 > 버스 정류장으로 간다 > 이용가능한 버스를 확인한다 ...
+]
+
+
+---
+
+### 개발 언어에 대한 이해
+
+사람은 비슷하거나 추상화, 그룹화된 것에 대해 종합적을 판단할 수 있기 때문에 그 **즈음**을 말하는 것을 이해할 수 있습니다. 하지만 컴퓨터를 동작하게 하는 개발 언어에서는 사소한 오타나, 미묘한 문법적 차이는 **기대하는 대로 동작하지 않음**을 뜻합니다. 
+
+<br>
+--
+
+### 언어가 동작하는 방식에 대한 이해
+
+R이 데이터를 다루는 기본적인 동작과 내용을 알고 있는 것은 매우 중요합니다. 같은 방식으로 사고하고 일을 시키지 않으면 R은 기대하는 대로 동작하지 않을 것이기 때문입니다. logical, numeric 같은 자료형서부터 function이 데이터를 다루는 방식을 파악하는 방법을 알아야 합니다.
+
+<br>
+
+R이 명령을 수행하기 위해서 R 객체를 메모리에 두고 사용하는 것이라던지, 함수도 R 객체의 일종이라던지 하는 것들을 알고 동작을 확인해보는 것은 매우 의미 있습니다. 하지만 동작을 확인하는 것 자체가 익숙하지 않기 때문에 학습을 위한 빠른 실패와 정보 습득의 습관을 만드는 것이 매우 중요합니다.
+
+---
+
+class: center, middle, title-slide
+
+## Advanced-beginner 를 벗어나기 위해서
+
+### 잘 된 코드를 흉내내기
+### 내 코드를 다른 사람에게 보여주기
+
+---
+
+### 좋은 코드가 있는 공간
+
+.pull-left[
+<br>
+<br>
+<br>
+<br>
+<br>
+![](https://storage.googleapis.com/twg_assets/images/think-with-google-logo.png)
+]
+.pull-right[
+![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
+]
+
+---
+
+### 코드를 공개하는 공간
+
+.pull-left[
+![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
+]
+.pull-right[
+![](https://scontent-hkg3-1.xx.fbcdn.net/v/t31.0-8/15972700_1302707063119521_1157313033503575120_o.jpg?oh=f0aba54b2f886068cddee33cab8c693d&oe=5A5C7095)
+]
