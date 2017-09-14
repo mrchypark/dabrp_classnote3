@@ -334,14 +334,8 @@ class: center, middle, title-slide
 
 ## 버전 관리의 개념 이해
 
-### 버전 관리란 
 ### commit == ctrl+z를 저장
 ### 일하는 local, 공유하는 remote
-
----
-
-
-### 버전 관리란
 
 ---
 
