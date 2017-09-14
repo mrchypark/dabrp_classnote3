@@ -32,31 +32,33 @@ class: center, middle, title-slide
 
 목차
 
-1. 강사 소개
-
-1. 강의의 목표
-    - 나는 지금 어느 정도인가
-    - 분석하는데 필요한 개발 능력
-
-1. 수업의 목표
-
-1. 프로젝트 환경 설정
-    - Rstudio
-    - Git
-    - Rtools(for windows)
-
-1. 버전 관리 시스템
-    - 개념과 용어
-    - 로컬 저장소, 원격 저장소
-    - rstudio와 함께 사용하기
-    
-1. 원격 저장소 활용
-    - 개념과 용어
-    - github에 코드 공유하기
-    - 다른 사람의 github 코드 활용하기
-
-1. 과제
-
+.pull-left[
+  1. 강사 소개
+  
+  2. 강의의 목표
+      - 나는 지금 어느 정도인가
+      - 분석하는데 필요한 개발 능력
+  
+  3. 수업의 목표
+]
+.pull-right[
+  1. 프로젝트 환경 설정
+      - Rstudio
+      - Git
+      - Rtools(for windows)
+  
+  2. 버전 관리 시스템
+      - 로컬 저장소, 원격 저장소
+      - rstudio와 함께 사용하기
+      
+  3. 원격 저장소 활용
+      - github에 코드 공유하기
+      - 다른 사람의 github 코드 활용하기
+      
+  4. 용어 정리
+  
+  5. 과제
+]
 ---
 
 ## 강사소개
@@ -267,22 +269,25 @@ class: center, middle, title-slide
 
 ## 오늘 수업의 목표
 
-#### 버전 관리의 개념과 이해
+#### 버전 관리와 협업을 위한 환경 설정
+#### 버전 관리의 개념 이해
 #### 다른 사람의 코드를 사용하는 법
 #### 나의 코드를 공유하는 법
-#### 다른 사람과 코드로 협업하는 법
+#### 다른 사람과 코드로 협업할 때
 
 ---
 
-## 설치 및 설정
+class: center, middle, title-slide 
 
-### rstudio
-### git(for windows)
+## 버전 관리와 협업을 위한 환경 설정
+
+### RStudio 1.1
+### Git(for windows)
 ### Rtools(for windows)
 
 ---
 
-### Rstudio 1.1 preview
+### RStudio 1.1 preview
 
 `preview` 란 미리 새로운 기능이나 특성을 체험할 수 있는 버전을 뜻합니다. `Rstudio`가 1.1 버전부터 몇 가지 유용한 기능을 추가로 제공하기 시작했습니다. 그래서 이후 안정화 버전이 나오더라도 계속 사용할 기능들을 소개하려고 합니다. 실습을 위한 preview 다운로드 링크[[바로가기](https://www.rstudio.com/products/rstudio/download/preview/)]에 들어가 각자의 OS에 맞는 버전을 다운 받아 설치해 주세요.
 
@@ -311,7 +316,7 @@ class: center, middle, title-slide
 
 ### git 유저 설정하기
 
-`git`은 분산 버전 관리 도구라고 표현합니다. 이 중에 `분산`은 협업을 위해서 중요한 특징입니다. 협업 때문에 `git`은 `commit`이라는 단위에 3가지를 필수로 기록하게 강제해놨는데, user.name, user.email, commit message 입니다. 그래서 앞에 두개는 설정해야 합니다.
+`git`은 분산 버전 관리 도구라고 표현합니다. 이 중에 `분산`은 협업을 위해서 중요한 특징입니다. 협업 때문에 `git`은 `commit`이라는 단위에 3가지를 필수로 기록하게 강제해놨는데, user.name, user.email, commit message 입니다. 그래서 앞에 두개는  사전에 설정해야 합니다.
 
 - terminal 에서
 ```{shell}
@@ -325,35 +330,73 @@ git config --global user.email "연락을 받을 수 있는 이메일"
 
 ---
 
-## 버전관리란
+class: center, middle, title-slide 
 
+## 버전 관리의 개념 이해
 
-
+### 버전 관리란 
+### commit == ctrl+z를 저장
+### 일하는 local, 공유하는 remote
 
 ---
 
-### git 용어
-### 버전 관리 시스템
 
+### 버전 관리란
 
-1. init
-1. commit
-1. history
-1. repository
-1. local vs remote
+---
 
+### commit == ctrl+z를 저장
 
-1. clone
-1. pull
-1. push
+---
 
+### 일하는 local, 공유하는 remote
 
-    - 로컬 저장소, 원격 저장소
-    - rstudio와 함께 사용하기
-    
-1. 원격 저장소 활용
-    - 개념과 용어
-    - github에 코드 공유하기
-    - 다른 사람의 github 코드 활용하기
+---
 
-1. 과제
+class: center, middle, title-slide 
+
+## 다른 사람의 코드를 사용하는 법
+
+### 새로 만드는 clone
+### pull = local 최신화
+### 실습
+
+---
+
+class: center, middle, title-slide 
+
+## 나의 코드를 공유하는 법
+
+### 
+###
+
+---
+
+class: center, middle, title-slide 
+
+## 다른 사람과 코드로 협업할 때
+
+### 
+###
+
+---
+
+## 용어 정리
+
+- init
+- clone
+- commit
+- commit message
+- pull
+- push
+- local
+- remote
+- repository
+- branch
+- merge
+- pull request
+- fork
+- star
+- watch
+- conflict
+- 
