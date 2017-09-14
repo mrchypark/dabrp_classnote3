@@ -336,10 +336,15 @@ class: center, middle, title-slide
 
 ### commit == ctrl+z를 저장
 ### 일하는 local, 공유하는 remote
+### 복사본을 만드는 branch, 합치는 merge
 
 ---
 
 ### commit == ctrl+z를 저장
+
+`ctrl+z`는 대표적으로 작업의 과정을 임시로 저장하고 있다가 되돌리는 기능을 의미합니다. `commit`은 그 되돌아 갈 수 있는 순간을 저장하는 것을 뜻합니다. 보통의 프로그램이 파일의 최종상태**만** 저장한다면, commit은 기존의 commit과 비교해서 **달라진 점**을 저장해서 `ctrl+z`를 언제든지 할 수 있게 해주는 역할을 합니다.
+
+![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/commit.png)
 
 ---
 
