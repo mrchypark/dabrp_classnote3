@@ -330,9 +330,9 @@ git config --global user.name "자신의 이름- 영어로 작성"
 git config --global user.email "연락을 받을 수 있는 이메일"
 ```
 
-.pull-center[
+
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/gitconfig.png)
-]
+
 
 ---
 
@@ -357,16 +357,28 @@ class: center, middle, title-slide
 ### 일하는 local, 공유하는 remote
 
 코드의 저장 상태 백업과 공유를 위해서 `git`은 작업하는 나의 컴퓨터 공간인 로컬 저장소(local repository)와 원격 저장소(remote repository)라는 개념으로 구분하여 사용합니다. local을 개인이 일하고 작업하는 공간, remote는 백업하고 공유하는 공간입니다.
-
+.pull-center[.set[
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/localremote.png)
-
+]]
 ---
 
 #### remote 공간 무료 서비스 github
 
 Github은 원격 저장소를 회원 가입한 사람 모두에게 무료로 나눠주는 서비스입니다. 코드로 소통하는 SNS와 같다고 할 수 있습니다.
 
+.pull-center[.set[
 ![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
+]]
+
+---
+
+#### github으로 사용하는 git
+
+github은 git의 원격 저장소를 무료로 제공하는 서비스기 때문에 원격 저장소끼리의 동작은 github의 동작이지 git의 동작이 아닙니다. github은 원격 저장소로 동작하기 때문에 git의 로컬과 원격 저장소의 상호작용에 대한 동작을 그대로 사용할 수 있습니다.
+
+.pull-center[.set[
+![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/terminology.png)
+]
 
 ---
 
@@ -379,14 +391,6 @@ Github은 원격 저장소를 회원 가입한 사람 모두에게 무료로 나
 - issue : 코드에 대해 의견을 나누는 공간
 - author : 코드 저장소의 주인
 - contributor : 코드 작성을 도와준 사람
-
----
-
-#### github으로 사용하는 git
-
-github은 git의 원격 저장소를 무료로 제공하는 서비스기 때문에 원격 저장소끼리의 동작은 github의 동작이지 git의 동작이 아닙니다. github은 원격 저장소로 동작하기 때문에 git의 로컬과 원격 저장소의 상호작용에 대한 동작을 그대로 사용할 수 있습니다.
-
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/terminology.png)
 
 ---
 
