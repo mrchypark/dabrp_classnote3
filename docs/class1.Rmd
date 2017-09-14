@@ -313,15 +313,13 @@ class: center, middle, title-slide
 
 `git`은 분산 버전 관리 도구라고 표현합니다. 이 중에 `분산`은 협업을 위해서 중요한 특징입니다. 협업 때문에 `git`은 `commit`이라는 단위에 3가지를 필수로 기록하게 강제해놨는데, user.name, user.email, commit message 입니다. 그래서 앞에 두개는 설정해야 합니다.
 
-.pull-left[
-
 - terminal 에서
-```
+```{shell}
 git config --global user.name "자신의 이름- 영어로 작성"
 git config --global user.email "연락을 받을 수 있는 이메일"
 ```
-]
-.pull-right[
+
+.pull-center[
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/gitconfig.png)
 ]
 
