@@ -378,7 +378,7 @@ github은 git의 원격 저장소를 무료로 제공하는 서비스기 때문�
 
 .pull-center[.set[
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/terminology.png)
-]
+]]
 
 ---
 
