@@ -287,8 +287,9 @@ class: center, middle, title-slide
 
 `preview` 란 미리 새로운 기능이나 특성을 체험할 수 있는 버전을 뜻합니다. `Rstudio`가 1.1 버전부터 몇 가지 유용한 기능을 추가로 제공하기 시작했습니다. 그래서 이후 안정화 버전이 나오더라도 계속 사용할 기능들을 소개하려고 합니다. 실습을 위한 preview 다운로드 링크[[바로가기](https://www.rstudio.com/products/rstudio/download/preview/)]에 들어가 각자의 OS에 맞는 버전을 다운 받아 설치해 주세요.
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtudio_prebute.png)
-
+.left[
+  ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtudio_prebute.png)
+]
 ---
 
 
