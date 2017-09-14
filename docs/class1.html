@@ -24,7 +24,7 @@ class: center, middle, title-slide
 ### 2017년 9월 14일
 ---
 
-목차
+## 목차
 
 .pull-left[
 1. 강사 소개
@@ -276,8 +276,8 @@ class: center, middle, title-slide
 ## 버전 관리와 협업을 위한 환경 설정
 
 ### RStudio 1.1
-### Git(for windows)
-### Rtools(for windows)
+### Git
+### Rtools
 
 ---
 
@@ -289,8 +289,11 @@ class: center, middle, title-slide
   ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtudio_prebute.png)
 ]
 ---
+
+### windows 사용자 추가 설치
+
 .pull-left[
-### git(for windows)
+### git
 
 깃(`git`)은 [여기](https://git-scm.com/downloads)에서 다운로드 후 설치하실 수 있습니다. git은 리눅스나 맥(mac)에서 기본 제공하기 때문에 따로 설치하실 필요가 없습니다.
 
@@ -299,7 +302,7 @@ class: center, middle, title-slide
 ![](https://git-scm.com/images/logos/downloads/Git-Logo-2Color.png)
 ]
 .pull-right[
-### Rtools(for windows)
+### Rtools
 
 `Rtools`는 원래 리눅스, 유닉스 태생의 R을 윈도우에서의 호환성을 높이기 위한 보조도구들을 모아놓은 프로그램입니다. `Rtools`는 [여기](https://cran.r-project.org/bin/windows/Rtools/index.html) 에서 다운로드 후 설치하실 수 있습니다. 34 버전을 설치해 주세요.
 
@@ -430,16 +433,10 @@ class: center, middle, title-slide
 
 ## 나의 코드를 공유하는 법
 
-### 코드를 공개 할 때의 관례
+### README 파일을 작성한다.
+### 코딩 컨벤션을 지킨다.
+### 주석을 이해하기 쉽게 작성한다.
 ### 실습
-
----
-
-### 코드를 공개 할 때의 관례
-
-1. README 파일을 작성한다.
-1. 코딩 컨벤션을 지킨다.
-1. 주석을 이해하기 쉽게 작성한다.
 
 ---
 
@@ -453,15 +450,17 @@ readme 파일은 해당 저장소에 있는 코드들을 사용하는데 있어 
 
 ### 코딩 컨벤션이란
 
-코딩 컨벤션은 코드를 작성할 때 사용하는 작성 규칙을 뜻합니다. 보통 띄어쓰기는 어디서 하는지, 변수명은 어떤 규칙을 통해 만드는지, 줄바꿈은 언제 하는지 같은 규칙이 있으며 R은 구글의 [스타일가이드]()를 대표적으로 사용합니다.
+코딩 컨벤션은 코드를 작성할 때 사용하는 작성 규칙을 뜻합니다. 보통 띄어쓰기는 어디서 하는지, 변수명은 어떤 규칙을 통해 만드는지, 줄바꿈은 언제 하는지 같은 규칙이 있으며 R은 구글의 [스타일가이드](https://google.github.io/styleguide/Rguide.xml)를 대표적으로 사용합니다.
 
-### lintr
+--
 
-이런 규칙을 일일이 외워서 사람이 작성하는 것은 어려운 일입니다. 특히 여러 협업하는 사람들이 같은 스타일을 유지한다는 것은 쉬운일이 아닙니다. 명명 규칙같이 온전히 사람이 해야하는 일도 있지만, 띄어쓰기나 줄바꿈 규칙은 프로그램이 대신 정리해 줄 수 있습니다. **lintr** 패키지는 방금의 두 규칙을 자동으로 정리해주는 패키지입니다.
+### lint
+
+이런 규칙을 일일이 외워서 사람이 작성하는 것은 어려운 일입니다. 특히 여러 협업하는 사람들이 같은 스타일을 유지한다는 것은 쉬운일이 아닙니다. 명명 규칙같이 온전히 사람이 해야하는 일도 있지만, 띄어쓰기나 줄바꿈 규칙은 프로그램이 대신 정리해 줄 수 있습니다. **lint**는 방금의 두 규칙을 자동으로 정리해주는 것을 뜻합니다.
 
 ---
 
-### lintr 사용해 보기
+### Rstudio의 lintr : reformat
 
 R script 파일을 사용 중일 때 보이는 마술 지팡이 같은 버튼을 누르면 여러 코드를 작성할 때 유용한 기능들이 나옵니다. 그 중에 우리에게 필요한 것은 **reformat** 버튼입니다.
 
@@ -481,16 +480,17 @@ R script 파일을 사용 중일 때 보이는 마술 지팡이 같은 버튼을
 
 ### 실습
 
-1. github에서 새로운 저장소를 만든다
-1. 새로 만든 저장소의 주소를 복사한다.
-1. Rstudio에서 File &gt; New project &gt; version control &gt; Git 으로 간다.
-1. Repository Url 에 2.에서 복사한 주소를 붙여넣는다.
-1. 저장소 이름의 폴더가 생성될 경로를 설정한다.
-1. Create project 버튼을 누른다.
-1. 데이터 파일이나 스크립트 파일을 생성하고 작성한다.
-1. 파일들의 변경을 commit한다.
-1. push 버튼을 누른다.
-1. 자신의 github 페이지로 돌아가서 변경이 반영됬는지 확인한다.
+1. github에서 새로운 저장소를 만듭니다.
+1. 새로 만든 저장소의 주소를 복사합니다.
+1. Rstudio에서 File &gt; New project &gt; version control &gt; Git 으로 이동합니다.
+1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
+1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
+1. Create project 버튼을 누릅니다.
+1. 데이터 파일이나 스크립트 파일을 생성하고 작성합니다.
+1. reformat 버튼을 눌러 코드가 정리되는 것을 확인합니다.
+1. 파일들의 변경을 commit합니다.
+1. push 버튼을 누릅니다.
+1. 자신의 github 페이지로 돌아가서 변경이 반영됬는지 확인합니다.
 
 ---
 
@@ -498,8 +498,88 @@ class: center, middle, title-slide
 
 ## 다른 사람과 코드로 협업할 때
 
-### fork로 복사해 오기
-### 
+### Fork로 가져오기
+### Pull Request로 가져가라고 요청하기
+### 실습
+
+---
+
+### 원격 저장소 복사해오는 Fork
+
+fork는 다른 사람의 원격 저장소 하나를 복사해서 자신의 원격 저장소에 저장하는 기능을 수행합니다. 다른 사람의 코드를 로컬에 가져와서 변경을 한 후 반영하는데 권한이 없었던 걸 앞에서 같이 해봤는데요. 그렇게 fork해 온 저장소는 자신의 계정내에 있기 때문에 변경 권한이 있습니다. 그래서 스스로 만든 저장소처럼 push를 진행할 수 있습니다.
+
+
+&lt;br&gt;
+
+![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/fork.png)
+
+---
+
+### 내가 고친 부분을 사용하라고 요청하는 Pull Request
+
+pull이 원격 저장소에서 가져오는 것이라고 했습니다. 다른 사람의 원격 저장소 입장에서는 저의 원격 저장소가 **원격 저장소** 일 수 있습니다. 그렇기 때문에 pull request라고 하는데요, 다른 사람의 원격 저장소에 제 원격 저장소의 변경 사항을 가져가라고 요청을 보내 변경 사항을 반영하는 것입니다. 용어가 어색할 수 있어서 다른 서비스에서는 merge request라고 하기도 합니다. 하지만 이미 너무 많은 개발자들이 **PR**이라고 이야기 하고 있어 Pull Request라고 하였습니다.
+
+&lt;br&gt;
+
+![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/pr.png)
+
+---
+
+### 실습
+
+1. &lt;https://github.com/mrchypark/dabrp_classnote3&gt;를 브라우저로 확인합니다.
+1. **FORK** 버튼을 눌러 자신의 계정으로 복사합니다.
+1. &lt;https://github.com/자신의계정/dabrp_classnote3&gt; 주소를 복사합니다.
+1. Rstudio에서 File &gt; New project &gt; version control &gt; Git 으로 이동합니다.
+1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
+1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
+1. Create project 버튼을 누릅니다.
+1. 새 스크립트 파일을 만들어서 print("hello world!") 를 입력합니다.
+1. 만든 스크립트 파일을 FolderForClass1 폴더 안에 저장합니다.
+1. 저장은 [자기이름영문으로].R 이름으로 합니다.
+1. 파일들의 변경을 commit합니다.
+1. push 버튼을 누릅니다.
+1. 자신의 github 페이지로 돌아가서 변경이 반영됬는지 확인합니다.
+1. github내 Pull Request 탭으로 가서 create Pull request 버튼을 누릅니다.
+1. pull request가 정상적으로 요청됬는지 확인합니다.
+
+---
+
+## 과제 1
+
+1. 프로젝트를 만들어 보세요    
+     1. 새 프로젝트 만들기로 project_1 폴더를 만들어 보세요    
+     2. 탐색기에서 project_2를 만든 후 Rstudio로 프로젝트로 만들어 보세요    
+     3. github에 project_3을 만든 후 Rstudio로 프로젝트로 만들어 보세요    
+
+2. 변경점을 저장(commit)해 보세요    
+     1. project_11 폴더에 proect_11.Rproj 파일로 프로젝트를 열어보세요    
+     2. Rscript 파일을 만들고 commit을 진행해 보세요    
+     3. project_2, project_3도 앞의 두단계를 진행해 주세요      
+
+3. 원격 저장소에 적용(push)해 보세요    
+     1. project_3을 push해서 자신의 github아이디/project_3을 변경하세요    
+
+---
+
+## 과제 2
+
+1. 코드 가져와서 사용하기    
+     1. 2인 이상 팀을 구성해주세요    
+     2. 관리자 역할을 한 명 정해주세요    
+     3. 관리자가 github에 project_ex_[팀명]를 만들어 주세요    
+     4. 다른 분들이 관리자의 project_ex_[팀명]로 프로젝트를 만들어 주세요    
+     5. 변경점을 만들고 push를 시도하고 스크린샷을 찍어주세요    
+     6. 관리자가 project_ex_[팀명]를 수정해주세요    
+     7. pull로 코드를 최신으로 적용해보세요    
+
+2. 코드를 수정해서 적용하기    
+     1. team 1.3.까지 같습니다 (이름: project_pr_[팀명])    
+     2. 다른 분들이 관리자의 project_pr_[팀명]를 fork하세요    
+     3. project_pr_[팀명] 로 프로젝트를 만들고 변경점을 만드세요    
+     4. 변경점을 push하고 관리자에게 pull request 요청을 생성하세요    
+     5. 관리자는 요청을 merge 해주세요    
+
 
 ---
 
