@@ -1,29 +1,23 @@
----
-title: "(2주차)데이터 분석을 위한 중급 R 프로그래밍 CAMP 3기"
-author: "박찬엽"
-date: "2017년 9월 14일"
-output:
-  xaringan::moon_reader:
-    seal: FALSE
-    css: ["default", "class.css"]
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
-      ratio: '16:9'
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>(2주차)데이터 분석을 위한 중급 R 프로그래밍 CAMP 3기</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = T, fig.height = 5)
-```
+
+
 
 class: center, middle, title-slide
 
 ## R 프로그래밍 중급으로 나아가기 위한 Level UP Skill
 #### Step2. 하나의 문법으로 다양한 소스의 데이터를 다뤄보기
-### <https://mrchypark.github.io/dabrp_classnote3/class2>
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class2&gt;
 
 ### 박찬엽
 
@@ -61,9 +55,9 @@ class: center, middle, title-slide
 
 .pull-left[
   .pull-right[
-<br>
-<br>
-    ![](https://avatars2.githubusercontent.com/u/6179259?v=4&s=460)
+&lt;br&gt;
+&lt;br&gt;
+    ![](https://avatars2.githubusercontent.com/u/6179259?v=4&amp;s=460)
   ]
 ]
 .pull-right[
@@ -98,7 +92,7 @@ class: center, middle, title-slide
 
 ## 드레이퍼스 기술 습득 모형
 
-드레이퍼스 모델(Dreyfus Model)은 철학자 드라이퍼스 (Hubert L. Dreyfus)가 그의 저서 Mind Over Machine의 도입부에서 제안한 기술 습득의 5단계 모델<sup>1</sup>.
+드레이퍼스 모델(Dreyfus Model)은 철학자 드라이퍼스 (Hubert L. Dreyfus)가 그의 저서 Mind Over Machine의 도입부에서 제안한 기술 습득의 5단계 모델&lt;sup&gt;1&lt;/sup&gt;.
 
 .center[
 ![](https://i2.wp.com/www.terrancesmith.com/wp-content/uploads/2016/03/dreyfus-model2.jpg?fit=500%2C375)
@@ -110,7 +104,7 @@ class: center, middle, title-slide
 
 ---
 
-## 드레이퍼스 기술 습득 모형<sup>1</sup>
+## 드레이퍼스 기술 습득 모형&lt;sup&gt;1&lt;/sup&gt;
 
 1. Novice
     경험이 없기 때문에, 상황에 상관 없이 적용할 수 있는, 다시 말하면, 상황에 따라 적절하지 않을 수 있는, 조리법(recipes) 즉, context-free한 규칙이 주어졌을 때 효과적으로 과업을 수행할 수 있다.
@@ -152,21 +146,21 @@ class: center, middle, title-slide
 
 제공되는 함수를 바탕으로 순서대로 동작해야 하는 활동들을 나열하여 연결하는 것을 뜻합니다. 사람은 학교에 간다 같이 세세한 부분을 한번에 뭉개서 생각하기 때문에 세부 사항을 절차적으로 나눠서 생각하는 것이 힘든 일입니다.
 
-<br>
+&lt;br&gt;
 
 --
 
 .center[
 #### 학교에 간다
 
-#### 샤워를 한다 > 집을 나선다 > 버스를 이용한다 > 학교에 간다
+#### 샤워를 한다 &gt; 집을 나선다 &gt; 버스를 이용한다 &gt; 학교에 간다
 ]
 
 
 .center[
 #### 버스를 이용한다
 
-#### 버스카드를 확인한다 > 버스 정류장을 찾는다 > 버스 정류장으로 간다 > 이용가능한 버스를 확인한다 ...
+#### 버스카드를 확인한다 &gt; 버스 정류장을 찾는다 &gt; 버스 정류장으로 간다 &gt; 이용가능한 버스를 확인한다 ...
 ]
 
 
@@ -176,14 +170,14 @@ class: center, middle, title-slide
 
 사람은 비슷하거나 추상화, 그룹화된 것에 대해 종합적을 판단할 수 있기 때문에 그 **즈음**을 말하는 것을 이해할 수 있습니다. 하지만 컴퓨터를 동작하게 하는 개발 언어에서는 사소한 오타나, 미묘한 문법적 차이는 **기대하는 대로 동작하지 않음**을 뜻합니다. 
 
-<br>
+&lt;br&gt;
 --
 
 ### 언어가 동작하는 방식에 대한 이해
 
 R이 데이터를 다루는 기본적인 동작과 내용을 알고 있는 것은 매우 중요합니다. 같은 방식으로 사고하고 일을 시키지 않으면 R은 기대하는 대로 동작하지 않을 것이기 때문입니다. logical, numeric 같은 자료형서부터 function이 데이터를 다루는 방식을 파악하는 방법을 알아야 합니다.
 
-<br>
+&lt;br&gt;
 
 R이 명령을 수행하기 위해서 R 객체를 메모리에 두고 사용하는 것이라던지, 함수도 R 객체의 일종이라던지 하는 것들을 알고 동작을 확인해보는 것은 매우 의미 있습니다. 하지만 동작을 확인하는 것 자체가 익숙하지 않기 때문에 학습을 위한 빠른 실패와 정보 습득의 습관을 만드는 것이 매우 중요합니다.
 
@@ -201,11 +195,11 @@ class: center, middle, title-slide
 ### 좋은 코드가 있는 공간
 
 .pull-left[
-<br>
-<br>
-<br>
-<br>
-<br>
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
 ![](https://storage.googleapis.com/twg_assets/images/think-with-google-logo.png)
 ]
 .pull-right[
@@ -220,7 +214,7 @@ class: center, middle, title-slide
 ![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
 ]
 .pull-right[
-![](https://scontent-hkg3-1.xx.fbcdn.net/v/t31.0-8/15972700_1302707063119521_1157313033503575120_o.jpg?oh=f0aba54b2f886068cddee33cab8c693d&oe=5A5C7095)
+![](https://scontent-hkg3-1.xx.fbcdn.net/v/t31.0-8/15972700_1302707063119521_1157313033503575120_o.jpg?oh=f0aba54b2f886068cddee33cab8c693d&amp;oe=5A5C7095)
 ]
 
 ---
@@ -246,12 +240,12 @@ class: center, middle, title-slide
 1. R을 강력하게 만드는 여러 패키지 소개
     - 여러 다른 패키지를 탐색하고 활용해 보는 과정을 체화
 
-<br>    
+&lt;br&gt;    
 
 1. 필수 용어 정리
     - 원활한 소통을 위한 필수 용어 정리
     
-<br>    
+&lt;br&gt;    
     
 1. 패키지 동작 원리와 활용을 이해
     - 효과적으로 코드를 작성하는 지식 습득
@@ -294,7 +288,7 @@ class: center, middle, title-slide
 
 깃(`git`)은 [여기](https://git-scm.com/downloads)에서 다운로드 후 설치하실 수 있습니다. git은 리눅스나 맥(mac)에서 기본 제공하기 때문에 따로 설치하실 필요가 없습니다.
 
-<br><br><br>
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
 ![](https://git-scm.com/images/logos/downloads/Git-Logo-2Color.png)
 ]
@@ -302,7 +296,7 @@ class: center, middle, title-slide
 
 `Rtools`는 원래 리눅스, 유닉스 태생의 R을 윈도우에서의 호환성을 높이기 위한 보조도구들을 모아놓은 프로그램입니다. `Rtools`는 [여기](https://cran.r-project.org/bin/windows/Rtools/index.html) 에서 다운로드 후 설치하실 수 있습니다. 34 버전을 설치해 주세요.
 
-<br>
+&lt;br&gt;
 
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtools.png)
 ]
@@ -321,7 +315,8 @@ class: center, middle, title-slide
 `git`은 분산 버전 관리 도구라고 표현합니다. 이 중에 `분산`은 협업을 위해서 중요한 특징입니다. 협업 때문에 `git`은 `commit`이라는 단위에 3가지를 필수로 기록하게 강제해놨는데, user.name, user.email, commit message 입니다. 그래서 앞에 두개는  사전에 설정해야 합니다.
 
 - terminal 에서
-```{shell}
+
+```shell
 git config --global user.name "자신의 이름- 영어로 작성"
 git config --global user.email "연락을 받을 수 있는 이메일"
 ```
@@ -415,9 +410,9 @@ github이 코드로 소통하는 SNS 같은 것이라고 설명했습니다. 그
 
 ### 실습
 
-1. <https://github.com/mrchypark/sejongFinData>를 브라우저로 확인합니다.
+1. &lt;https://github.com/mrchypark/sejongFinData&gt;를 브라우저로 확인합니다.
 1. 주소를 복사합니다.
-1. RStudio에서 File > New Project > Version Control > Git 으로 가서 Repository Url에 붙여넣기를 합니다.
+1. RStudio에서 File &gt; New Project &gt; Version Control &gt; Git 으로 가서 Repository Url에 붙여넣기를 합니다.
 1. Create Project 버튼을 눌러 프로젝트를 만듭니다.
 1. 위의 주소에 있는 파일들과 같은 것이 폴더 내에 있는지 확인합니다.
 
@@ -466,7 +461,7 @@ R script 파일을 사용 중일 때 보이는 마술 지팡이 같은 버튼을
 
 **가독성** 좋게 작성하는 코드는 여러 가지 장점이 있습니다. 우선 다른 사람이 쉽게 이해할 수 있고, 자신도 시간이 지난뒤에 기억을 떠올리기 좋기 때문에 같은 코드를 다시 짜는 문제를 예방할 수 있습니다. 하지만 코드의 형식을 따라야 하기 때문에 아무리 가독성이 좋아도 다시 코드를 파악하는데 어려움이 있을 수 있습니다. 이 때 주석 기능을 이용해서 설명을 작성해두면 더 빠르게 코드를 파악할 수 있습니다.
 
-<br>
+&lt;br&gt;
 
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/comment.png)
 
@@ -476,7 +471,7 @@ R script 파일을 사용 중일 때 보이는 마술 지팡이 같은 버튼을
 
 1. github에서 새로운 저장소를 만듭니다.
 1. 새로 만든 저장소의 주소를 복사합니다.
-1. Rstudio에서 File > New project > version control > Git 으로 이동합니다.
+1. Rstudio에서 File &gt; New project &gt; version control &gt; Git 으로 이동합니다.
 1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
 1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
 1. Create project 버튼을 누릅니다.
@@ -503,7 +498,7 @@ class: center, middle, title-slide
 fork는 다른 사람의 원격 저장소 하나를 복사해서 자신의 원격 저장소에 저장하는 기능을 수행합니다. 다른 사람의 코드를 로컬에 가져와서 변경을 한 후 반영하는데 권한이 없었던 걸 앞에서 같이 해봤는데요. 그렇게 fork해 온 저장소는 자신의 계정내에 있기 때문에 변경 권한이 있습니다. 그래서 스스로 만든 저장소처럼 push를 진행할 수 있습니다.
 
 
-<br>
+&lt;br&gt;
 
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/fork.png)
 
@@ -513,7 +508,7 @@ fork는 다른 사람의 원격 저장소 하나를 복사해서 자신의 원�
 
 pull이 원격 저장소에서 가져오는 것이라고 했습니다. 다른 사람의 원격 저장소 입장에서는 저의 원격 저장소가 **원격 저장소** 일 수 있습니다. 그렇기 때문에 pull request라고 하는데요, 다른 사람의 원격 저장소에 제 원격 저장소의 변경 사항을 가져가라고 요청을 보내 변경 사항을 반영하는 것입니다. 용어가 어색할 수 있어서 다른 서비스에서는 merge request라고 하기도 합니다. 하지만 이미 너무 많은 개발자들이 **PR**이라고 이야기 하고 있어 Pull Request라고 하였습니다.
 
-<br>
+&lt;br&gt;
 
 ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/pr.png)
 
@@ -521,10 +516,10 @@ pull이 원격 저장소에서 가져오는 것이라고 했습니다. 다른 �
 
 ### 실습
 
-1. <https://github.com/mrchypark/dabrp_classnote3>를 브라우저로 확인합니다.
+1. &lt;https://github.com/mrchypark/dabrp_classnote3&gt;를 브라우저로 확인합니다.
 1. **FORK** 버튼을 눌러 자신의 계정으로 복사합니다.
-1. <https://github.com/자신의계정/dabrp_classnote3> 주소를 복사합니다.
-1. Rstudio에서 File > New project > version control > Git 으로 이동합니다.
+1. &lt;https://github.com/자신의계정/dabrp_classnote3&gt; 주소를 복사합니다.
+1. Rstudio에서 File &gt; New project &gt; version control &gt; Git 으로 이동합니다.
 1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
 1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
 1. Create project 버튼을 누릅니다.
@@ -607,3 +602,34 @@ pull이 원격 저장소에서 가져오는 것이라고 했습니다. 다른 �
 - issue : 코드에 대해 의견을 나누는 공간
 - author : 코드 저장소의 주인
 - contributor : 코드 작성을 도와준 사람
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
