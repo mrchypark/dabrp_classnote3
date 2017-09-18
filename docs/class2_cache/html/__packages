@@ -1,7 +1,5 @@
 base
-methods
-datasets
-utils
-grDevices
-graphics
-stats
+devtools
+DBI
+RSQLite
+readr

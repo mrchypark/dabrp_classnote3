@@ -33,577 +33,561 @@ class: center, middle, title-slide
 ## 목차
 
 .pull-left[
+
+0. 과제 확인
+
 1. 수업의 목표
 
-2. 프로젝트 환경 설정
-    - Rstudio
-    - Git
-    - Rtools(for windows)
+2. 데이터베이스
+    - 데이터베이스란
+    - 서버와 클라이언트
+    - 
 
-3. 버전 관리 시스템
+3. 클라우드 서비스
     - 로컬 저장소, 원격 저장소
     - rstudio와 함께 사용하기
-    
-4. 원격 저장소 활용
+]
+.pull-right[
+4. 데이터 베이스와 R의 연결
     - github에 코드 공유하기
     - 다른 사람의 github 코드 활용하기
     
-5. 용어 정리
+5. 과제
 
-6. 과제
+6. 용어 정리
 ]
 ---
+# 데이터베이스
 
-## 강사소개
-.center[
-  #### 질문 / 상담 / 잡담 대환영!
-]
 
-.pull-left[
-  .pull-right[
-<br>
-<br>
-    ![](https://avatars2.githubusercontent.com/u/6179259?v=4&s=460)
-  ]
-]
-.pull-right[
-### 박찬엽    
-#### - .yellow[**KAKAO**]@[알코홀릭](http://pf.kakao.com/_RXANd)
-#### - .blue[**FACEBOOK**]@[mrchypark](https://www.facebook.com/mrchypark)
-#### - .gray[**GITHUB**]@[mrchypark](https://github.com/mrchypark)
-#### - .gray[**PHONE**]+82-10-8720-6115
-]
+## 데이터란
 
----
+단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값
 
-class: center, middle, title-slide
+의미있게 사용하기 위해서 구조화가 필요함    
+* 구조화: 체계적으로 조직하는 것
 
-## 강의의 목표
+## DBMS
 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
+* 이미지 출처: [생활코딩 MySQL 수업][1]
 
-### 분석을 위한 R 프로그래밍 능력 향상
+## 데이터베이스란
 
 
-#### 프로그래밍에 대해서 *얼마나* 알아야 하는가?
 
-#### 프로그래밍에 대해서 *무엇을* 알아야 하는가?
+## 데이터베이스 클라이언트
 
----
+  - 대표적인 클라이언트
+    - MySQL monitor
+    - PHPmyAdmin
+    - Navicat
+    - HeidiSQL
 
-class: center, middle, title-slide
+## 서버와 클라이언트
 
-### 나는 지금 어느 정도인가?
+![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
 
----
+## 테이블
 
-## 드레이퍼스 기술 습득 모형
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
+* 이미지 출처: [생활코딩 MySQL 수업][1]
 
-드레이퍼스 모델(Dreyfus Model)은 철학자 드라이퍼스 (Hubert L. Dreyfus)가 그의 저서 Mind Over Machine의 도입부에서 제안한 기술 습득의 5단계 모델<sup>1</sup>.
+## data.frame
 
-.center[
-![](https://i2.wp.com/www.terrancesmith.com/wp-content/uploads/2016/03/dreyfus-model2.jpg?fit=500%2C375)
-]
+```{r printh}
+print(head(iris))
+```
 
-.footnote[
-[1] [드레이퍼스 모델 소개글](http://blog.lastmind.io/archives/593)
-]
+## SQL
 
----
+Structured Query Language
 
-## 드레이퍼스 기술 습득 모형<sup>1</sup>
+구조적 데이터 요청 언어
 
-1. Novice
-    경험이 없기 때문에, 상황에 상관 없이 적용할 수 있는, 다시 말하면, 상황에 따라 적절하지 않을 수 있는, 조리법(recipes) 즉, context-free한 규칙이 주어졌을 때 효과적으로 과업을 수행할 수 있다.
-    
-1. Advanced-beginner
-    여러 가지 상황에서 의미를 가지는 요소에 대해 인지하게 되고, 이러한 요소를 context-free한 규칙에 더해서 활용하게 된다.
-    
-1. Competent
-    경험이 쌓이면서, 상황 하에서 어떤 요소를 중요하게 고려해야 할 지, 상황을 분석하고 규칙에 따라 행동을 선택하여 결과적으로 스스로 문제를 해결(troubleshoot)할 수 있게 된다.
-    
-1. Proficient
-    Competent 단계에서 경험한 성공과 실패를 바탕으로, 상황에 따라 어떤 요소를 중요하게 고려해야 할 지를 결정한다.어떤 요소들이 더 중요하고, 어떤 요소들이 무시해도 되는가는 경험이 추가됨에 따라 직관적으로 변화한다. 반면에, 실제로 어떤 행동을 해야 할 것인가에 대해서는 분석적인 사고를 필요로 한다.
-    
-1. Expert
-    의식적인 사고나 규칙의 필요 없이, 직관적으로 어떤 요소를 중요하게 고려해야 할 지와 어떤 행동을 해야 할 것인가를 안다.
+## DBI
 
-.footnote[
-[1] [드레이퍼스 모델 소개글](http://blog.lastmind.io/archives/593)
-]
+```{r dbi}
+if (!require(devtools)) install.packages("devtools") 
+if (!require(DBI)) devtools::install_github("rstats-db/DBI")
+if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
+```
 
----
+## SQLite
 
-class: center, middle, title-slide
+[SQLite][2]    
 
-## 분석하는데 필요한 개발 능력은 .tiny[(아마도)]
+> SQLite is a self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
 
-### Advanced-beginner ~ Competent 사이
+> 파일 하나로 구성하는 작고, 무료인 sql db
 
+## DBI
 
----
+```
+library(DBI)
+library(RSQLite)
+con <- dbConnect(RSQLite::SQLite(), dbname="class2.sqlite")
 
-## novice를 벗어나기 위해서
+dbListTables(con)
 
-통계 패키지로 이해하고 있는 경우도 있지만, R은 프로그래밍 언어입니다. 다른 언어와 달리 일반 개발을 위한 용도로 시작하지 않아서 개발에 대한 요소를 전부 알아가며 공부를 할 필요는 없지만 처음 시작할 때 공통적으로 겪는 어려움이 있습니다.
+dbWriteTable(con, "mtcars", mtcars, overwrite=T)
+dbListTables(con)
 
---
+dbReadTable(con, "mtcars")
 
-### 절차적으로 생각하기
+dbRemoveTable(con,"mtcars")
+dbListTables(con)
 
-제공되는 함수를 바탕으로 순서대로 동작해야 하는 활동들을 나열하여 연결하는 것을 뜻합니다. 사람은 학교에 간다 같이 세세한 부분을 한번에 뭉개서 생각하기 때문에 세부 사항을 절차적으로 나눠서 생각하는 것이 힘든 일입니다.
+system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
+```
 
-<br>
+# 데이터
 
---
+## 데이터 공유
 
-.center[
-#### 학교에 간다
+[Leek group][3]에서 소개하는 [데이터 공유 가이드][4]
 
-#### 샤워를 한다 > 집을 나선다 > 버스를 이용한다 > 학교에 간다
-]
+  - 원시 데이터
+  - 정제후 데이터
+  - 코드북
+  - 변수 작성법
+  - 재현성
 
+## 원시 데이터
 
-.center[
-#### 버스를 이용한다
+최초 획득한 당시 그대로의 데이터
 
-#### 버스카드를 확인한다 > 버스 정류장을 찾는다 > 버스 정류장으로 간다 > 이용가능한 버스를 확인한다 ...
-]
+  - 어떤 식으로든 수정을 가하지 않은 상태
+  - 수정을 가하는 과정을 함께 기록함으로써 신뢰성 확보
+  - 위 두 가지가 없는 경우 상황을 상상해야 함
 
+## 정제후 데이터
 
----
+해들리 위컴이 설명한 [tidy data][5]의 요건에 맞게 가공하여 데이터를 쉽게 다룰 수 있게 만든 상태
 
-### 개발 언어에 대한 이해
+  - 측정하는 각 변수는 하나의 열에 있어야 함
+  - 측정하는 각 관찰은 하나의 행에 있어야 함
+  - 각 종류의 변수에 대해 각 하나의 테이블이 있어야 함
+  - 여러 개의 테이블이있는 경우 테이블에 합치기 위한 기준 열을 포함해야 함
 
-사람은 비슷하거나 추상화, 그룹화된 것에 대해 종합적을 판단할 수 있기 때문에 그 **즈음**을 말하는 것을 이해할 수 있습니다. 하지만 컴퓨터를 동작하게 하는 개발 언어에서는 사소한 오타나, 미묘한 문법적 차이는 **기대하는 대로 동작하지 않음**을 뜻합니다. 
+## 코드북
 
-<br>
---
+데이터셋에 대해 필요한 설명을 담은 문서
 
-### 언어가 동작하는 방식에 대한 이해
+  - 정제후 데이터에 대해 추가적으로 필요한 설명이나 정보(단위 등)
+  - 정제 과정에서 사용한 방법의 설명과 사용한 이유
+  - 데이터가 사용된 분석에 대한 정보
 
-R이 데이터를 다루는 기본적인 동작과 내용을 알고 있는 것은 매우 중요합니다. 같은 방식으로 사고하고 일을 시키지 않으면 R은 기대하는 대로 동작하지 않을 것이기 때문입니다. logical, numeric 같은 자료형서부터 function이 데이터를 다루는 방식을 파악하는 방법을 알아야 합니다.
 
-<br>
+## 데이터 원본
 
-R이 명령을 수행하기 위해서 R 객체를 메모리에 두고 사용하는 것이라던지, 함수도 R 객체의 일종이라던지 하는 것들을 알고 동작을 확인해보는 것은 매우 의미 있습니다. 하지만 동작을 확인하는 것 자체가 익숙하지 않기 때문에 학습을 위한 빠른 실패와 정보 습득의 습관을 만드는 것이 매우 중요합니다.
+확보할 당시의 원시 데이터나, 항상 최신 상태를 유지하여 신뢰할 수 있는 데이터
 
----
+  - 커뮤니케이션 비용 감소
+  - 의사결정 및 활동의 기준
+  - 가공된 데이터의 신뢰성 확보
 
-class: center, middle, title-slide
 
-## Advanced-beginner 를 벗어나기 위해서
+## 데이터 훑어보기
 
-### 잘 된 코드를 흉내내기
-### 내 코드를 다른 사람에게 보여주기
+  - head: 최초 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - tail: 마지막 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - summary: 각 컬럼의 자료형과 숫자라면 대표값을 함께 보여줌
+  - str: 각 컬럼의 자료형과 초기 값을 보여줌
+  - length: 데이터의 길이 출력(vector)
+  - nrow: 행 갯수 출력(data.frame)
+  - is.na: NA 인지 확인
+  - complete.cases: 값이 모두 있는지 행단위로 검사
+  - tibble: 최근 기법으로 재구성된 data.frame
 
----
+## 추천 데이터 - chennel
 
-### 좋은 코드가 있는 공간
+```{r loaddata, message=FALSE}
+library(readr)
+chennel<-read_csv("../data/recomen/chennel.csv")
+competitor<-read_csv("../data/recomen/competitor.csv")
+customer<-read_csv("../data/recomen/customer.csv")
+item<-read_csv("../data/recomen/item.csv")
+membership<-read_csv("../data/recomen/membership.csv")
+tran<-read_csv("../data/recomen/tran.csv")
+```
+  - cusID  : 5자리 숫자조합으로 구성된 고객ID
+  - chennel: 접속 체널
+  - useCnt : 사용횟수(건)
+```{r strchennel}
+summary(chennel)
+str(chennel, max.level=1)
+```
 
-.pull-left[
-<br>
-<br>
-<br>
-<br>
-<br>
-![](https://storage.googleapis.com/twg_assets/images/think-with-google-logo.png)
-]
-.pull-right[
-![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
-]
+## 추천 데이터 - competitor
 
----
+  - cusID     : 5자리 숫자조합으로 구성된 고객ID
+  - partner   : 제휴사
+  - competitor: 경쟁사
+  - useDate   : 이용년월(YYYYDD)
+```{r strcompetitor1}
+summary(competitor)
+```
 
-### 코드를 공개하는 공간
+## 추천 데이터 - competitor
 
-.pull-left[
-![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
-]
-.pull-right[
-![](https://scontent-hkg3-1.xx.fbcdn.net/v/t31.0-8/15972700_1302707063119521_1157313033503575120_o.jpg?oh=f0aba54b2f886068cddee33cab8c693d&oe=5A5C7095)
-]
-
----
-
-### SNS with Code
-
-1. 다른 사람이 볼 수 있는 코드를 작성한다.
-    1. 주석으로 설명 작성
-    1. 코딩 컨벤션을 준수
-
-1. 버전 관리 시스템을 사용한다.
-    1. issue로 질의응답
-    1. Pull Request로 소통
-    
-1. 재현 가능한 상태를 유지한다.
-    1. readme 작성
-    1. data 동봉 전략
-
----
-
-### 수업에서는
-
-1. R을 강력하게 만드는 여러 패키지 소개
-    - 여러 다른 패키지를 탐색하고 활용해 보는 과정을 체화
-
-<br>    
-
-1. 필수 용어 정리
-    - 원활한 소통을 위한 필수 용어 정리
-    
-<br>    
-    
-1. 패키지 동작 원리와 활용을 이해
-    - 효과적으로 코드를 작성하는 지식 습득
-    
----
-
-class: center, middle, title-slide
-
-## 오늘 수업의 목표
-
-#### 버전 관리와 협업을 위한 환경 설정
-#### 버전 관리의 개념 이해
-#### 다른 사람의 코드를 사용하는 법
-#### 나의 코드를 공유하는 법
-#### 다른 사람과 코드로 협업할 때
-
----
-
-class: center, middle, title-slide 
-
-## 버전 관리와 협업을 위한 환경 설정
-
-### RStudio 1.1
-### Git
-### Rtools
-
----
-
-### RStudio 1.1 preview
-
-`preview` 란 미리 새로운 기능이나 특성을 체험할 수 있는 버전을 뜻합니다. `Rstudio`가 1.1 버전부터 몇 가지 유용한 기능을 추가로 제공하기 시작했습니다. 그래서 이후 안정화 버전이 나오더라도 계속 사용할 기능들을 소개하려고 합니다. 실습을 위한 preview 다운로드 링크[[바로가기](https://www.rstudio.com/products/rstudio/download/preview/)]에 들어가 각자의 OS에 맞는 버전을 다운 받아 설치해 주세요.
-
-.left[
-  ![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtudio_prebute.png)
-]
----
-
-### windows 사용자 추가 설치
-.pull-left[
-
-깃(`git`)은 [여기](https://git-scm.com/downloads)에서 다운로드 후 설치하실 수 있습니다. git은 리눅스나 맥(mac)에서 기본 제공하기 때문에 따로 설치하실 필요가 없습니다.
-
-<br><br><br>
-
-![](https://git-scm.com/images/logos/downloads/Git-Logo-2Color.png)
-]
-.pull-right[
-
-`Rtools`는 원래 리눅스, 유닉스 태생의 R을 윈도우에서의 호환성을 높이기 위한 보조도구들을 모아놓은 프로그램입니다. `Rtools`는 [여기](https://cran.r-project.org/bin/windows/Rtools/index.html) 에서 다운로드 후 설치하실 수 있습니다. 34 버전을 설치해 주세요.
-
-<br>
-
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/rtools.png)
-]
----
-
-### git 확인하기
-
-컴퓨터에 git이 있는지는 `terminal`에서 `git`을 입력해 보는 것입니다.
-
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/gitchk.png)
-
----
-
-### git 유저 설정하기
-
-`git`은 분산 버전 관리 도구라고 표현합니다. 이 중에 `분산`은 협업을 위해서 중요한 특징입니다. 협업 때문에 `git`은 `commit`이라는 단위에 3가지를 필수로 기록하게 강제해놨는데, user.name, user.email, commit message 입니다. 그래서 앞에 두개는  사전에 설정해야 합니다.
-
-- terminal 에서
-```{shell}
-git config --global user.name "자신의 이름- 영어로 작성"
-git config --global user.email "연락을 받을 수 있는 이메일"
+```{r strcompetitor2}
+str(competitor, max.level=1)
 ```
 
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/gitconfig.png)
+## 추천 데이터 - customer
 
+  - cusID: 5자리 숫자조합으로 구성된 고객ID
+  - sex  : 성별
+  - age  : 연령    
+    * `r unique(customer$age)[length(unique(customer$age)):1]`
+  - area : 거주지역
+  
+## 추천 데이터 - customer
 
----
+```{r strcustomer}
+summary(customer)
+str(customer, max.level=1)
+```
 
-class: center, middle, title-slide 
 
-## 버전 관리의 개념 이해
+## 추천 데이터 - item
 
-### commit == ctrl+z를 저장
-### 일하는 local, 공유하는 remote
-### 복사본을 만드는 branch, 합치는 merge
+  - partner    : 재휴사
+  - cate_1     : 대분류
+  - cate_2     : 중분류
+  - cate_3     : 소분류
+  - cate_2_name: 중분류명
+  - cate_3_name: 소분류명
+  
+## 추천 데이터 - item
 
----
+```{r stritem1}
+summary(item)
+```
 
-### commit == ctrl+z를 저장
+## 추천 데이터 - item
 
-`ctrl+z`는 대표적으로 작업의 과정을 임시로 저장하고 있다가 되돌리는 기능을 의미합니다. `commit`은 그 되돌아 갈 수 있는 순간을 저장하는 것을 뜻합니다. 보통의 프로그램이 파일의 최종상태**만** 저장한다면, commit은 기존의 commit과 비교해서 **달라진 점**을 저장해서 `ctrl+z`를 언제든지 할 수 있게 해주는 역할을 합니다.
+```{r stritem2}
+str(item, max.level=1)
+```
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/commit.png)
+## 추천 데이터 - membership
 
----
+  - cusID     : 5자리 숫자조합으로 구성된 고객ID
+  - memberShip: 멤버십명
+  - regDate   : 가입년월
+```{r strmembership}
+summary(membership)
+str(membership, max.level=1)
+```
 
-### 일하는 local, 공유하는 remote
 
-코드의 저장 상태 백업과 공유를 위해서 `git`은 작업하는 나의 컴퓨터 공간인 로컬 저장소(local repository)와 원격 저장소(remote repository)라는 개념으로 구분하여 사용합니다. local을 개인이 일하고 작업하는 공간, remote는 백업하고 공유하는 공간입니다.
-.pull-center[.set[
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/localremote.png)
-]]
----
+## 추천 데이터 - tran
 
-#### remote 공간 무료 서비스 github
+```{r strtran1}
+summary(tran)
+```
 
-Github은 원격 저장소를 회원 가입한 사람 모두에게 무료로 나눠주는 서비스입니다. 코드로 소통하는 SNS와 같다고 할 수 있습니다.
+## 추천 데이터 - tran
 
-.pull-center[.set[
-![](http://www.cbronline.com/wp-content/uploads/2016/06/github.jpg)
-]]
+```{r strtran2}
+str(tran, max.level=1)
+```
 
----
 
-#### github으로 사용하는 git
+# 클라우드 서비스
 
-github은 git의 원격 저장소를 무료로 제공하는 서비스기 때문에 원격 저장소끼리의 동작은 github의 동작이지 git의 동작이 아닙니다. github은 원격 저장소로 동작하기 때문에 git의 로컬과 원격 저장소의 상호작용에 대한 동작을 그대로 사용할 수 있습니다.
 
-.pull-center[.ori[
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/terminology.png)
-]]
+## 클라우드 서비스 소개
 
----
+클라우딩 컴퓨팅은 사용자의 환경 밖에서 서비스로서 제공된 확장 가능한 컴퓨팅 자원을 사용한 양에 따라 비용을 지불하고 사용하는 것
 
-### 복사본을 만드는 branch, 합치는 merge
 
-git은 달라지는 점을 저장하는 만큼 시간적인 변화 뿐만 아니라 복사본처럼 동시에 여러 버전을 관리할 수 도 있습니다. 그 것을 **branch**라고 부르고 각 branch에 이름을 지정하여 옮겨다닐 있습니다. 이 복사본은 폴더 전체를 기준으로 동작합니다. 
+출처: [P. Changanti, 가상 인프라용 클라우드 서비스, Part 1: IaaS(Infrastructure as a Service) 및 Eucalyptus][6]
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/branch.png)
 
+## 구글 클라우드
 
----
+![](http://tech.whatap.io/wp-content/uploads/2016/03/gcp-header-logo.png)
 
-class: center, middle, title-slide 
+## 구글 클라우드 시작하기
+```
+https://cloud.google.com/
+```
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(1).png" width="100%"/>
 
-## 다른 사람의 코드를 사용하는 법
+## 구글 클라우드 로그인
 
-### 새로 만드는 clone
-### pull = local 최신화
-### 실습
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(3).png" width="100%"/>
 
----
+## 구글 클라우드 설문
 
-### 새로 만드는 clone
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(4).png" width="100%"/>
 
-github이 코드로 소통하는 SNS 같은 것이라고 설명했습니다. 그렇기 떄문에 공개되어있는 저장소라면 다른 사람의 저장소라도 가져오는 것은 자유롭게 할 수 있습니다. Rstudio의 project 생성을 이용해서 다른 사람의 원격 저장소를 clone해서 가져올 수 있습니다.
+## 구글 클라우드 설문 선택
 
-- 주의할 점 : 자신의 계정이 아니기 때문에 수정권한이 없어서 push하여 로컬에서 바꾼 부분을 반영할 수 없습니다. 페이스북에서 다른 사람의 프로필을 바꿀 수 없는 것과 비슷합니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(5).png" width="100%"/>
 
+## 구글 클라우드 카드 등록
 
-### pull = local 최신화
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(6).png" width="100%"/>
 
-프로젝트를 원격 저장소를 바탕으로 만들어 clone을 하는 것은 로컬에 처음 프로젝트를 만들때 사용합니다. **pull**은 기존에 가져왔던 시점 이후에 저장소 주인이 무언가 변경점을 만들어 반영을 하면 그 변경된 내용을 로컬 저장소에 가져와서 반영하는 명령입니다.
+## 구글 클라우드 프로젝트 생성
 
-- 주의할 점 : 모든 파일이 commit이 완료되어 git 탭에 어떤 파일리스트도 없는 깔끔한 상태여야 pull이 문제 없이 진행됩니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(7).png" width="100%"/>
 
 
----
+## R MySQL 연결
 
-### 실습
+`DBI`로 MySQL을 연결하는 패키지와 사용
 
-1. <https://github.com/mrchypark/sejongFinData>를 브라우저로 확인합니다.
-1. 주소를 복사합니다.
-1. RStudio에서 File > New Project > Version Control > Git 으로 가서 Repository Url에 붙여넣기를 합니다.
-1. Create Project 버튼을 눌러 프로젝트를 만듭니다.
-1. 위의 주소에 있는 파일들과 같은 것이 폴더 내에 있는지 확인합니다.
+```
+library(RMySQL)
+con <- dbConnect(MySQL(),
+                 user = user,
+                 password = pw,
+                 host = host,
+                 dbname = "recom")
+dbListTables(conn = con)
+dbWriteTable(conn = con, name = 'tran', value = "./recomen/tran.csv")
+dbReadTable(conn = con, name = "tran")
+```
 
----
+## MySQL 인스턴스 생성
 
-class: center, middle, title-slide 
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(8).png" width="100%"/>
 
-## 나의 코드를 공유하는 법
+## 엔진선택
 
-### README 파일을 작성한다.
-### 코딩 컨벤션을 지킨다.
-### 주석을 이해하기 쉽게 작성한다.
-### 실습
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(9).png" width="100%"/>
 
----
+## MySQL 2세대 선택
 
-### README 란
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(10).png" width="100%"/>
 
-readme 파일은 해당 저장소에 있는 코드들을 사용하는데 있어 필요한 정보들을 담고 있습니다. 대표적으로 간단한 예시, 주의해야 할 점, 설치 방법, 테스트한 환경, 버전에 따른 변경점 등을 작성합니다. README를 충실하게 작성하는 것은 다른 사람들이 잘 사용할 수 있게 유도하는 역할을 하며 Star 등을 통해서 유용한 코드라는 간접 지표를 확보할 수 있습니다. 
+## 인스턴스 설정
 
-- issue는 사람들이 사용할 때 문제가 있거나 개선점 제안 등을 할 때 사용합니다. 성실하고 빠르게 대답을 해주거나 코드에 반영하는 것은 많은 사람들이 믿고 코드를 사용할 수 있게 만들어 인기있는 코드로 만드는 요령입니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(11).png" width="100%"/>
 
----
+## 접속 허용 IP 설정
 
-### 코딩 컨벤션이란
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(12).png" width="100%"/>
 
-코딩 컨벤션은 코드를 작성할 때 사용하는 작성 규칙을 뜻합니다. 보통 띄어쓰기는 어디서 하는지, 변수명은 어떤 규칙을 통해 만드는지, 줄바꿈은 언제 하는지 같은 규칙이 있으며 R은 구글의 [스타일가이드](https://google.github.io/styleguide/Rguide.xml)를 대표적으로 사용합니다.
+## 접속 허용 IP 설정
 
---
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(13).png" width="100%"/>
 
-### lint
+## 현재 IP 확인하기
 
-이런 규칙을 일일이 외워서 사람이 작성하는 것은 어려운 일입니다. 특히 여러 협업하는 사람들이 같은 스타일을 유지한다는 것은 쉬운일이 아닙니다. 명명 규칙같이 온전히 사람이 해야하는 일도 있지만, 띄어쓰기나 줄바꿈 규칙은 프로그램이 대신 정리해 줄 수 있습니다. **lint**는 방금의 두 규칙을 자동으로 정리해주는 것을 뜻합니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(14).png" width="100%"/>
 
----
+## whatismyip
 
-### Rstudio의 lintr : reformat
+```
+https://www.whatismyip.com/
+```
 
-R script 파일을 사용 중일 때 보이는 마술 지팡이 같은 버튼을 누르면 여러 코드를 작성할 때 유용한 기능들이 나옵니다. 그 중에 우리에게 필요한 것은 **reformat** 버튼입니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(15).png" width="100%"/>
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/reformat.png)
+## ip 입력
 
----
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(16).png" width="100%"/>
 
-### 주석(comment)
+## root 계정 비밀번호 생성
 
-**가독성** 좋게 작성하는 코드는 여러 가지 장점이 있습니다. 우선 다른 사람이 쉽게 이해할 수 있고, 자신도 시간이 지난뒤에 기억을 떠올리기 좋기 때문에 같은 코드를 다시 짜는 문제를 예방할 수 있습니다. 하지만 코드의 형식을 따라야 하기 때문에 아무리 가독성이 좋아도 다시 코드를 파악하는데 어려움이 있을 수 있습니다. 이 때 주석 기능을 이용해서 설명을 작성해두면 더 빠르게 코드를 파악할 수 있습니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(17).png" width="100%"/>
 
-<br>
+## SQL 인스턴스 생성중
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/comment.png)
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(19).png" width="100%"/>
 
----
+## RMySQL로 연결하기
 
-### 실습
+  - host 주소 파악
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(20).png" width="100%"/>
 
-1. github에서 새로운 저장소를 만듭니다.
-1. 새로 만든 저장소의 주소를 복사합니다.
-1. Rstudio에서 File > New project > version control > Git 으로 이동합니다.
-1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
-1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
-1. Create project 버튼을 누릅니다.
-1. 데이터 파일이나 스크립트 파일을 생성하고 작성합니다.
-1. reformat 버튼을 눌러 코드가 정리되는 것을 확인합니다.
-1. 파일들의 변경을 commit합니다.
-1. push 버튼을 누릅니다.
-1. 자신의 github 페이지로 돌아가서 변경이 반영됬는지 확인합니다.
+## RMySQL로 연결하기
 
----
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(21).png" width="100%"/>
 
-class: center, middle, title-slide 
+## 데이터베이스 만들기
 
-## 다른 사람과 코드로 협업할 때
+<img src="https://raw.  githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/>
 
-### Fork로 가져오기
-### Pull Request로 가져가라고 요청하기
-### 실습
+## 데이터베이스 만들기
 
----
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(23).png" width="100%"/>
 
-### 원격 저장소 복사해오는 Fork
+## 데이터베이스 만들기
 
-fork는 다른 사람의 원격 저장소 하나를 복사해서 자신의 원격 저장소에 저장하는 기능을 수행합니다. 다른 사람의 코드를 로컬에 가져와서 변경을 한 후 반영하는데 권한이 없었던 걸 앞에서 같이 해봤는데요. 그렇게 fork해 온 저장소는 자신의 계정내에 있기 때문에 변경 권한이 있습니다. 그래서 스스로 만든 저장소처럼 push를 진행할 수 있습니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(24).png" width="100%"/>
 
+## 데이터베이스 만들기
 
-<br>
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(25).png" width="100%"/>
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/fork.png)
+## 데이터베이스 만들기
 
----
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(26).png" width="100%"/>
 
-### 내가 고친 부분을 사용하라고 요청하는 Pull Request
+## 데이터베이스 만들기
 
-pull이 원격 저장소에서 가져오는 것이라고 했습니다. 다른 사람의 원격 저장소 입장에서는 저의 원격 저장소가 **원격 저장소** 일 수 있습니다. 그렇기 때문에 pull request라고 하는데요, 다른 사람의 원격 저장소에 제 원격 저장소의 변경 사항을 가져가라고 요청을 보내 변경 사항을 반영하는 것입니다. 용어가 어색할 수 있어서 다른 서비스에서는 merge request라고 하기도 합니다. 하지만 이미 너무 많은 개발자들이 **PR**이라고 이야기 하고 있어 Pull Request라고 하였습니다.
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(27).png" width="100%"/>
 
-<br>
+## host와 dbname 설정
 
-![](https://github.com/mrchypark/dabrp_classnote3/raw/master/img/pr.png)
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(28).png" width="100%"/>
 
----
+## 실습 진행
 
-### 실습
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/>
 
-1. <https://github.com/mrchypark/dabrp_classnote3>를 브라우저로 확인합니다.
-1. **FORK** 버튼을 눌러 자신의 계정으로 복사합니다.
-1. <https://github.com/자신의계정/dabrp_classnote3> 주소를 복사합니다.
-1. Rstudio에서 File > New project > version control > Git 으로 이동합니다.
-1. Repository Url 에 2.에서 복사한 주소를 붙여넣습니다.
-1. 저장소 이름의 폴더가 생성될 경로를 설정합니다.
-1. Create project 버튼을 누릅니다.
-1. 새 스크립트 파일을 만들어서 print("hello world!") 를 입력합니다.
-1. 만든 스크립트 파일을 FolderForClass1 폴더 안에 저장합니다.
-1. 저장은 [자기이름영문으로].R 이름으로 합니다.
-1. 파일들의 변경을 commit합니다.
-1. push 버튼을 누릅니다.
-1. 자신의 github 페이지로 돌아가서 변경이 반영됬는지 확인합니다.
-1. github내 Pull Request 탭으로 가서 create Pull request 버튼을 누릅니다.
-1. pull request가 정상적으로 요청됬는지 확인합니다.
 
----
+## R bigquery 연결
 
-## 과제 1
+`query_exec`가 첫 실행이면 브라우저에서 권한 확인을 합니다.
+```
+library(bigrquery)
+project <- "konlper-168808" 
+sql <- "SELECT * FROM [konlper-168808:recom.chennel] LIMIT 5"
+query_exec(sql, project = project)
+```
 
-1. 프로젝트를 만들어 보세요    
-     1. 새 프로젝트 만들기로 project_1 폴더를 만들어 보세요    
-     2. 탐색기에서 project_2를 만든 후 Rstudio로 프로젝트로 만들어 보세요    
-     3. github에 project_3을 만든 후 Rstudio로 프로젝트로 만들어 보세요    
+## bigquery 인스턴스 생성
 
-2. 변경점을 저장(commit)해 보세요    
-     1. project_11 폴더에 proect_11.Rproj 파일로 프로젝트를 열어보세요    
-     2. Rscript 파일을 만들고 commit을 진행해 보세요    
-     3. project_2, project_3도 앞의 두단계를 진행해 주세요      
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(30).png" width="100%"/>
 
-3. 원격 저장소에 적용(push)해 보세요    
-     1. project_3을 push해서 자신의 github아이디/project_3을 변경하세요    
+## bigquery 첫 화면
 
----
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(31).png" width="100%"/>
 
-## 과제 2
+## dataset 만들기
 
-1. 코드 가져와서 사용하기    
-     1. 2인 이상 팀을 구성해주세요    
-     2. 관리자 역할을 한 명 정해주세요    
-     3. 관리자가 github에 project_ex_[팀명]를 만들어 주세요    
-     4. 다른 분들이 관리자의 project_ex_[팀명]로 프로젝트를 만들어 주세요    
-     5. 변경점을 만들고 push를 시도하고 스크린샷을 찍어주세요    
-     6. 관리자가 project_ex_[팀명]를 수정해주세요    
-     7. pull로 코드를 최신으로 적용해보세요    
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(32).png" width="100%"/>
 
-2. 코드를 수정해서 적용하기    
-     1. team 1.3.까지 같습니다 (이름: project_pr_[팀명])    
-     2. 다른 분들이 관리자의 project_pr_[팀명]를 fork하세요    
-     3. project_pr_[팀명] 로 프로젝트를 만들고 변경점을 만드세요    
-     4. 변경점을 push하고 관리자에게 pull request 요청을 생성하세요    
-     5. 관리자는 요청을 merge 해주세요    
+## 
 
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(33).png" width="100%"/>
 
----
+## table 생성
 
-## 용어 정리
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(34).png" width="100%"/>
 
-### git
+## 큰 데이터는 storage를 통해 업로드
 
-- init : 폴더내를 git의 관리하로 만들기
-- clone : 원격 저장소를 로컬에 복사해 가져오기
-- commit : 이전 저장 상태와 비교해 바뀌 점을 저장하기
-- commit message : 바뀐 점이 무엇인지 작성해 두는 것
-- pull : 연결된 원격 저장소해서 변경된 점 가져와 합치기
-- push : 로컬 저장소에서 변경된 점을 원격 저장소에 올리기
-- local : 코드 수정등의 작업을 하는 공간(내 노트북)
-- remote : 로컬과 대비되는 개념
-- repository : 코드 저장소
-- branch : 폴더 전체에 대한 복사본을 만들어 관리
-- merge : 다르게 관리된 두 개의 branch를 합치는 것
-- conflict : 합칠 때 자동으로 진행하지 못하는 부분이 발생한 것
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(35).png" width="100%"/>
 
----
+## 
 
-## 용어 정리
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(36).png" width="100%"/>
 
-### github
+## 버킷 만들기
 
-- watch : 메일로 저장소의 소식을 받아 보기
-- star : 즐겨찾기
-- fork : 자기 계정의 원격 저장소로 복사
-- pull request : 
-- issue : 코드에 대해 의견을 나누는 공간
-- author : 코드 저장소의 주인
-- contributor : 코드 작성을 도와준 사람
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(37).png" width="100%"/>
+
+## 
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(38).png" width="100%"/>
+
+## 버킷 확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(42).png" width="100%"/>
+
+## 폴더 업로드
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(39).png" width="100%"/>
+
+## 업로드 확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(43).png" width="100%"/>
+
+## 업로드 확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(44).png" width="100%"/>
+
+## gs:// 경로확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(45).png" width="100%"/>
+
+## 작업 결과 확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(46).png" width="100%"/>
+
+## query 실행화면
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(47).png" width="100%"/>
+
+## 비용 발생 경고
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(48).png" width="100%"/>
+
+## query 결과 확인
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(49).png" width="100%"/>
+
+## 공개 데이터셋
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(50).png" width="100%"/>
+
+## wikipedia dataset
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(52).png" width="100%"/>
+
+## dataset 복사
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(53).png" width="100%"/>
+
+## 
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(54).png" width="100%"/>
+
+## 데이터 구조 보기
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(56).png" width="100%"/>
+
+## 큰 데이터 query 진행
+
+```
+select title,sum(num_characters) as num_characters
+from [konlper-168808:test.wikipedia_copy]
+where regexp_match(title,'[Ss]eoul')
+group by title
+order by num_characters desc;
+```
+
+## query 결과
+
+<img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(58).png" width="100%"/>
+
+## 과제
+
+  1. RSQLite와 DBI를 활용해서 `nycflights13` 데이터를 db Table로 만들고, 제출해 주세요.
+      1) 'nycflights13' 패키지를 설치하고 5개 데이터를 확인하세요.
+      2) dbConnect 명령으로 SQLite 파일을 sql_[이름].db 으로 생성하세요.
+      3) 5개의 데이터를 각각의 이름으로 table을 생성하세요.
+      4) 1)~3)의 과정을 모두 코드로 남기고 run_[이름].R로 저장하세요.
+      5) run_[이름].R과 sql_[이름].db 두 개의 파일을 class2assignment 폴더에 저장하세요.
+      6) github에서 pull request로 제출해 주세요.
+      7) recomen 폴더에 있는 데이터 6개도 같은 과정을 진행하고, 제출은 하지 마세요.
+      8) .gitignore를 이용하면 push의 범위에서 제외할 수 있습니다.
+  
+## 과제
+
+  2. recomen 폴더에 있는 데이터 6개를 bigquery에 업로드 하고 질의를 실행해 보세요.
+      1) "bigrquery" 패키지의 기능으로 작은 용량 5개의 데이터를 업로드해 주세요.
+      2) Storage 서비스를 이용해서 `tran.csv` 파일을 bigquery에 테이블로 생성하세요.
+      3) query_exec 함수와 "select * from [tran] limit 10" 을 실행하고 결과를 받으세요.
+          * [tran]은 각자 해당하는 이름으로 변경하셔야 합니다.
+      4) 1)~3)의 과정을 big_[이름].R로 저장하세요.
+      5) big_[이름].R 파일을 class2assignment 폴더에 저장하세요.
+      6) github에서 pull request로 제출해 주세요.
+      
+
+[1]: https://opentutorials.org/course/195/1399
+[2]: http://www.sqlite.org/
+[3]: http://jtleek.com/
+[4]: https://github.com/jtleek/datasharing
+[5]: http://vita.had.co.nz/papers/tidy-data.pdf
+[6]: http://www.ibm.com/developerworks/kr/library/os-cloud-virtual1/index.html 
