@@ -35,147 +35,57 @@ class: center, middle, title-slide
 2. 데이터베이스
     - 데이터베이스란
     - 서버와 클라이언트
-    - 
 
 3. 클라우드 서비스
-    - 로컬 저장소, 원격 저장소
-    - rstudio와 함께 사용하기
+    - 구글 클라우드 소개
+    - 
 ]
 .pull-right[
 4. 데이터 베이스와 R의 연결
-    - github에 코드 공유하기
-    - 다른 사람의 github 코드 활용하기
+    - DBI 소개와 SQLite
+    - 다른 데이터 베이스와 연결하기
+    - 
     
 5. 과제
 
 6. 용어 정리
 ]
+
 ---
-# 데이터베이스
 
+class: center, middle, title-slide
 
-## 데이터란
+## 과제 확인
 
-단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값
+---
 
-의미있게 사용하기 위해서 구조화가 필요함    
-* 구조화: 체계적으로 조직하는 것
+## 수업의 목표
 
-## DBMS
+### 1. 데이터를 잘 공유하는 법을 알고 설명할 수 있다.
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
-* 이미지 출처: [생활코딩 MySQL 수업][1]
+### 2. DBI 패키지의 구조를 이해하고 설명할 수 있다.
 
-## 데이터베이스란
+### 3. 클라우드 서비스에 테이블을 저장하고 R로 연동할 수 있다.
 
+---
 
+class: center, middle, title-slide
 
-## 데이터베이스 클라이언트
+## 데이터를 공유하기
 
-  - 대표적인 클라이언트
-    - MySQL monitor
-    - PHPmyAdmin
-    - Navicat
-    - HeidiSQL
-
-## 서버와 클라이언트
-
-![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
-
-## 테이블
-
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
-* 이미지 출처: [생활코딩 MySQL 수업][1]
-
-## data.frame
-
-
-```r
-print(head(iris))
-```
-
-```
-##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-## 1          5.1         3.5          1.4         0.2  setosa
-## 2          4.9         3.0          1.4         0.2  setosa
-## 3          4.7         3.2          1.3         0.2  setosa
-## 4          4.6         3.1          1.5         0.2  setosa
-## 5          5.0         3.6          1.4         0.2  setosa
-## 6          5.4         3.9          1.7         0.4  setosa
-```
-
-## SQL
-
-Structured Query Language
-
-구조적 데이터 요청 언어
-
-## DBI
-
-
-```r
-if (!require(devtools)) install.packages("devtools") 
-```
-
-```
-## Loading required package: devtools
-```
-
-```r
-if (!require(DBI)) devtools::install_github("rstats-db/DBI")
-```
-
-```
-## Loading required package: DBI
-```
-
-```r
-if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
-```
-
-```
-## Loading required package: RSQLite
-```
-
-## SQLite
-
-[SQLite][2]    
-
-&gt; SQLite is a self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
-
-&gt; 파일 하나로 구성하는 작고, 무료인 sql db
-
-## DBI
-
-```
-library(DBI)
-library(RSQLite)
-con &lt;- dbConnect(RSQLite::SQLite(), dbname="class2.sqlite")
-
-dbListTables(con)
-
-dbWriteTable(con, "mtcars", mtcars, overwrite=T)
-dbListTables(con)
-
-dbReadTable(con, "mtcars")
-
-dbRemoveTable(con,"mtcars")
-dbListTables(con)
-
-system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
-```
-
-# 데이터
+---
 
 ## 데이터 공유
 
 [Leek group][3]에서 소개하는 [데이터 공유 가이드][4]
 
-  - 원시 데이터
-  - 정제후 데이터
-  - 코드북
-  - 변수 작성법
-  - 재현성
+  - 원시 데이터(raw data) : 최초에 수집된 데이터를 뜻하며 센서나 인터넷 서비스의 로그 데이터나 사용자가 직접 작성한 설문 데이터등을 의미함
+  - 정제후 데이터(tidy data) : 사용하기 좋은 상태로 정리한 데이터를 뜻하며 보통 설문조사에서는 코딩한다고 표현함
+  - 코드북(code book) : 공개하는 데이터에 대해서 설명하는 문서로 단위나 각 변수명이 의미하는 바 등을 작성함
+  - 자료형(data type) : 변수의 종류와 저장법에 대해서 조언하며 엑셀등 특별한 프로그램에 종속적인 기능은 사용하지 말 것을 권고함
+  - [재현성(reproducibility)](https://namu.wiki/w/%EC%9E%AC%ED%98%84%EC%84%B1) : 다시 결과를 만들 수 있는 것을 뜻하며 2010년대 이후 과학적 방법의 중요한 축
+
+---
 
 ## 원시 데이터
 
@@ -184,6 +94,8 @@ system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
   - 어떤 식으로든 수정을 가하지 않은 상태
   - 수정을 가하는 과정을 함께 기록함으로써 신뢰성 확보
   - 위 두 가지가 없는 경우 상황을 상상해야 함
+
+---
 
 ## 정제후 데이터
 
@@ -194,6 +106,8 @@ system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
   - 각 종류의 변수에 대해 각 하나의 테이블이 있어야 함
   - 여러 개의 테이블이있는 경우 테이블에 합치기 위한 기준 열을 포함해야 함
 
+---
+
 ## 코드북
 
 데이터셋에 대해 필요한 설명을 담은 문서
@@ -202,70 +116,85 @@ system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
   - 정제 과정에서 사용한 방법의 설명과 사용한 이유
   - 데이터가 사용된 분석에 대한 정보
 
+---
 
 ## 데이터 원본
 
-확보할 당시의 원시 데이터나, 항상 최신 상태를 유지하여 신뢰할 수 있는 데이터
+확보할 당시의 원시 데이터나, 항상 최신 상태를 유지하여 신뢰할 수 있는 데이터. 기계적 생성 데이터가 아닌한 사람이 원본이 되므로 작성된 내용이 원본이라는 합의를 함으로써 데이터 관리의 체계를 세울 수 있음
 
   - 커뮤니케이션 비용 감소
   - 의사결정 및 활동의 기준
   - 가공된 데이터의 신뢰성 확보
 
+---
 
 ## 데이터 훑어보기
 
-  - head: 최초 6행의 데이터를 보여줌(행갯수 조절 가능)
-  - tail: 마지막 6행의 데이터를 보여줌(행갯수 조절 가능)
-  - summary: 각 컬럼의 자료형과 숫자라면 대표값을 함께 보여줌
-  - str: 각 컬럼의 자료형과 초기 값을 보여줌
-  - length: 데이터의 길이 출력(vector)
-  - nrow: 행 갯수 출력(data.frame)
-  - is.na: NA 인지 확인
-  - complete.cases: 값이 모두 있는지 행단위로 검사
-  - tibble: 최근 기법으로 재구성된 data.frame
+  - head(): 최초 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - tail(): 마지막 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - summary(): 각 컬럼의 자료형과 숫자라면 대표값을 함께 보여줌
+  - str(): 각 컬럼의 자료형과 초기 값을 보여줌
+  - length(): 데이터의 길이 출력(vector)
+  - nrow(): 행 갯수 출력(data.frame)
+  - is.na(): NA 인지 확인
+  - complete.cases(): 값이 모두 있는지 행단위로 검사
+  - tibble(): 최근 기법으로 재구성된 data.frame
+
+---
+
+class: center, middle, title-slide
+
+## 데이터 소개
+
+---
+
+## 실습 데이터 설정하기
+
+```{}
+# data.table 패키지가 있는지 확인하고 없으면 설치합니다.
+if (!requireNamespace("data.table")) install.packages("data.table")
+# data.table 패키지를 사용할 수 있게 불러옵니다.
+library(data.table)
+
+# tran.csv 파일이 data/recomen 폴더에 있는지 확인 합니다.
+chk&lt;-dir("../data/recomen", pattern = "tran.csv")
+# 없으면 다운로드합니다.
+if(identical(chk,character(0))){
+  recoment&lt;-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
+  download.file(recoment,destfile="../data/recomen/tran.csv",mode='wb')
+}
+# fread 함수를 이용해서 csv 파일을 R객체로 불러옵니다.
+chennel&lt;-fread("../data/recomen/chennel.csv")
+competitor&lt;-fread("../data/recomen/competitor.csv")
+customer&lt;-fread("../data/recomen/customer.csv")
+item&lt;-fread("../data/recomen/item.csv")
+membership&lt;-fread("../data/recomen/membership.csv")
+tran&lt;-fread("../data/recomen/tran.csv")
+```
+
+
+
+---
 
 ## 추천 데이터 - chennel
 
-
-```r
-library(readr)
-chennel&lt;-read_csv("../data/recomen/chennel.csv")
-competitor&lt;-read_csv("../data/recomen/competitor.csv")
-customer&lt;-read_csv("../data/recomen/customer.csv")
-item&lt;-read_csv("../data/recomen/item.csv")
-membership&lt;-read_csv("../data/recomen/membership.csv")
-tran&lt;-read_csv("../data/recomen/tran.csv")
-```
   - cusID  : 5자리 숫자조합으로 구성된 고객ID
   - chennel: 접속 체널
   - useCnt : 사용횟수(건)
-
-```r
-summary(chennel)
-```
-
-```
-##     cusID             chennel              useCnt      
-##  Length:8824        Length:8824        Min.   :  1.00  
-##  Class :character   Class :character   1st Qu.:  2.00  
-##  Mode  :character   Mode  :character   Median :  7.00  
-##                                        Mean   : 13.57  
-##                                        3rd Qu.: 19.00  
-##                                        Max.   :240.00
-```
 
 ```r
 str(chennel, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	8824 obs. of  3 variables:
-##  $ cusID  : chr  "00007" "00014" "00042" "00074" ...
+## Classes 'data.table' and 'data.frame':	8824 obs. of  3 variables:
+##  $ cusID  : int  7 14 42 74 74 94 112 112 122 123 ...
 ##  $ chennel: chr  "A_MOBILE/APP" "A_MOBILE/APP" "B_MOBILE/APP" "A_MOBILE/APP" ...
 ##  $ useCnt : int  4 1 23 1 30 14 16 1 27 10 ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
+
+---
 
 ## 추천 데이터 - competitor
 
@@ -288,6 +217,8 @@ summary(competitor)
 ##                                                           Max.   :201512
 ```
 
+---
+
 ## 추천 데이터 - competitor
 
 
@@ -306,46 +237,29 @@ str(competitor, max.level=1)
 ```
 
 
+---
+
 ## 추천 데이터 - customer
 
   - cusID: 5자리 숫자조합으로 구성된 고객ID
   - sex  : 성별
   - age  : 연령    
-    * 19세이하, 20세~24세, 25세~29세, 30세~34세, 35세~39세, 40세~44세, 45세~49세, 50세~54세, 55세~59세, 60세이상
   - area : 거주지역
-  
-## 추천 데이터 - customer
-
-
-```r
-summary(customer)
-```
-
-```
-##     cusID               sex                age           
-##  Length:19383       Length:19383       Length:19383      
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##      area          
-##  Length:19383      
-##  Class :character  
-##  Mode  :character
-```
 
 ```r
 str(customer, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	19383 obs. of  4 variables:
-##  $ cusID: chr  "00001" "00002" "00003" "00004" ...
+## Classes 'data.table' and 'data.frame':	19383 obs. of  4 variables:
+##  $ cusID: int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ sex  : chr  "M" "M" "M" "F" ...
-##  $ age  : chr  "60세이상" "60세이상" "60세이상" "60세이상" ...
-##  $ area : chr  "060" "100" "033" "016" ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  $ age  : chr  "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" ...
+##  $ area : int  60 100 33 16 100 240 36 10 100 24 ...
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
 
+---
 
 ## 추천 데이터 - item
 
@@ -355,26 +269,6 @@ str(customer, max.level=1)
   - cate_3     : 소분류
   - cate_2_name: 중분류명
   - cate_3_name: 소분류명
-  
-## 추천 데이터 - item
-
-
-```r
-summary(item)
-```
-
-```
-##    partner             cate_1             cate_2         
-##  Length:4386        Length:4386        Length:4386       
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character  
-##     cate_3          cate_2_name        cate_3_name       
-##  Length:4386        Length:4386        Length:4386       
-##  Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character
-```
-
-## 추천 데이터 - item
 
 
 ```r
@@ -393,6 +287,8 @@ str(item, max.level=1)
 ##   ..- attr(*, "class")= chr "col_spec"
 ```
 
+---
+
 ## 추천 데이터 - membership
 
   - cusID     : 5자리 숫자조합으로 구성된 고객ID
@@ -400,32 +296,18 @@ str(item, max.level=1)
   - regDate   : 가입년월
 
 ```r
-summary(membership)
-```
-
-```
-##     cusID            memberShip           regDate      
-##  Length:7456        Length:7456        Min.   :201210  
-##  Class :character   Class :character   1st Qu.:201311  
-##  Mode  :character   Mode  :character   Median :201407  
-##                                        Mean   :201412  
-##                                        3rd Qu.:201504  
-##                                        Max.   :201512
-```
-
-```r
 str(membership, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	7456 obs. of  3 variables:
-##  $ cusID     : chr  "00011" "00021" "00037" "00043" ...
-##  $ memberShip: chr  "하이마트" "하이마트" "하이마트" "하이마트" ...
+## Classes 'data.table' and 'data.frame':	7456 obs. of  3 variables:
+##  $ cusID     : int  11 21 37 43 44 61 65 69 76 79 ...
+##  $ memberShip: chr  "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" ...
 ##  $ regDate   : int  201512 201506 201306 201403 201411 201312 201506 201404 201406 201311 ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
 
+---
 
 ## 추천 데이터 - tran
 
@@ -458,6 +340,8 @@ summary(tran)
 ##  Max.   :23.00   Max.   :101330000
 ```
 
+---
+
 ## 추천 데이터 - tran
 
 
@@ -481,6 +365,145 @@ str(tran, max.level=1)
 ##   ..- attr(*, "class")= chr "col_spec"
 ```
 
+---
+
+# 데이터베이스
+
+
+## 데이터란
+
+단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값
+
+의미있게 사용하기 위해서 구조화가 필요함    
+* 구조화: 체계적으로 조직하는 것
+
+---
+
+## DBMS
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
+* 이미지 출처: [생활코딩 MySQL 수업][1]
+
+---
+
+## 데이터베이스란
+
+---
+
+## 서버와 클라이언트
+
+![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
+
+---
+
+## 데이터베이스 클라이언트
+
+  - 대표적인 클라이언트
+    - MySQL monitor
+    - PHPmyAdmin
+    - Navicat
+    - HeidiSQL
+
+---
+
+## 테이블
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
+* 이미지 출처: [생활코딩 MySQL 수업][1]
+
+---
+
+## data.frame
+
+
+```r
+print(head(iris))
+```
+
+```
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
+```
+
+---
+
+## SQL
+
+Structured Query Language
+
+구조적 데이터 요청 언어
+
+---
+
+## DBI
+
+
+```r
+if (!require(devtools)) install.packages("devtools") 
+```
+
+```
+## Loading required package: devtools
+```
+
+```r
+if (!require(DBI)) devtools::install_github("rstats-db/DBI")
+```
+
+```
+## Loading required package: DBI
+```
+
+```r
+if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
+```
+
+```
+## Loading required package: RSQLite
+```
+
+---
+
+## SQLite
+
+[SQLite][2]    
+
+&gt; SQLite is a self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
+
+&gt; 파일 하나로 구성하는 작고, 무료인 sql db
+
+---
+
+## DBI
+
+```
+library(DBI)
+library(RSQLite)
+con &lt;- dbConnect(RSQLite::SQLite(), dbname="class2.sqlite")
+
+dbListTables(con)
+
+dbWriteTable(con, "mtcars", mtcars, overwrite=T)
+dbListTables(con)
+
+dbReadTable(con, "mtcars")
+
+dbRemoveTable(con,"mtcars")
+dbListTables(con)
+
+system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
+```
+
+---
+
+
+
+---
 
 # 클라우드 서비스
 
@@ -492,6 +515,7 @@ str(tran, max.level=1)
 
 출처: [P. Changanti, 가상 인프라용 클라우드 서비스, Part 1: IaaS(Infrastructure as a Service) 및 Eucalyptus][6]
 
+---
 
 ## 구글 클라우드
 
@@ -749,25 +773,25 @@ order by num_characters desc;
 ## 과제
 
   1. RSQLite와 DBI를 활용해서 `nycflights13` 데이터를 db Table로 만들고, 제출해 주세요.
-      1) 'nycflights13' 패키지를 설치하고 5개 데이터를 확인하세요.
-      2) dbConnect 명령으로 SQLite 파일을 sql_[이름].db 으로 생성하세요.
-      3) 5개의 데이터를 각각의 이름으로 table을 생성하세요.
-      4) 1)~3)의 과정을 모두 코드로 남기고 run_[이름].R로 저장하세요.
-      5) run_[이름].R과 sql_[이름].db 두 개의 파일을 class2assignment 폴더에 저장하세요.
-      6) github에서 pull request로 제출해 주세요.
-      7) recomen 폴더에 있는 데이터 6개도 같은 과정을 진행하고, 제출은 하지 마세요.
-      8) .gitignore를 이용하면 push의 범위에서 제외할 수 있습니다.
+      1. 'nycflights13' 패키지를 설치하고 5개 데이터를 확인하세요.
+      2. dbConnect 명령으로 SQLite 파일을 sql_[이름].db 으로 생성하세요.
+      3. 5개의 데이터를 각각의 이름으로 table을 생성하세요.
+      4. 1)~3)의 과정을 모두 코드로 남기고 run_[이름].R로 저장하세요.
+      5. run_[이름].R과 sql_[이름].db 두 개의 파일을 class2assignment 폴더에 저장하세요.
+      6. github에서 pull request로 제출해 주세요.
+      7. recomen 폴더에 있는 데이터 6개도 같은 과정을 진행하고, 제출은 하지 마세요.
+      8. .gitignore를 이용하면 push의 범위에서 제외할 수 있습니다.
   
 ## 과제
 
   2. recomen 폴더에 있는 데이터 6개를 bigquery에 업로드 하고 질의를 실행해 보세요.
-      1) "bigrquery" 패키지의 기능으로 작은 용량 5개의 데이터를 업로드해 주세요.
-      2) Storage 서비스를 이용해서 `tran.csv` 파일을 bigquery에 테이블로 생성하세요.
-      3) query_exec 함수와 "select * from [tran] limit 10" 을 실행하고 결과를 받으세요.
+      1. "bigrquery" 패키지의 기능으로 작은 용량 5개의 데이터를 업로드해 주세요.
+      2. Storage 서비스를 이용해서 `tran.csv` 파일을 bigquery에 테이블로 생성하세요.
+      3. query_exec 함수와 "select * from [tran] limit 10" 을 실행하고 결과를 받으세요.
           * [tran]은 각자 해당하는 이름으로 변경하셔야 합니다.
-      4) 1)~3)의 과정을 big_[이름].R로 저장하세요.
-      5) big_[이름].R 파일을 class2assignment 폴더에 저장하세요.
-      6) github에서 pull request로 제출해 주세요.
+      4. 1)~3)의 과정을 big_[이름].R로 저장하세요.
+      5. big_[이름].R 파일을 class2assignment 폴더에 저장하세요.
+      6. github에서 pull request로 제출해 주세요.
       
 
 [1]: https://opentutorials.org/course/195/1399
