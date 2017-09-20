@@ -138,7 +138,8 @@ class: center, middle, title-slide
   - nrow(): 행 갯수 출력(data.frame)
   - is.na(): NA 인지 확인
   - complete.cases(): 값이 모두 있는지 행단위로 검사
-  - tibble(): 최근 기법으로 재구성된 data.frame
+  - tibble(): 최근 기법으로 재구성한 tidyverse 패키지 군에서 사용하는 data.frame의 일종
+  - data.table(): DB에서 사용하는 기법 등과 메모리 효율성을 극대화한 data.frame의 일종
 
 ---
 
@@ -351,6 +352,15 @@ str(tran, max.level=1)
 
 ---
 
+## 실습
+
+1. dabrp_classnote3 프로젝트를 pull 하여 data 폴더를 받고 확인하세요
+1. 13 페이지의 실습데이터 설정 스크립트를 실행하여 tran.csv(1.4G) 파일을 받으세요
+1. 11 페이지의 함수들을 활용하여 데이터를 탐색해보세요    
+\* tibble이나 data.table은 다음 시간에 다룰 예정입니다
+
+---
+
 class: center, middle, title-slide
 
 ## 데이터베이스
@@ -368,17 +378,22 @@ class: center, middle, title-slide
 ]
 ---
 
-## Database Management System(DBMS)
+## Database Management System(DBMS)&lt;sup&gt;1&lt;/sup&gt;
+
+DBMS는 데이터베이스를 관리하는 응용프로그램의 일종으로 중복 제어, 접근 권환 관리, 무결성 제약, 데이터 관리 등의 기능을 제공하며 제품마다 특성이 매우 다양함
 
 .pull-center[.set[
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)
 ]]
 .footnote[
+1 &lt;https://namu.wiki/w/DBMS&gt;        
 \* 이미지 출처: [생활코딩 MySQL 수업][1]
 ]
 ---
 
 ## 서버와 클라이언트
+
+유명하게 사용되는 DBMS는 잘 활용되는 GUI가 있기도 하나 그 기능 구현이 서버와 클라이언트로 되어 있어 연결시 ip 주소가 필요하는 등 관련 상식이 필요함
 
 .pull-center[.set[
 ![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
@@ -398,17 +413,6 @@ class: center, middle, title-slide
 
 ## 테이블(table)
 
-.pull-center[.set[
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
-]]
-.footnote[
-\* 이미지 출처: [생활코딩 MySQL 수업][1]
-]
-
----
-
-## data.frame
-
 - 2차원의 자료형으로 table과 같이 행(row)과 열(column)이 있는 엑셀의 시트와 비슷한 모양
 
 
@@ -426,9 +430,17 @@ print(head(iris))
 ## 6          5.4         3.9          1.7         0.4  setosa
 ```
 
+.footnote[
+
+\* R 데이터 객체인 iris의 data.frame 예시
+
+]
+
 ---
 
 ## DBI(database interface)
+
+[DBI](http://rstats-db.github.io/DBI/)는 odbc나 java의 [jdbc](https://ko.wikipedia.org/wiki/JDBC), 파이썬의 [db-api](http://pythonstudy.xyz/python/data)와 같이 R에서 데이터베이스를 컨트롤하기 위한 인터페이스 패키지
 
 
 ```r
@@ -457,72 +469,192 @@ if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/fileio.png)
+## 파일의 입출력
+
+R은 데이터를 사용하기 위해 메모리로 구성된 R 환경에 파일의 내용을 R객체 형태의 데이터로 변환해서 사용
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/fileio.png)
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/dbdriver.png) 
+## DBI의 DBMS 연결
+
+DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패키지와 연동하여 DBMS를 통해 데이터를 사용
+.pull-center[.set[
+![](http://d33wubrfki0l68.cloudfront.net/076ba23e17519ed36db5bf0ec1cb731f2376b92e/ec344/homepage/open-source.png) 
+]]
+---
+
+## ODBC를 통한 연결
+
+[ODBC](https://ko.wikipedia.org/wiki/ODBC)를 직접 지원하기도 함
+
+.pull-center[.set[
+![](http://d33wubrfki0l68.cloudfront.net/50801b55c11a1e5b4b5ae26dfcff79b2163ed94c/1a3d0/homepage/commercial.png)
+]]
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/conn.png) 
+## 데이터 베이스와 연결
+
+파일과 다르게 데이터베이스는 DBMS를 통해서 내부의 데이터에 접근해야 하기 때문에 DBMS의 연결 정보를 가진 conn 객체를 만들고 그것을 활용하는 명령 구조를 따름
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn.png) 
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/conn2.png) 
+## 데이터 베이스와 연결
+
+정확히 같진 않지만 `conn`은 브라우저가 로그인 정보등을 바탕으로 서버와 통신하는 것과 비슷하게 동작함
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn2.png) 
 
 ---
-## SQLite
 
-[SQLite][2]    
+## [SQLite][2]  
 
 &gt; SQLite is a self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
 
 &gt; 파일 하나로 구성하는 작고, 무료인 sql db
 
+
+
 ---
 
-## DBI
+## DBI 함수
 
-```
+먼저 필요한 패키지를 불러옵니다. data.table은 
+
+
+```r
 library(DBI)
 library(RSQLite)
-con &lt;- dbConnect(RSQLite::SQLite(), dbname="class2.sqlite")
-
-dbListTables(con)
-
-dbWriteTable(con, "mtcars", mtcars, overwrite=T)
-dbListTables(con)
-
-dbReadTable(con, "mtcars")
-
-dbRemoveTable(con,"mtcars")
-dbListTables(con)
-
-system.time(dbWriteTable(con, "member", "./recomen/membership.csv",row.names=F))
+library(data.table)
 ```
 
 ---
 
 
+```r
+conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "class2.sqlite")
+
+dbListTables(conn)
+```
+
+```
+## [1] "member"
+```
 
 ---
 
-# 클라우드 서비스
 
+```r
+dbWriteTable(conn, "mtcars", mtcars, overwrite = T)
+dbListTables(conn)
+```
+
+```
+## [1] "member" "mtcars"
+```
+
+---
+
+
+```r
+dbReadTable(conn, "mtcars")
+```
+
+```
+##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## 1  21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## 2  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## 3  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## 4  21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## 5  18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## 6  18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## 7  14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## 8  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## 9  22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## 10 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## 11 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## 12 16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## 13 17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## 14 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## 15 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## 16 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## 17 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## 18 32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## 19 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## 20 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## 21 21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## 22 15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## 23 15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## 24 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## 25 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## 26 27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## 27 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## 28 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+## 29 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## 30 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## 31 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## 32 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+```
+
+---
+
+
+```r
+dbRemoveTable(conn, "mtcars")
+dbListTables(conn)
+```
+
+```
+## [1] "member"
+```
+
+---
+
+
+```r
+dbWriteTable(conn,
+             "member",
+             fread("../data/recomen/membership.csv", encoding = "UTF-8"),
+             row.names = F,
+             overwrite = T
+)
+```
+
+---
+
+class: center, middle, title-slide
+
+## 클라우드 서비스
+
+---
 
 ## 클라우드 서비스 소개
 
 클라우딩 컴퓨팅은 사용자의 환경 밖에서 서비스로서 제공된 확장 가능한 컴퓨팅 자원을 사용한 양에 따라 비용을 지불하고 사용하는 것
 
-
+.footnote[
 출처: [P. Changanti, 가상 인프라용 클라우드 서비스, Part 1: IaaS(Infrastructure as a Service) 및 Eucalyptus][6]
-
+]
 ---
 
 ## 구글 클라우드
 
 ![](http://tech.whatap.io/wp-content/uploads/2016/03/gcp-header-logo.png)
+
+---
 
 ## 구글 클라우드 시작하기
 ```
@@ -530,26 +662,37 @@ https://cloud.google.com/
 ```
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(1).png" width="100%"/&gt;
 
+---
+
 ## 구글 클라우드 로그인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(3).png" width="100%"/&gt;
+
+---
 
 ## 구글 클라우드 설문
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(4).png" width="100%"/&gt;
 
+---
+
 ## 구글 클라우드 설문 선택
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(5).png" width="100%"/&gt;
+
+---
 
 ## 구글 클라우드 카드 등록
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(6).png" width="100%"/&gt;
 
+---
+
 ## 구글 클라우드 프로젝트 생성
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(7).png" width="100%"/&gt;
 
+---
 
 ## R MySQL 연결
 
@@ -563,205 +706,290 @@ con &lt;- dbConnect(MySQL(),
                  host = host,
                  dbname = "recom")
 dbListTables(conn = con)
-dbWriteTable(conn = con, name = 'tran', value = "./recomen/tran.csv")
+dbWriteTable(conn = con, name = 'tran', value = "./data/recomen/tran.csv")
 dbReadTable(conn = con, name = "tran")
 ```
+---
 
 ## MySQL 인스턴스 생성
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(8).png" width="100%"/&gt;
 
+---
+
 ## 엔진선택
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(9).png" width="100%"/&gt;
+
+---
 
 ## MySQL 2세대 선택
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(10).png" width="100%"/&gt;
 
+---
+
 ## 인스턴스 설정
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(11).png" width="100%"/&gt;
+
+---
 
 ## 접속 허용 IP 설정
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(12).png" width="100%"/&gt;
 
+---
+
 ## 접속 허용 IP 설정
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(13).png" width="100%"/&gt;
+
+---
 
 ## 현재 IP 확인하기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(14).png" width="100%"/&gt;
 
+---
+
 ## whatismyip
 
-```
+```{}
 https://www.whatismyip.com/
 ```
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(15).png" width="100%"/&gt;
 
+---
+
 ## ip 입력
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(16).png" width="100%"/&gt;
+
+---
 
 ## root 계정 비밀번호 생성
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(17).png" width="100%"/&gt;
 
+---
+
 ## SQL 인스턴스 생성중
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(19).png" width="100%"/&gt;
+
+---
 
 ## RMySQL로 연결하기
 
   - host 주소 파악
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(20).png" width="100%"/&gt;
 
+---
+
 ## RMySQL로 연결하기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(21).png" width="100%"/&gt;
 
+---
+
 ## 데이터베이스 만들기
 
-&lt;img src="https://raw.  githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/&gt;
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/&gt;
+
+---
 
 ## 데이터베이스 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(23).png" width="100%"/&gt;
 
+---
+
 ## 데이터베이스 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(24).png" width="100%"/&gt;
+
+---
 
 ## 데이터베이스 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(25).png" width="100%"/&gt;
 
+---
+
 ## 데이터베이스 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(26).png" width="100%"/&gt;
+
+---
 
 ## 데이터베이스 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(27).png" width="100%"/&gt;
 
+---
+
 ## host와 dbname 설정
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(28).png" width="100%"/&gt;
+
+---
 
 ## 실습 진행
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/&gt;
 
+---
 
 ## R bigquery 연결
 
 `query_exec`가 첫 실행이면 브라우저에서 권한 확인을 합니다.
-```
+
+```{}
 library(bigrquery)
 project &lt;- "konlper-168808" 
 sql &lt;- "SELECT * FROM [konlper-168808:recom.chennel] LIMIT 5"
 query_exec(sql, project = project)
 ```
 
+---
+
 ## bigquery 인스턴스 생성
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(30).png" width="100%"/&gt;
+
+---
 
 ## bigquery 첫 화면
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(31).png" width="100%"/&gt;
 
+---
+
 ## dataset 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(32).png" width="100%"/&gt;
 
-## 
+---
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(33).png" width="100%"/&gt;
+
+---
 
 ## table 생성
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(34).png" width="100%"/&gt;
 
+---
+
 ## 큰 데이터는 storage를 통해 업로드
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(35).png" width="100%"/&gt;
 
-## 
+---
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(36).png" width="100%"/&gt;
+
+---
 
 ## 버킷 만들기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(37).png" width="100%"/&gt;
 
-## 
+
+---
+
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(38).png" width="100%"/&gt;
+
+---
 
 ## 버킷 확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(42).png" width="100%"/&gt;
 
+---
+
 ## 폴더 업로드
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(39).png" width="100%"/&gt;
+
+---
 
 ## 업로드 확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(43).png" width="100%"/&gt;
 
+---
+
 ## 업로드 확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(44).png" width="100%"/&gt;
+
+---
 
 ## gs:// 경로확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(45).png" width="100%"/&gt;
 
+---
+
 ## 작업 결과 확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(46).png" width="100%"/&gt;
+
+---
 
 ## query 실행화면
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(47).png" width="100%"/&gt;
 
+---
+
 ## 비용 발생 경고
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(48).png" width="100%"/&gt;
+
+---
 
 ## query 결과 확인
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(49).png" width="100%"/&gt;
 
+---
+
 ## 공개 데이터셋
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(50).png" width="100%"/&gt;
+
+---
 
 ## wikipedia dataset
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(52).png" width="100%"/&gt;
 
+---
+
 ## dataset 복사
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(53).png" width="100%"/&gt;
 
-## 
+---
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(54).png" width="100%"/&gt;
+
+---
 
 ## 데이터 구조 보기
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(56).png" width="100%"/&gt;
 
+---
+
 ## 큰 데이터 query 진행
 
-```
+```{}
 select title,sum(num_characters) as num_characters
 from [konlper-168808:test.wikipedia_copy]
 where regexp_match(title,'[Ss]eoul')
@@ -769,9 +997,13 @@ group by title
 order by num_characters desc;
 ```
 
+---
+
 ## query 결과
 
 &lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(58).png" width="100%"/&gt;
+
+---
 
 ## 과제
 
@@ -785,6 +1017,8 @@ order by num_characters desc;
       7. recomen 폴더에 있는 데이터 6개도 같은 과정을 진행하고, 제출은 하지 마세요.
       8. .gitignore를 이용하면 push의 범위에서 제외할 수 있습니다.
   
+---
+
 ## 과제
 
   2. recomen 폴더에 있는 데이터 6개를 bigquery에 업로드 하고 질의를 실행해 보세요.
