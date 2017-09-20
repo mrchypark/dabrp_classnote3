@@ -23,7 +23,7 @@ html, body, h1, h2, h3, h4, h5, h6, li, p {font-family:'Nanum Gothic';}
   float: right;
 
   position: relative;
-  left: -50%; /* or right 50% */
+  right: 50%; /* or right 50% */
   text-align: left;
   width: 60%
 }

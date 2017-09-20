@@ -181,6 +181,7 @@ tran&lt;-fread("../data/recomen/tran.csv")
   - cusID  : 5자리 숫자조합으로 구성된 고객ID
   - chennel: 접속 체널
   - useCnt : 사용횟수(건)
+  
 
 ```r
 str(chennel, max.level=1)
@@ -202,38 +203,19 @@ str(chennel, max.level=1)
   - partner   : 제휴사
   - competitor: 경쟁사
   - useDate   : 이용년월(YYYYDD)
-
-```r
-summary(competitor)
-```
-
-```
-##     cusID             partner           competitor           useDate      
-##  Length:28159       Length:28159       Length:28159       Min.   :201501  
-##  Class :character   Class :character   Class :character   1st Qu.:201504  
-##  Mode  :character   Mode  :character   Mode  :character   Median :201507  
-##                                                           Mean   :201507  
-##                                                           3rd Qu.:201510  
-##                                                           Max.   :201512
-```
-
----
-
-## 추천 데이터 - competitor
-
+  
 
 ```r
 str(competitor, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	28159 obs. of  4 variables:
-##  $ cusID     : chr  "00002" "00051" "00077" "00077" ...
+## Classes 'data.table' and 'data.frame':	28159 obs. of  4 variables:
+##  $ cusID     : int  2 51 77 77 77 77 77 88 88 110 ...
 ##  $ partner   : chr  "D" "D" "D" "D" ...
 ##  $ competitor: chr  "D02" "D01" "D02" "D02" ...
 ##  $ useDate   : int  201507 201504 201503 201506 201507 201508 201511 201510 201511 201508 ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
 
 
@@ -245,6 +227,7 @@ str(competitor, max.level=1)
   - sex  : 성별
   - age  : 연령    
   - area : 거주지역
+  
 
 ```r
 str(customer, max.level=1)
@@ -294,6 +277,7 @@ str(item, max.level=1)
   - cusID     : 5자리 숫자조합으로 구성된 고객ID
   - memberShip: 멤버십명
   - regDate   : 가입년월
+  
 
 ```r
 str(membership, max.level=1)
@@ -367,32 +351,38 @@ str(tran, max.level=1)
 
 ---
 
-# 데이터베이스
+class: center, middle, title-slide
 
+## 데이터베이스
+
+---
 
 ## 데이터란
 
-단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값
-
-의미있게 사용하기 위해서 구조화가 필요함    
-* 구조화: 체계적으로 조직하는 것
-
+단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값. 의미있게 사용하기 위해서 구조화&lt;sup&gt;*&lt;/sup&gt;가 필요함    
+.pull-center[.set[
+![](http://www.orchardsoft.com/images/products/pathology/StructuredData.jpg)
+]]
+.footnote[
+\* 구조화: 체계적으로 조직하는 것
+]
 ---
 
-## DBMS
+## Database Management System(DBMS)
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
-* 이미지 출처: [생활코딩 MySQL 수업][1]
-
----
-
-## 데이터베이스란
-
+.pull-center[.set[
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)
+]]
+.footnote[
+\* 이미지 출처: [생활코딩 MySQL 수업][1]
+]
 ---
 
 ## 서버와 클라이언트
 
+.pull-center[.set[
 ![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
+]]
 
 ---
 
@@ -406,14 +396,20 @@ str(tran, max.level=1)
 
 ---
 
-## 테이블
+## 테이블(table)
 
+.pull-center[.set[
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)    
-* 이미지 출처: [생활코딩 MySQL 수업][1]
+]]
+.footnote[
+\* 이미지 출처: [생활코딩 MySQL 수업][1]
+]
 
 ---
 
 ## data.frame
+
+- 2차원의 자료형으로 table과 같이 행(row)과 열(column)이 있는 엑셀의 시트와 비슷한 모양
 
 
 ```r
@@ -432,15 +428,7 @@ print(head(iris))
 
 ---
 
-## SQL
-
-Structured Query Language
-
-구조적 데이터 요청 언어
-
----
-
-## DBI
+## DBI(database interface)
 
 
 ```r
@@ -469,6 +457,21 @@ if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
 
 ---
 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/fileio.png)
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/dbdriver.png) 
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/conn.png) 
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/notegen/img/conn2.png) 
+
+---
 ## SQLite
 
 [SQLite][2]    
