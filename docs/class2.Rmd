@@ -32,36 +32,33 @@ class: center, middle, title-slide
 
 ## 목차
 
-.pull-left[
-
-0. 과제 확인
+0. 과제 질답
 
 1. 수업의 목표
 
-2. 데이터베이스
-    - 데이터베이스란
-    - 서버와 클라이언트
+2. 데이터 공유와 탐색
+    - 데이터를 공유하는 방법
+    - 실습에 사용할 데이터 소개
+    - 실습
 
-3. 클라우드 서비스
-    - 구글 클라우드 소개
-    - 
-]
-.pull-right[
-4. 데이터 베이스와 R의 연결
+3. 데이터 베이스와 R의 연결
     - DBI 소개와 SQLite
-    - 다른 데이터 베이스와 연결하기
-    - 
+    - DBI 함수의 동작
+    - 실습
+    
+4. 본격 DB와 R의 연결
+    - 클라우드 서비스 이용하기
+    - MySQL 연결
+    - BigQuery 연결
     
 5. 과제
 
-6. 용어 정리
-]
 
 ---
 
 class: center, middle, title-slide
 
-## 과제 확인
+## 과제 질답
 
 ---
 
@@ -283,8 +280,8 @@ str(tran, max.level=1)
 ## 실습
 
 1. dabrp_classnote3 프로젝트를 pull 하여 data 폴더를 받고 확인하세요
-1. 13 페이지의 실습데이터 설정 스크립트를 실행하여 tran.csv(1.4G) 파일을 받으세요
-1. 11 페이지의 함수들을 활용하여 데이터를 탐색해보세요    
+1. 13p의 실습데이터 설정 스크립트를 실행하여 tran.csv(1.4G) 파일을 받으세요
+1. 11p의 함수들을 활용하여 데이터를 탐색해보세요    
 \* tibble이나 data.table은 다음 시간에 다룰 예정입니다
 
 ---
@@ -321,7 +318,7 @@ DBMS는 데이터베이스를 관리하는 응용프로그램의 일종으로 �
 
 ## 서버와 클라이언트
 
-유명하게 사용되는 DBMS는 잘 활용되는 GUI가 있기도 하나 그 기능 구현이 서버와 클라이언트로 되어 있어 연결시 ip 주소가 필요하는 등 관련 상식이 필요함
+유명하게 사용되는 DBMS는 잘 활용되는 GUI가 있기도 하나 그 기능 구현이 서버와 클라이언트로 되어 있어 연결시 ip 주소가 필요하는 등 관련 지식이 필요함
 
 .pull-center[.set[
 ![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
@@ -424,13 +421,11 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 
 > 파일 하나로 구성하는 작고, 무료인 sql db
 
-
-
 ---
 
 ## DBI 함수
 
-먼저 필요한 패키지를 불러옵니다.
+패키지 불러오기. 패키지가 설치되어 있지 않으면 28p 참ㅈ
 
 ```{r}
 library(DBI)
@@ -440,20 +435,35 @@ library(data.table)
 
 ---
 
-```{r}
-conn <- dbConnect(RSQLite::SQLite(), dbname = "../ForderForclass2/class2.sqlite")
+## SQLite 와 연결하기
 
+`conn`은 관례적으로 연결 정보를 저장하는 객체의 이름이며 SQLite는 DB가 파일로 구성되어 있어서 권한(ID나 비밀번호) 설정이 없고 연결 정보도 단순(host 없음)함
+
+```{r}
+conn <- dbConnect(RSQLite::SQLite(), dbname = "../ForderForClass2/class2.sqlite")
+conn
+
+# DB내에 있는 테이블의 이름을 확인함
 dbListTables(conn)
 ```
 
 ---
+
+## DBI 명령으로 table 만들기
+
+DBI 패키지에는 테이블을 작성하고 지우는 등 원래 SQL로 작성하는 Query의 몇 가지 유용한 경우를 함수로 만들어 제공. `dbWriteTable()` 함수는 R 객체를 바로 테이블로 작성하는 기능
 
 ```{r}
 dbWriteTable(conn, "mtcars", mtcars, overwrite = T)
+
 dbListTables(conn)
 ```
 
 ---
+
+## DBI 명령으로 table 불러오기
+
+`dbReadTable()`은 명령어에서도 이해하기 쉽듯 DB내에 있는 특정 테이블을 이름으로 지정하여 데이터를 불러오는 함수
 
 ```{r}
 dbReadTable(conn, "mtcars")
@@ -461,29 +471,31 @@ dbReadTable(conn, "mtcars")
 
 ---
 
+## DBI 명령으로 table 지우기
+
+`dbRomoceTable()` 은 테이블을 이름으로 지정하여 지우는 함수
+
 ```{r}
 dbRemoveTable(conn, "mtcars")
+
 dbListTables(conn)
-```
-
----
-
-## 
-
-```{r}
-dbWriteTable(conn,
-             "member",
-             fread("../data/recomen/membership.csv", encoding = "UTF-8"),
-             row.names = F,
-             overwrite = T
-)
 ```
 
 ---
 
 ## 실습
 
-
+1. DBI 패키지로 연결, 쓰기, 읽기를 수행해 봅니다.
+    1. `dbConnect()`함수와 `SQLite()`함수를 이용해서 "./ForderForclass2" 폴더에 "db_[자기이름영어].sqlite" 파일 이름으로 "conn" 연결 정보를 만드세요.
+    1. "dbListTables(conn)"으로 테이블이 아무것도 없는 것을 확인하세요.
+    1. "./data/recomen/chennel.csv"을 "chen" 이름의 R 객체로 불러오세요.
+    1. "dbWriteTable()" 함수를 이용해 "chen" 데이터 객체를 DB에 "dbchen"이라는 테이블 이름으로 저장해 보세요.
+    1. "dbReadTable()" 함수로 "dbchen"을 불러와서 "chen" 데이터 객체와 내용이 같은지 확인하세요.    
+    \* identical() 함수는 두 개의 객체가 같은지를 T/F로 결과를 주는 함수입니다.
+    1.  "./ForderForclass2" 폴더에 "db_[자기이름영어].sqlite" 이 "chen" 테이블을 저장한 상태를 commit 해주세요.
+    1. github에서 PR을 진행해주세요.
+    1. 같은 과정을 "./data/recomen/customer.csv" 파일로 진행해 주세요. 중간에 명명은 "cust", "dbcust" 입니다.    
+    \* 인코딩 문제가 발생할 수 있습니다.
 
 ---
 
