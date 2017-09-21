@@ -16,3 +16,15 @@ customer<-fread("./data/recomen/customer.csv")
 item<-fread("./data/recomen/item.csv")
 membership<-fread("./data/recomen/membership.csv")
 tran<-fread("./data/recomen/tran.csv")
+
+#메모리 로드된 객체를 바로 호출하여 사용 가능함
+head(tran)
+tail(tran)
+
+#맥에서 한글 깨짐현상 설정방법
+#Sys.getlocale()
+#Sys.setlocale("LC_ALL","ko_KR.UTF-8")
+
+
+
+
