@@ -532,7 +532,7 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 
 ## DBI 함수
 
-먼저 필요한 패키지를 불러옵니다. data.table은 
+먼저 필요한 패키지를 불러옵니다.
 
 
 ```r
@@ -545,13 +545,13 @@ library(data.table)
 
 
 ```r
-conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "class2.sqlite")
+conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "../ForderForclass2/class2.sqlite")
 
 dbListTables(conn)
 ```
 
 ```
-## [1] "member"
+## character(0)
 ```
 
 ---
@@ -623,6 +623,8 @@ dbListTables(conn)
 
 ---
 
+## 
+
 
 ```r
 dbWriteTable(conn,
@@ -632,6 +634,12 @@ dbWriteTable(conn,
              overwrite = T
 )
 ```
+
+---
+
+## 실습
+
+
 
 ---
 
