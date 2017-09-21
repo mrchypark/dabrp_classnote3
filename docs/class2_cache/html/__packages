@@ -1,0 +1,6 @@
+base
+devtools
+DBI
+RSQLite
+readr
+data.table

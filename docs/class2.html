@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>(2주차)데이터 분석을 위한 중급 R 프로그래밍 CAMP 3기</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: center, middle, title-slide
+
+## R 프로그래밍 중급으로 나아가기 위한 Level UP Skill
+#### Step2. 하나의 문법으로 다양한 소스의 데이터를 다뤄보기
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class2&gt;
+
+### 박찬엽
+
+### 2017년 9월 21일
+---
+
+## 목차
+
+0. 과제 질답
+
+1. 수업의 목표
+
+2. 데이터 공유와 탐색
+    - 데이터를 공유하는 방법
+    - 실습에 사용할 데이터 소개
+    - 실습
+
+3. 데이터 베이스와 R의 연결
+    - DBI 소개와 SQLite
+    - DBI 함수의 동작
+    - 실습
+    
+4. 본격 DB와 R의 연결
+    - 클라우드 서비스 이용하기
+    - MySQL 연결
+    - BigQuery 연결
+    
+5. 과제
+
+
+---
+
+class: center, middle, title-slide
+
+## 과제 질답
+
+---
+
+## 수업의 목표
+
+### 1. 데이터를 잘 공유하는 법을 알고 설명할 수 있다.
+
+### 2. DBI 패키지의 구조를 이해하고 설명할 수 있다.
+
+### 3. 클라우드 서비스에 테이블을 저장하고 R로 연동할 수 있다.
+
+---
+
+class: center, middle, title-slide
+
+## 데이터를 공유하기
+
+---
+
+## 데이터 공유
+
+[Leek group][3]에서 소개하는 [데이터 공유 가이드][4]
+
+  - 원시 데이터(raw data) : 최초에 수집된 데이터를 뜻하며 센서나 인터넷 서비스의 로그 데이터나 사용자가 직접 작성한 설문 데이터등을 의미함
+  - 정제후 데이터(tidy data) : 사용하기 좋은 상태로 정리한 데이터를 뜻하며 보통 설문조사에서는 코딩한다고 표현함
+  - 코드북(code book) : 공개하는 데이터에 대해서 설명하는 문서로 단위나 각 변수명이 의미하는 바 등을 작성함
+  - 자료형(data type) : 변수의 종류와 저장법에 대해서 조언하며 엑셀등 특별한 프로그램에 종속적인 기능은 사용하지 말 것을 권고함
+  - [재현성(reproducibility)](https://namu.wiki/w/%EC%9E%AC%ED%98%84%EC%84%B1) : 다시 결과를 만들 수 있는 것을 뜻하며 2010년대 이후 과학적 방법의 중요한 축
+
+---
+
+## 원시 데이터
+
+최초 획득한 당시 그대로의 데이터
+
+  - 어떤 식으로든 수정을 가하지 않은 상태
+  - 수정을 가하는 과정을 함께 기록함으로써 신뢰성 확보
+  - 위 두 가지가 없는 경우 상황을 상상해야 함
+
+---
+
+## 정제후 데이터
+
+해들리 위컴이 설명한 [tidy data][5]의 요건에 맞게 가공하여 데이터를 쉽게 다룰 수 있게 만든 상태
+
+  - 측정하는 각 변수는 하나의 열에 있어야 함
+  - 측정하는 각 관찰은 하나의 행에 있어야 함
+  - 각 종류의 변수에 대해 각 하나의 테이블이 있어야 함
+  - 여러 개의 테이블이있는 경우 테이블에 합치기 위한 기준 열을 포함해야 함
+
+---
+
+## 코드북
+
+데이터셋에 대해 필요한 설명을 담은 문서
+
+  - 정제후 데이터에 대해 추가적으로 필요한 설명이나 정보(단위 등)
+  - 정제 과정에서 사용한 방법의 설명과 사용한 이유
+  - 데이터가 사용된 분석에 대한 정보
+
+---
+
+## 데이터 원본
+
+확보할 당시의 원시 데이터나, 항상 최신 상태를 유지하여 신뢰할 수 있는 데이터. 기계적 생성 데이터가 아닌한 사람이 원본이 되므로 작성된 내용이 원본이라는 합의를 함으로써 데이터 관리의 체계를 세울 수 있음
+
+  - 커뮤니케이션 비용 감소
+  - 의사결정 및 활동의 기준
+  - 가공된 데이터의 신뢰성 확보
+
+---
+
+## 데이터 훑어보기
+
+  - head(): 최초 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - tail(): 마지막 6행의 데이터를 보여줌(행갯수 조절 가능)
+  - summary(): 각 컬럼의 자료형과 숫자라면 대표값을 함께 보여줌
+  - str(): 각 컬럼의 자료형과 초기 값을 보여줌
+  - length(): 데이터의 길이 출력(vector)
+  - nrow(): 행 갯수 출력(data.frame)
+  - is.na(): NA 인지 확인
+  - complete.cases(): 값이 모두 있는지 행단위로 검사
+  - tibble(): 최근 기법으로 재구성한 tidyverse 패키지 군에서 사용하는 data.frame의 일종
+  - data.table(): DB에서 사용하는 기법 등과 메모리 효율성을 극대화한 data.frame의 일종
+
+---
+
+class: center, middle, title-slide
+
+## 데이터 소개
+
+---
+
+## 실습 데이터 설정하기
+
+```{}
+# data.table 패키지가 있는지 확인하고 없으면 설치합니다.
+if (!requireNamespace("data.table")) install.packages("data.table")
+# data.table 패키지를 사용할 수 있게 불러옵니다.
+library(data.table)
+
+# tran.csv 파일이 data/recomen 폴더에 있는지 확인 합니다.
+chk&lt;-dir("./data/recomen", pattern = "tran.csv")
+# 없으면 다운로드합니다.
+if(identical(chk,character(0))){
+  recoment&lt;-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
+  download.file(recoment,destfile="./data/recomen/tran.csv",mode='wb')
+}
+# fread 함수를 이용해서 csv 파일을 R객체로 불러옵니다.
+chennel&lt;-fread("./data/recomen/chennel.csv")
+competitor&lt;-fread("./data/recomen/competitor.csv")
+customer&lt;-fread("./data/recomen/customer.csv")
+item&lt;-fread("./data/recomen/item.csv")
+membership&lt;-fread("./data/recomen/membership.csv")
+tran&lt;-fread("./data/recomen/tran.csv")
+```
+
+
+
+---
+
+## 추천 데이터 - chennel
+
+  - cusID  : 5자리 숫자조합으로 구성된 고객ID
+  - chennel: 접속 체널
+  - useCnt : 사용횟수(건)
+  
+
+```r
+str(chennel, max.level=1)
+```
+
+```
+## Classes 'data.table' and 'data.frame':	8824 obs. of  3 variables:
+##  $ cusID  : int  7 14 42 74 74 94 112 112 122 123 ...
+##  $ chennel: chr  "A_MOBILE/APP" "A_MOBILE/APP" "B_MOBILE/APP" "A_MOBILE/APP" ...
+##  $ useCnt : int  4 1 23 1 30 14 16 1 27 10 ...
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+```
+
+---
+
+## 추천 데이터 - competitor
+
+  - cusID     : 5자리 숫자조합으로 구성된 고객ID
+  - partner   : 제휴사
+  - competitor: 경쟁사
+  - useDate   : 이용년월(YYYYDD)
+  
+
+```r
+str(competitor, max.level=1)
+```
+
+```
+## Classes 'data.table' and 'data.frame':	28159 obs. of  4 variables:
+##  $ cusID     : int  2 51 77 77 77 77 77 88 88 110 ...
+##  $ partner   : chr  "D" "D" "D" "D" ...
+##  $ competitor: chr  "D02" "D01" "D02" "D02" ...
+##  $ useDate   : int  201507 201504 201503 201506 201507 201508 201511 201510 201511 201508 ...
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+```
+
+
+---
+
+## 추천 데이터 - customer
+
+  - cusID: 5자리 숫자조합으로 구성된 고객ID
+  - sex  : 성별
+  - age  : 연령    
+  - area : 거주지역
+  
+
+```r
+str(customer, max.level=1)
+```
+
+```
+## Classes 'data.table' and 'data.frame':	19383 obs. of  4 variables:
+##  $ cusID: int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ sex  : chr  "M" "M" "M" "F" ...
+##  $ age  : chr  "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" ...
+##  $ area : int  60 100 33 16 100 240 36 10 100 24 ...
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+```
+
+---
+
+## 추천 데이터 - item
+
+  - partner    : 재휴사
+  - cate_1     : 대분류
+  - cate_2     : 중분류
+  - cate_3     : 소분류
+  - cate_2_name: 중분류명
+  - cate_3_name: 소분류명
+
+
+```r
+str(item, max.level=1)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	4386 obs. of  6 variables:
+##  $ partner    : chr  "A" "A" "A" "A" ...
+##  $ cate_1     : chr  "01" "01" "01" "01" ...
+##  $ cate_2     : chr  "0101" "0101" "0101" "0101" ...
+##  $ cate_3     : chr  "A010101" "A010102" "A010103" "A010104" ...
+##  $ cate_2_name: chr  "일용잡화" "일용잡화" "일용잡화" "일용잡화" ...
+##  $ cate_3_name: chr  "위생세제" "휴지류" "뷰티상품" "일용잡화" ...
+##  - attr(*, "spec")=List of 2
+##   ..- attr(*, "class")= chr "col_spec"
+```
+
+---
+
+## 추천 데이터 - membership
+
+  - cusID     : 5자리 숫자조합으로 구성된 고객ID
+  - memberShip: 멤버십명
+  - regDate   : 가입년월
+  
+
+```r
+str(membership, max.level=1)
+```
+
+```
+## Classes 'data.table' and 'data.frame':	7456 obs. of  3 variables:
+##  $ cusID     : int  11 21 37 43 44 61 65 69 76 79 ...
+##  $ memberShip: chr  "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" ...
+##  $ regDate   : int  201512 201506 201306 201403 201411 201312 201506 201404 201406 201311 ...
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+```
+
+---
+
+## 추천 데이터 - tran
+
+
+```r
+summary(tran)
+```
+
+```
+##    partner            receiptNum           cate_1          cate_2    
+##  Length:28593030    Min.   :       1   Min.   : 1.00   Min.   : 101  
+##  Class :character   1st Qu.: 3922474   1st Qu.: 4.00   1st Qu.: 401  
+##  Mode  :character   Median : 7167787   Median :11.00   Median :1102  
+##                     Mean   : 6447881   Mean   :18.37   Mean   :1840  
+##                     3rd Qu.: 9116336   3rd Qu.:18.00   3rd Qu.:1808  
+##                     Max.   :11096601   Max.   :92.00   Max.   :9206  
+##     cate_3              cusID         storeCode           date         
+##  Length:28593030    Min.   :    1   Min.   :  1.00   Min.   :20140101  
+##  Class :character   1st Qu.: 5206   1st Qu.: 16.00   1st Qu.:20140711  
+##  Mode  :character   Median :10104   Median : 44.00   Median :20150110  
+##                     Mean   : 9904   Mean   : 92.26   Mean   :20145817  
+##                     3rd Qu.:14638   3rd Qu.:110.00   3rd Qu.:20150703  
+##                     Max.   :19383   Max.   :593.00   Max.   :20151231  
+##       time           amount         
+##  Min.   : 0.00   Min.   :        1  
+##  1st Qu.:14.00   1st Qu.:     2050  
+##  Median :17.00   Median :     4290  
+##  Mean   :16.71   Mean   :    23678  
+##  3rd Qu.:19.00   3rd Qu.:     9900  
+##  Max.   :23.00   Max.   :101330000
+```
+
+---
+
+## 추천 데이터 - tran
+
+
+```r
+str(tran, max.level=1)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	28593030 obs. of  10 variables:
+##  $ partner   : chr  "B" "B" "B" "B" ...
+##  $ receiptNum: int  8664000 8664000 8664000 8664000 8664001 8664001 8664002 8664002 8664002 8664003 ...
+##  $ cate_1    : int  15 16 16 18 5 15 10 43 54 5 ...
+##  $ cate_2    : int  1504 1601 1602 1803 509 1501 1003 4301 5403 504 ...
+##  $ cate_3    : chr  "B150401" "B160101" "B160201" "B180301" ...
+##  $ cusID     : int  17218 17218 17218 17218 17674 17674 14388 14388 14388 15773 ...
+##  $ storeCode : int  44 44 44 44 44 44 44 44 44 44 ...
+##  $ date      : int  20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 ...
+##  $ time      : int  20 20 20 20 22 22 23 23 23 21 ...
+##  $ amount    : int  2420 1070 8060 6000 1120 1200 5290 5960 9900 970 ...
+##  - attr(*, "spec")=List of 2
+##   ..- attr(*, "class")= chr "col_spec"
+```
+
+---
+
+## 실습
+
+1. dabrp_classnote3 프로젝트를 pull 하여 data 폴더를 받고 확인하세요
+1. 13p의 실습데이터 설정 스크립트를 실행하여 tran.csv(1.4G) 파일을 받으세요
+1. 11p의 함수들을 활용하여 데이터를 탐색해보세요    
+\* tibble이나 data.table은 다음 시간에 다룰 예정입니다
+
+---
+
+class: center, middle, title-slide
+
+## 데이터베이스
+
+---
+
+## 데이터란
+
+단순한 관찰이나 측정 등의 수단을 통해 현실 세계로부터 수집된 사실이나 값. 의미있게 사용하기 위해서 구조화&lt;sup&gt;*&lt;/sup&gt;가 필요함    
+.pull-center[.set[
+![](http://www.orchardsoft.com/images/products/pathology/StructuredData.jpg)
+]]
+.footnote[
+\* 구조화: 체계적으로 조직하는 것
+]
+---
+
+## Database Management System(DBMS)&lt;sup&gt;1&lt;/sup&gt;
+
+DBMS는 데이터베이스를 관리하는 응용프로그램의 일종으로 중복 제어, 접근 권환 관리, 무결성 제약, 데이터 관리 등의 기능을 제공하며 제품마다 특성이 매우 다양함
+
+.pull-center[.set[
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/class2_database.png)
+]]
+.footnote[
+1 &lt;https://namu.wiki/w/DBMS&gt;        
+\* 이미지 출처: [생활코딩 MySQL 수업][1]
+]
+---
+
+## 서버와 클라이언트
+
+유명하게 사용되는 DBMS는 잘 활용되는 GUI가 있기도 하나 그 기능 구현이 서버와 클라이언트로 되어 있어 연결시 ip 주소가 필요하는 등 관련 지식이 필요함
+
+.pull-center[.set[
+![](https://s3-ap-northeast-2.amazonaws.com/opentutorials-user-file/module/2790/5800.png)
+]]
+
+---
+
+## 데이터베이스 클라이언트
+
+  - 대표적인 클라이언트
+    - MySQL monitor
+    - PHPmyAdmin
+    - Navicat
+    - HeidiSQL
+
+---
+
+## 테이블(table)
+
+- 2차원의 자료형으로 table과 같이 행(row)과 열(column)이 있는 엑셀의 시트와 비슷한 모양
+
+
+```r
+print(head(iris))
+```
+
+```
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
+```
+
+.footnote[
+
+\* R 데이터 객체인 iris의 data.frame 예시
+
+]
+
+---
+
+## DBI(database interface)
+
+[DBI](http://rstats-db.github.io/DBI/)는 odbc나 java의 [jdbc](https://ko.wikipedia.org/wiki/JDBC), 파이썬의 [db-api](http://pythonstudy.xyz/python/data)와 같이 R에서 데이터베이스를 컨트롤하기 위한 인터페이스 패키지
+
+
+```r
+if (!require(devtools)) install.packages("devtools") 
+```
+
+```
+## Loading required package: devtools
+```
+
+```r
+if (!require(DBI)) devtools::install_github("rstats-db/DBI")
+```
+
+```
+## Loading required package: DBI
+```
+
+```r
+if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
+```
+
+```
+## Loading required package: RSQLite
+```
+
+---
+
+## 파일의 입출력
+
+R은 데이터를 사용하기 위해 메모리로 구성된 R 환경에 파일의 내용을 R객체 형태의 데이터로 변환해서 사용
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/fileio.png)
+
+---
+
+## DBI의 DBMS 연결
+
+DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패키지와 연동하여 DBMS를 통해 데이터를 사용
+.pull-center[.set[
+![](http://d33wubrfki0l68.cloudfront.net/076ba23e17519ed36db5bf0ec1cb731f2376b92e/ec344/homepage/open-source.png) 
+]]
+---
+
+## ODBC를 통한 연결
+
+[ODBC](https://ko.wikipedia.org/wiki/ODBC)를 직접 지원하기도 함
+
+.pull-center[.set[
+![](http://d33wubrfki0l68.cloudfront.net/50801b55c11a1e5b4b5ae26dfcff79b2163ed94c/1a3d0/homepage/commercial.png)
+]]
+
+---
+
+## 데이터 베이스와 연결
+
+파일과 다르게 데이터베이스는 DBMS를 통해서 내부의 데이터에 접근해야 하기 때문에 DBMS의 연결 정보를 가진 conn 객체를 만들고 그것을 활용하는 명령 구조를 따름
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn.png) 
+
+---
+
+## 데이터 베이스와 연결
+
+정확히 같진 않지만 `conn`은 브라우저가 로그인 정보등을 바탕으로 서버와 통신하는 것과 비슷하게 동작함
+
+&lt;br&gt;
+&lt;br&gt;
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn2.png) 
+
+---
+
+## [SQLite][2]  
+
+&gt; SQLite is a self-contained, high-reliability, embedded, full-featured, public-domain, SQL database engine.
+
+&gt; 파일 하나로 구성하는 작고, 무료인 sql db
+
+---
+
+## DBI 함수
+
+패키지 불러오기. 패키지가 설치되어 있지 않으면 28p 참ㅈ
+
+
+```r
+library(DBI)
+library(RSQLite)
+library(data.table)
+```
+
+---
+
+## SQLite 와 연결하기
+
+`conn`은 관례적으로 연결 정보를 저장하는 객체의 이름이며 SQLite는 DB가 파일로 구성되어 있어서 권한(ID나 비밀번호) 설정이 없고 연결 정보도 단순(host 없음)함
+
+
+```r
+conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "../ForderForClass2/class2.sqlite")
+conn
+```
+
+```
+## &lt;SQLiteConnection&gt;
+##   Path: C:\Users\mrchypark\Documents\project\dabrp_classnote3\ForderForClass2\class2.sqlite
+##   Extensions: TRUE
+```
+
+```r
+# DB내에 있는 테이블의 이름을 확인함
+dbListTables(conn)
+```
+
+```
+## character(0)
+```
+
+---
+
+## DBI 명령으로 table 만들기
+
+DBI 패키지에는 테이블을 작성하고 지우는 등 원래 SQL로 작성하는 Query의 몇 가지 유용한 경우를 함수로 만들어 제공. `dbWriteTable()` 함수는 R 객체를 바로 테이블로 작성하는 기능
+
+
+```r
+dbWriteTable(conn, "mtcars", mtcars, overwrite = T)
+
+dbListTables(conn)
+```
+
+```
+## [1] "mtcars"
+```
+
+---
+
+## DBI 명령으로 table 불러오기
+
+`dbReadTable()`은 명령어에서도 이해하기 쉽듯 DB내에 있는 특정 테이블을 이름으로 지정하여 데이터를 불러오는 함수
+
+
+```r
+dbReadTable(conn, "mtcars")
+```
+
+```
+##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## 1  21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+## 2  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+## 3  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+## 4  21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+## 5  18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+## 6  18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+## 7  14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+## 8  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+## 9  22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+## 10 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+## 11 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+## 12 16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+## 13 17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+## 14 15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+## 15 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+## 16 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+## 17 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+## 18 32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+## 19 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## 20 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+## 21 21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+## 22 15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+## 23 15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+## 24 13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+## 25 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+## 26 27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## 27 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+## 28 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+## 29 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+## 30 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## 31 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+## 32 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+```
+
+---
+
+## DBI 명령으로 table 지우기
+
+`dbRomoceTable()` 은 테이블을 이름으로 지정하여 지우는 함수
+
+
+```r
+dbRemoveTable(conn, "mtcars")
+
+dbListTables(conn)
+```
+
+```
+## character(0)
+```
+
+---
+
+## 실습
+
+1. DBI 패키지로 연결, 쓰기, 읽기를 수행해 봅니다.
+    1. `dbConnect()`함수와 `SQLite()`함수를 이용해서 "./ForderForclass2" 폴더에 "db_[자기이름영어].sqlite" 파일 이름으로 "conn" 연결 정보를 만드세요.
+    1. "dbListTables(conn)"으로 테이블이 아무것도 없는 것을 확인하세요.
+    1. "./data/recomen/chennel.csv"을 "chen" 이름의 R 객체로 불러오세요.
+    1. "dbWriteTable()" 함수를 이용해 "chen" 데이터 객체를 DB에 "dbchen"이라는 테이블 이름으로 저장해 보세요.
+    1. "dbReadTable()" 함수로 "dbchen"을 불러와서 "chen" 데이터 객체와 내용이 같은지 확인하세요.    
+    \* identical() 함수는 두 개의 객체가 같은지를 T/F로 결과를 주는 함수입니다.
+    1.  "./ForderForclass2" 폴더에 "db_[자기이름영어].sqlite" 이 "chen" 테이블을 저장한 상태를 commit 해주세요.
+    1. github에서 PR을 진행해주세요.
+    1. 같은 과정을 "./data/recomen/customer.csv" 파일로 진행해 주세요. 중간에 명명은 "cust", "dbcust" 입니다.    
+    \* 인코딩 문제가 발생할 수 있습니다.
+
+---
+
+class: center, middle, title-slide
+
+## 클라우드 서비스
+
+---
+
+## 클라우드 서비스 소개
+
+클라우딩 컴퓨팅은 사용자의 환경 밖에서 서비스로서 제공된 확장 가능한 컴퓨팅 자원을 사용한 양에 따라 비용을 지불하고 사용하는 것
+
+.footnote[
+출처: [P. Changanti, 가상 인프라용 클라우드 서비스, Part 1: IaaS(Infrastructure as a Service) 및 Eucalyptus][6]
+]
+---
+
+## 구글 클라우드
+
+![](http://tech.whatap.io/wp-content/uploads/2016/03/gcp-header-logo.png)
+
+---
+
+## 구글 클라우드 시작하기
+```
+https://cloud.google.com/
+```
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(1).png" width="100%"/&gt;
+
+---
+
+## 구글 클라우드 로그인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(3).png" width="100%"/&gt;
+
+---
+
+## 구글 클라우드 설문
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(4).png" width="100%"/&gt;
+
+---
+
+## 구글 클라우드 설문 선택
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(5).png" width="100%"/&gt;
+
+---
+
+## 구글 클라우드 카드 등록
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(6).png" width="100%"/&gt;
+
+---
+
+## 구글 클라우드 프로젝트 생성
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(7).png" width="100%"/&gt;
+
+---
+
+## R MySQL 연결
+
+`DBI`로 MySQL을 연결하는 패키지와 사용
+
+```
+library(RMySQL)
+con &lt;- dbConnect(MySQL(),
+                 user = user,
+                 password = pw,
+                 host = host,
+                 dbname = "recom")
+dbListTables(conn = con)
+dbWriteTable(conn = con, name = 'tran', value = "./data/recomen/tran.csv")
+dbReadTable(conn = con, name = "tran")
+```
+---
+
+## MySQL 인스턴스 생성
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(8).png" width="100%"/&gt;
+
+---
+
+## 엔진선택
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(9).png" width="100%"/&gt;
+
+---
+
+## MySQL 2세대 선택
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(10).png" width="100%"/&gt;
+
+---
+
+## 인스턴스 설정
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(11).png" width="100%"/&gt;
+
+---
+
+## 접속 허용 IP 설정
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(12).png" width="100%"/&gt;
+
+---
+
+## 접속 허용 IP 설정
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(13).png" width="100%"/&gt;
+
+---
+
+## 현재 IP 확인하기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(14).png" width="100%"/&gt;
+
+---
+
+## whatismyip
+
+```{}
+https://www.whatismyip.com/
+```
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(15).png" width="100%"/&gt;
+
+---
+
+## ip 입력
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(16).png" width="100%"/&gt;
+
+---
+
+## root 계정 비밀번호 생성
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(17).png" width="100%"/&gt;
+
+---
+
+## SQL 인스턴스 생성중
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(19).png" width="100%"/&gt;
+
+---
+
+## RMySQL로 연결하기
+
+  - host 주소 파악
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(20).png" width="100%"/&gt;
+
+---
+
+## RMySQL로 연결하기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(21).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(23).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(24).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(25).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(26).png" width="100%"/&gt;
+
+---
+
+## 데이터베이스 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(27).png" width="100%"/&gt;
+
+---
+
+## host와 dbname 설정
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(28).png" width="100%"/&gt;
+
+---
+
+## 실습 진행
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(22).png" width="100%"/&gt;
+
+---
+
+## R bigquery 연결
+
+`query_exec`가 첫 실행이면 브라우저에서 권한 확인을 합니다.
+
+```{}
+library(bigrquery)
+project &lt;- "konlper-168808" 
+sql &lt;- "SELECT * FROM [konlper-168808:recom.chennel] LIMIT 5"
+query_exec(sql, project = project)
+```
+
+---
+
+## bigquery 인스턴스 생성
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(30).png" width="100%"/&gt;
+
+---
+
+## bigquery 첫 화면
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(31).png" width="100%"/&gt;
+
+---
+
+## dataset 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(32).png" width="100%"/&gt;
+
+---
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(33).png" width="100%"/&gt;
+
+---
+
+## table 생성
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(34).png" width="100%"/&gt;
+
+---
+
+## 큰 데이터는 storage를 통해 업로드
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(35).png" width="100%"/&gt;
+
+---
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(36).png" width="100%"/&gt;
+
+---
+
+## 버킷 만들기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(37).png" width="100%"/&gt;
+
+
+---
+
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(38).png" width="100%"/&gt;
+
+---
+
+## 버킷 확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(42).png" width="100%"/&gt;
+
+---
+
+## 폴더 업로드
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(39).png" width="100%"/&gt;
+
+---
+
+## 업로드 확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(43).png" width="100%"/&gt;
+
+---
+
+## 업로드 확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(44).png" width="100%"/&gt;
+
+---
+
+## gs:// 경로확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(45).png" width="100%"/&gt;
+
+---
+
+## 작업 결과 확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(46).png" width="100%"/&gt;
+
+---
+
+## query 실행화면
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(47).png" width="100%"/&gt;
+
+---
+
+## 비용 발생 경고
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(48).png" width="100%"/&gt;
+
+---
+
+## query 결과 확인
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(49).png" width="100%"/&gt;
+
+---
+
+## 공개 데이터셋
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(50).png" width="100%"/&gt;
+
+---
+
+## wikipedia dataset
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(52).png" width="100%"/&gt;
+
+---
+
+## dataset 복사
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(53).png" width="100%"/&gt;
+
+---
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(54).png" width="100%"/&gt;
+
+---
+
+## 데이터 구조 보기
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(56).png" width="100%"/&gt;
+
+---
+
+## 큰 데이터 query 진행
+
+```{}
+select title,sum(num_characters) as num_characters
+from [konlper-168808:test.wikipedia_copy]
+where regexp_match(title,'[Ss]eoul')
+group by title
+order by num_characters desc;
+```
+
+---
+
+## query 결과
+
+&lt;img src="https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/cluod%20(58).png" width="100%"/&gt;
+
+---
+
+## 과제
+
+  1. RSQLite와 DBI를 활용해서 `nycflights13` 데이터를 db Table로 만들고, 제출해 주세요.
+      1. 'nycflights13' 패키지를 설치하고 5개 데이터를 확인하세요.
+      2. dbConnect 명령으로 SQLite 파일을 sql_[이름].db 으로 생성하세요.
+      3. 5개의 데이터를 각각의 이름으로 table을 생성하세요.
+      4. 1)~3)의 과정을 모두 코드로 남기고 run_[이름].R로 저장하세요.
+      5. run_[이름].R과 sql_[이름].db 두 개의 파일을 class2assignment 폴더에 저장하세요.
+      6. github에서 pull request로 제출해 주세요.
+      7. recomen 폴더에 있는 데이터 6개도 같은 과정을 진행하고, 제출은 하지 마세요.
+      8. .gitignore를 이용하면 push의 범위에서 제외할 수 있습니다.
+  
+---
+
+## 과제
+
+  2. recomen 폴더에 있는 데이터 6개를 bigquery에 업로드 하고 질의를 실행해 보세요.
+      1. "bigrquery" 패키지의 기능으로 작은 용량 5개의 데이터를 업로드해 주세요.
+      2. Storage 서비스를 이용해서 `tran.csv` 파일을 bigquery에 테이블로 생성하세요.
+      3. query_exec 함수와 "select * from [tran] limit 10" 을 실행하고 결과를 받으세요.
+          * [tran]은 각자 해당하는 이름으로 변경하셔야 합니다.
+      4. 1)~3)의 과정을 big_[이름].R로 저장하세요.
+      5. big_[이름].R 파일을 class2assignment 폴더에 저장하세요.
+      6. github에서 pull request로 제출해 주세요.
+      
+
+[1]: https://opentutorials.org/course/195/1399
+[2]: http://www.sqlite.org/
+[3]: http://jtleek.com/
+[4]: https://github.com/jtleek/datasharing
+[5]: http://vita.had.co.nz/papers/tidy-data.pdf
+[6]: http://www.ibm.com/developerworks/kr/library/os-cloud-virtual1/index.html
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
