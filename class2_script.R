@@ -60,8 +60,9 @@ conn
 
 dbListTables(conn)
 
-library(readr)
-chen <- read_csv("data/recomen/chennel.csv")
+chen <- as.data.frame("data/recomen/chennel.csv")
+#library(readr)
+#chen <- read_csv("data/recomen/chennel.csv")
 
 dbWriteTable(conn, "dbchen", chen, overwrite = T)
 dbListTables(conn)
