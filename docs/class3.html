@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>(3주차)데이터 분석을 위한 중급 R 프로그래밍 CAMP 3기</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: center, middle, title-slide
+
+## 데이터 분석의 기본이 되는 데이터전처리
+#### Step1. 데이터 전처리를 위한 SQL기초 학습하기
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class3&gt;
+
+### 박찬엽
+
+### 2017년 9월 21일
+---
+
+## 목차
+
+0. 과제 질답
+
+1. 수업의 목표
+
+2. 단정한 데이터란
+    - tidy data
+    - long form과 wide form
+    - 실습
+
+3. tidy 데이터를 위한 dplyr+tidyr
+    - DBI 소개와 SQLite
+    - DBI 함수의 동작
+    - 실습
+    
+4. 
+    - 클라우드 서비스 이용하기
+    - MySQL 연결
+    - BigQuery 연결
+    
+5. 과제
+
+
+---
+
+class: center, middle, title-slide
+
+## 과제 질답
+
+---
+
+## 수업의 목표
+
+### 1. 데이터를 다루는 주요 7가지 동작을 설명할 수 있다.
+
+### 2. 파이프 연산자를 이용하여 R의 명령어를 결합하여 작성할 수 있다.
+
+### 3. tidy data, long form과 wide form의 장단점을 설명할 수 있다.
+
+---
+
+class: center, middle, title-slide
+
+## 데이터를 다루는 주요 7가지 동작
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+
+
+---
+
+class: center, middle, title-slide
+
+## 데이터를 다루는 dplyr과 파이프 연산자(%&gt;%)
+
+---
+
+
+class: center, middle, title-slide
+
+## 
+
+---
+
+
+# sql
+
+## CRUD
+
+create: 데이터의 생성    
+read  : 데이터의 조회    
+update: 데이터의 변경    
+delete: 데이터의 제거    
+
+## 분석에 사용되는 READ
+
+```
+SELECT
+FROM
+(WHERE)
+(GROUP BY)
+(ORDER BY)
+```
+
+## select
+
+select는 column을 선택하는 구문입니다. 기존에 있는 데이터를 기준으로 어떤 column을 선택할꺼냐를 묻는 곳으로 전체가 필요하면 *를 사용합니다.
+
+## from
+
+from은 table을 선택하는 구문입니다. 생각 같아서는 어디 테이블에 어디 컬럼이 좋을 것 같은데, 영문권에서는 이 순서가 더 자연스러운 모양입니다.
+
+## where
+
+where는 조건문입니다. 위에 두 경우(table, column)에 해당하는 데이터 전체를 가져오고 싶으면 select * from bank 같이 bank테이블 전체를 가져오는 query를 작성하시면 됩니다. 하지만 그 와중에 데이터들이 조건에 해당하는 일정 부분만 필요하면 그 부분을 where 뒤에 작성하시면 됩니다.
+
+## group by
+
+group by는 선택한 column으로 묶어서 처리하라는 뜻입니다. 예를 들어 A반의 학생들 평균을 알고 싶으면 A반 학생이라는 조건인 성적만 가져와서 평균을 낼 수도 있지만, 반끼리 데이터를 사용하라고 알려주고 평균을 구할 수도 있습니다.
+
+## order by
+
+order by는 정렬을 위한 column을 정할 때 사용합니다. db는 table의 데이터를 저장할 때 순서를 고려해서 저장하지 않습니다. 그렇기 때문에 사람의 편의를 위해 순서를 강제하는 방법을 알려주는 것입니다.
+
+## as
+
+하나 더 as는 길게 만들어진 무엇을 줄여서 쉽게 작성하기 위해서 사용합니다. column명이나 table명에서 많이 사용합니다.
+
+## data.frame과 비교 1
+```
+# for R
+train
+
+# for db
+select * from train
+```
+
+## data.frame과 비교 2
+```
+# for R
+train[,c("date","age")]
+
+# for db
+select date, age from train
+```
+
+
+## data.frame과 비교 3
+```
+# for R
+train[train$date &gt; 2016-06-28 ,c("date","age")]
+
+# for db
+select date, age from train where train.date &gt; 2016-07-28
+```
+## data.frame과 비교 4
+```
+# for R
+data&lt;-train[,c("sex","age")]
+mean(data[data$sex=="F","age"])
+mean(data[data$sex=="M","age"])
+
+# for db
+select sex, avg(age) from train group by sex
+```
+
+## join
+
+![](http://rapapa.net/wp/wp-content/uploads/2012/06/Visual_SQL_JOINS_V2.png)
+
+## inner join
+
+```
+select *
+from A inner join B on A.key = b.key;
+```
+
+## outer join
+
+```
+select *
+from A outer join B on A.key = b.key;
+```
+
+## left join
+```
+select *
+from A left join B on A.key = b.key;
+```
+
+# dplyr + tidyr
+
+## pipe 연산자  %&gt;%
+
+```
+g(f(y)) == y %&gt;% f() %&gt;% g()
+
+g(f(x,y,z)) == y %&gt;% f(x, . , z) %&gt;% g
+```
+
+## dplyr
+
+filter    : 행에 조건을 줘서 부분을 불러옴    
+select    : 필요한 컬럼만 선택    
+mutate    : 새로운 컬럼을 계산해서 만듬     
+arrange   : 조건에 따라 재정렬    
+group_by  : 그룹을 조건으로 사용    
+summarise : 요약형 계산을 진행    
+
+## tidyr
+
+spread   : long form &gt; wide form    
+gather   : wide form &gt; long form      
+seperate : 한 컬럼내의 데이터를 지정 조건으로 분리    
+unite    : 여러 컬럼의 데이터를 한 컬럼으로 함침    
+extract  : 데이터를 분리하는 폼을 지정하여 분리     
+
+## 실습
+
+&lt;https://github.com/mrchypark/dabrp_classnote2/blob/master/codeForClass3.R&gt;
+
+## data.table
+
+[cheat sheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf)
+
+## 과제
+
+- recomen 폴더에 있는 6개 데이터를 활용해서 다음장의 6개 질문에 답해주세요.
+- 데이터가 5개이신 분은 아래 코드를 실행해서 다운로드해주세요. 1.4G라 시간이 좀 걸립니다.    
+
+```
+chk&lt;-file.info("./recomen/tran.csv")
+if(is.na(chk$size)){
+  recoment&lt;-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
+  dir.create("./recomen", showWarnings = F)
+  download.file(recoment,destfile="./recomen/tran.csv",mode='wb')
+}
+
+```    
+
+- 답을 구하기 위한 코드와 답을 class3assignment 폴더에 class3_[이름].R로 제출해주세요.(답은 주석으로 작성)
+- sql, dplyr+tidyr, data.table 등 무엇이든 사용하시고, 외부서비스도 가능하시면 무엇이든 사용하세요. 몇 문제는 계산 시간이 오래걸릴 수 있습니다.
+
+## 문제
+
+1. receiptNum가 "6998419"인 구매기록의 가격(amout)의 합은 얼마인가요?
+2. 가장 비싼 item은 무엇인가요?
+3. 사용자들이 가장 많이 사용한 체널은 mobile/app과 onlinemall 중에 무엇입니까?
+4. 월매출이 2015년 03월 가장 높은 매장의 storeCode는 무엇인가요?
+5. 경쟁사의 이용기록이 가장 많은 사용자의 성별은 무엇입니까?
+  (competitor 데이터에서 1row가 1건이라고 가정)
+6. 한번에 3개 이상 구매한 경우에 가장 많이 구매에 포함된 제품 카테고리(cate_3)는 무엇입니까?
+
+---
+
+# set packages
+
+if (!require(devtools)) install.packages("devtools") 
+if (!require(DBI)) devtools::install_github("rstats-db/DBI")
+if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
+if (!require(RMySQL)) devtools::install_github("rstats-db/RMySQL")
+if (!require(bigrquery)) devtools::install_github("rstats-db/bigrquery")
+if (!require(data.table)) install.packages("data.table")
+if (!require(readr)) install.packages("readr")
+if (!require(tidyverse)) install.packages("tidyverse")
+if (!require(nycflights13)) install.packages("nycflights13")
+
+
+# db set
+library(DBI)
+library(RSQLite)
+library(RMySQL)
+library(nycflights13)
+con &lt;- dbConnect(SQLite(),
+                 dbname="class3.sqlite")
+
+
+con &lt;- DBI::dbConnect(SQLite(),
+               dbname="class3.sqlite")
+
+# write tables
+
+dbWriteTable(con, "customer", fread("./recomen/customer.csv",encoding = "UTF-8"), overwrite=T)
+dbWriteTable(con, "flights", flights, overwrite=T)
+dbWriteTable(con, "airlines", airlines, overwrite=T)
+dbWriteTable(con, "airports", airports, overwrite=T)
+dbWriteTable(con, "planes", planes, overwrite=T)
+dbWriteTable(con, "weather", weather, overwrite=T)
+
+# check table list
+dbListTables(con)
+
+# select from 
+dbGetQuery(con, "select * from planes
+           limit 10")
+
+# select from where
+dbGetQuery(con, "select * from planes where year &gt; 2000")
+
+# select columns
+dbGetQuery(con, "select year, month, day from flights limit 10")
+
+# group by
+dbGetQuery(con, "select type, count(*) from planes group by type")
+dbGetQuery(con, "select type, count(*) as SUM from planes group by type")
+
+# order by 
+dbGetQuery(con, "select type, count(*) from planes group by type order by count(*)")
+
+# where
+dbGetQuery(con, "select * from flights where month = 1")
+
+# and
+dbGetQuery(con, "select * from flights where month = 12 and day = 25")
+
+# or
+dbGetQuery(con, "select * from flights where arr_delay &gt; 120 or dep_delay &gt; 120")
+
+# inner join
+dbGetQuery(con, "select * from flights as a inner join planes as b on a.tailnum = b.tailnum")
+
+library(tidyverse)
+
+# data
+flights
+
+# filter like where
+filter(flights, month == 1, day == 1)
+jan1 &lt;- filter(flights, month == 1, day == 1)
+(dec25 &lt;- filter(flights, month == 12, day == 25))
+dec25 %&gt;% summary
+filter(flights, month == 11 | month == 12)
+nov_dec &lt;- filter(flights, month %in% c(11, 12))
+filter(flights, !(arr_delay &gt; 120 | dep_delay &gt; 120))
+filter(flights, arr_delay &lt;= 120, dep_delay &lt;= 120)
+
+# arrange like order by
+arrange(flights, year, month, day)
+arrange(flights, desc(arr_delay))
+
+# test NA|
+(df &lt;- tibble(x = c(5, 2, NA)))
+arrange(df, x)
+arrange(df, desc(x))
+
+# select like select
+select(flights, year, month, day)
+select(flights, year:day)
+head(flights)
+select(flights, -(year:day))
+
+rename(flights, tail_num = tailnum)
+select(flights, time_hour, air_time, everything())
+
+# ends_with with select
+flights_sml &lt;- select(flights, 
+                      year:day, 
+                      ends_with("delay"), 
+                      distance, 
+                      air_time
+)
+names(flights_sml)
+# mutate make new columns using calculate others
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       speed = distance / air_time * 60
+)
+
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       hours = air_time / 60,
+       gain_per_hour = gain / hours
+)
+
+# only get new columns
+transmute(flights,
+          gain = arr_delay - dep_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain / hours
+)
+
+# extra functions
+
+(x &lt;- 1:10)
+lag(x)
+lead(x)
+
+# summarise what you want to get
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+
+# group_by 
+by_day &lt;- group_by(flights, year, month, day)
+class(by_day)
+class(flights)
+summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
+
+daily &lt;- group_by(flights, year, month, day)
+(per_day   &lt;- summarise(daily, flights = n()))
+(per_month &lt;- summarise(per_day, flights = sum(flights)))
+(per_year  &lt;- summarise(per_month, flights = sum(flights)))
+
+# ungroup
+daily %&gt;% 
+  ungroup() %&gt;% 
+  summarise(flights = n())
+
+ungroup(daily)
+
+# with pipe
+flights_sml %&gt;% 
+  group_by(year, month, day) %&gt;%
+  filter(rank(desc(arr_delay)) &lt; 10)
+filter(group_by(flights_sml, year, month, day), rank(desc(arr_delay)) &lt; 10)
+
+summarise(group_by(flights, year, month, day), 
+          delay = mean(dep_delay, na.rm = TRUE))
+
+flights %&gt;%
+  group_by(year,month,day) %&gt;%
+  summarise(delay=mean(dep_delay, na.rm = TRUE))
+
+
+# assign values
+popular_dests &lt;- flights %&gt;% 
+  group_by(dest) %&gt;% 
+  filter(n() &gt; 365)
+popular_dests
+popular_dests &lt;- filter(group_by(flights, dest), n() &gt; 365)
+popular_dests
+
+popular_dests %&gt;% 
+  filter(arr_delay &gt; 0) %&gt;% 
+  mutate(prop_delay = arr_delay / sum(arr_delay)) %&gt;% 
+  select(year:day, dest, arr_delay, prop_delay)
+popular_dests
+# tidyr examples
+table1
+table2
+table3
+table4a
+table4b
+
+# case of column name is value
+
+table4a
+table4a %&gt;% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+
+# case of value is column name
+table2
+spread(table2, key = type, value = count)
+
+# separate columns
+table3
+table3 %&gt;% 
+  separate(rate, into = c("cases", "population"))
+
+# separate columns with class set
+table3 %&gt;% 
+  separate(rate, into = c("cases", "population"), convert = TRUE)
+
+# separate int columns
+table3 %&gt;% 
+  separate(year, into = c("century", "year"), sep = 2)
+
+# unite two columns to new column
+table5 %&gt;% 
+  unite(new, century, year)
+
+# unite two columns to new column controll to sep characters
+table5 %&gt;% 
+  unite(new, century, year, sep = "")
+
+
+# join example
+
+flights2 &lt;- flights %&gt;% 
+  select(year:day, hour, origin, dest, tailnum, carrier)
+
+flights2
+
+# left join with dplyr
+flights2 %&gt;%
+  select(-origin, -dest) %&gt;% 
+  left_join(airlines, by = "carrier")
+
+# left join with dplyr without join function
+flights2 %&gt;%
+  select(-origin, -dest) %&gt;% 
+  mutate(name = airlines$name[match(carrier, airlines$carrier)])
+
+# join without key
+flights2 %&gt;% 
+  left_join(weather)
+
+
+flights2 %&gt;% 
+  left_join(planes, by = "tailnum")
+
+flights2 %&gt;% 
+  left_join(planes)
+
+# join with diff key names
+
+flights2 %&gt;% 
+  left_join(airports, c("dest" = "faa"))
+
+flights2 %&gt;% 
+  left_join(airports, c("origin" = "faa"))
+
+
+## dplyr with db
+library(dplyr)
+library(RSQLite)
+
+sqlite_db = src_sqlite('sqlite_db.sqlite', 
+                       create = T)
+copy_to(sqlite_db, mtcars)
+
+src_tbls(sqlite_db)
+tbl(sqlite_db, 'mtcars')
+tbl(sqlite_db, sql('SELECT * FROM mtcars'))
+
+iris_db = tbl(sqlite_db, 'mtcars')
+iris_db %&gt;% filter(mpg &gt; 20)
+
+sql_db = src_mysql(dbname="bank",user = "root",password = "XXXX")
+sql_db
+
+src_bigquery
+
+
+# data.table
+
+library(data.table)
+
+# get data
+
+# url&lt;-"https://github.com/arunsrinivasan/flights/wiki/NYCflights14/flights14.csv"
+# dir.create("./data",showWarnings = F)
+# download.file(url,destfile = "./data/flights14.csv")
+
+# read data
+system.time(flights &lt;- read.csv("./data/flights14.csv"))  # to data.frame
+system.time(flights &lt;- read_csv("./data/flights14.csv"))  # to tibble
+system.time(flights &lt;- fread("./data/flights14.csv"))     # to data.table
+flights
+class(flights)
+dim(flights)
+
+# subset like where
+ans &lt;- flights[origin == "JFK" &amp; month == 6L]
+head(ans)
+
+ans &lt;- flights[1:2]
+ans
+
+# order like order by
+ans &lt;- flights[order(origin, -dest)]
+head(ans)
+
+# select column like select
+ans &lt;- flights[, arr_delay]
+head(ans)
+
+# select columns like select
+ans &lt;- flights[, .(arr_delay, dep_delay)]
+head(ans)
+
+# rename
+ans &lt;- flights[, .(delay_arr = arr_delay, delay_dep = dep_delay)]
+head(ans)
+
+# transmute
+flights[origin == "JFK" &amp; month == 6L,
+        .(m_arr = mean(arr_delay), m_dep = mean(dep_delay))]
+
+
+
+# length
+flights[origin == "JFK" &amp; month == 6L, length(dest)]
+
+# make count table 
+flights[, .(.N), by = .(origin)]
+
+# make count table with condition
+flights[carrier == "AA", .N, by = origin]
+
+# make count table with condition and group by
+flights[carrier == "AA", .N, by = .(origin,dest)]
+
+# add options
+flights[carrier == "AA", .N, by = .(origin, dest)][order(origin, -dest)][1:10,]
+## like pipe %&gt;%      [][][]....[]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

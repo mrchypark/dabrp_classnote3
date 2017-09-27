@@ -35,5 +35,6 @@ vignettes/*.pdf
 .Rproj.user
 
 *.sqlite
+*.db
 
 data/recomen/tran.csv
