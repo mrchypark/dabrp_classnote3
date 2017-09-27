@@ -30,21 +30,18 @@ class: center, middle, title-slide
 
 1. 수업의 목표
 
-2. 단정한 데이터란
-    - tidy data
-    - long form과 wide form
-    - 실습
+2. 데이터를 다루는 주요 7가지 동작
+    - 데이터 소개 : nycflights13
+    - dplyr을 활용한 주요 7가지 동작
 
-3. tidy 데이터를 위한 dplyr+tidyr
-    - DBI 소개와 SQLite
-    - DBI 함수의 동작
-    - 실습
-    
-4. 
-    - 클라우드 서비스 이용하기
-    - MySQL 연결
-    - BigQuery 연결
-    
+3. tidy data, long form과 wide form
+    - 함수를 연결하는 파이프 연산자
+    - tidyr로 데이터를 tidy하게 만들기
+
+4. 데이터 소스에 연결하기
+    - 데이터 소스 소개와 연결 패키지 dbplyr, dtplyr
+    - 데이터 소스와 함께 사용하는 dplyr 함수
+
 5. 과제
 
 
@@ -60,9 +57,9 @@ class: center, middle, title-slide
 
 ### 1. 데이터를 다루는 주요 7가지 동작을 설명할 수 있다.
 
-### 2. 파이프 연산자를 이용하여 R의 명령어를 결합하여 작성할 수 있다.
+### 2. tidy data, long form과 wide form의 장단점을 설명할 수 있다.
 
-### 3. tidy data, long form과 wide form의 장단점을 설명할 수 있다.
+### 3. 데이터 베이스의 테이블을 R 객체에 연결하여 데이터를 다룰 수 있다.
 
 ---
 
@@ -74,6 +71,1255 @@ class: center, middle, title-slide
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
 
+---
+
+## 실습 데이터 소개
+
+[nycflights13](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)는 2013년 미국의 비행기 운항기록에 관련된 airlines, airports, flights, planes, weather의 5개 데이터를 가지고 있는 데이터 패키지
+
+
+```r
+if (!requireNamespace("nycflights13")) install.packages("nycflights13")
+library(nycflights13)
+nycflights13::flights
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+## [nycflights13 코드북](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)
+
+
+```r
+str(flights)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	336776 obs. of  19 variables:
+##  $ year          : int  2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...
+##  $ month         : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ day           : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ dep_time      : int  517 533 542 544 554 554 555 557 557 558 ...
+##  $ sched_dep_time: int  515 529 540 545 600 558 600 600 600 600 ...
+##  $ dep_delay     : num  2 4 2 -1 -6 -4 -5 -3 -3 -2 ...
+##  $ arr_time      : int  830 850 923 1004 812 740 913 709 838 753 ...
+##  $ sched_arr_time: int  819 830 850 1022 837 728 854 723 846 745 ...
+##  $ arr_delay     : num  11 20 33 -18 -25 12 19 -14 -8 8 ...
+##  $ carrier       : chr  "UA" "UA" "AA" "B6" ...
+##  $ flight        : int  1545 1714 1141 725 461 1696 507 5708 79 301 ...
+##  $ tailnum       : chr  "N14228" "N24211" "N619AA" "N804JB" ...
+##  $ origin        : chr  "EWR" "LGA" "JFK" "JFK" ...
+##  $ dest          : chr  "IAH" "IAH" "MIA" "BQN" ...
+##  $ air_time      : num  227 227 160 183 116 150 158 53 140 138 ...
+##  $ distance      : num  1400 1416 1089 1576 762 ...
+##  $ hour          : num  5 5 5 5 6 5 6 6 6 6 ...
+##  $ minute        : num  15 29 40 45 0 58 0 0 0 0 ...
+##  $ time_hour     : POSIXct, format: "2013-01-01 05:00:00" "2013-01-01 05:00:00" ...
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)][3]
+
+---
+
+## 데이터를 다루는 주요 7가지 동작
+
+.pull-left[
+[dplyr][3]은 데이터를 다루는 주요 7가지 동작 자체를 함수로 가지고 추가적인 helper 함수를 함께 제공
+
+1. 열 방향: 선택 - select()
+1. 열 방향: 계산 - mutate()
+1. 행 방향: 조건 - filter()
+1. 행 방향: 추가 - bind_rows()
+1. 행 방향: 정렬 - arrange()
+1. 그룹 계산 - group_by() + summarise()
+1. 열 결합 - left_join()
+]
+.pull-right[
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+]
+
+---
+
+## dplyr 준비
+
+
+```r
+if (!requireNamespace("dplyr")) install.packages("dplyr")
+```
+
+```
+## Loading required namespace: dplyr
+```
+
+```r
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+숫자에서만 제공하던 from:to 문법을 컬럼 순서를 기준으로 지원
+.pull-left[
+```{}
+select(flights, year:day)
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+-(마이너스)는 지정한 컬럼을 제외하고 전부라는 의미
+
+```r
+select(flights, -(year:day))
+```
+
+```
+## # A tibble: 336,776 x 16
+##    dep_time sched_dep_time dep_delay arr_time sched_arr_time arr_delay
+##       &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1      517            515         2      830            819        11
+##  2      533            529         4      850            830        20
+##  3      542            540         2      923            850        33
+##  4      544            545        -1     1004           1022       -18
+##  5      554            600        -6      812            837       -25
+##  6      554            558        -4      740            728        12
+##  7      555            600        -5      913            854        19
+##  8      557            600        -3      709            723       -14
+##  9      557            600        -3      838            846        -8
+## 10      558            600        -2      753            745         8
+## # ... with 336,766 more rows, and 10 more variables: carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+everything() 같은 helper 함수를 제공 everything()은 select()내에 선언된 컬럼을 제외한 나머지 전부라는 의미. 
+
+
+```r
+select(flights, time_hour, air_time, everything())
+```
+
+```
+## # A tibble: 336,776 x 19
+##              time_hour air_time  year month   day dep_time sched_dep_time
+##                 &lt;dttm&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+##  1 2013-01-01 05:00:00      227  2013     1     1      517            515
+##  2 2013-01-01 05:00:00      227  2013     1     1      533            529
+##  3 2013-01-01 05:00:00      160  2013     1     1      542            540
+##  4 2013-01-01 05:00:00      183  2013     1     1      544            545
+##  5 2013-01-01 06:00:00      116  2013     1     1      554            600
+##  6 2013-01-01 05:00:00      150  2013     1     1      554            558
+##  7 2013-01-01 06:00:00      158  2013     1     1      555            600
+##  8 2013-01-01 06:00:00       53  2013     1     1      557            600
+##  9 2013-01-01 06:00:00      140  2013     1     1      557            600
+## 10 2013-01-01 06:00:00      138  2013     1     1      558            600
+## # ... with 336,766 more rows, and 12 more variables: dep_delay &lt;dbl&gt;,
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+ends_with()같이 글자의 일부에 해당하는 컬럼 전부를 가져오는 helper 함수도 있음. 정규표현식의 주요 기능을 함수로 제공. ?select로 확인
+
+
+```r
+select(flights, year:day, ends_with("delay"), distance, air_time)
+```
+
+```
+## # A tibble: 336,776 x 7
+##     year month   day dep_delay arr_delay distance air_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1  2013     1     1         2        11     1400      227
+##  2  2013     1     1         4        20     1416      227
+##  3  2013     1     1         2        33     1089      160
+##  4  2013     1     1        -1       -18     1576      183
+##  5  2013     1     1        -6       -25      762      116
+##  6  2013     1     1        -4        12      719      150
+##  7  2013     1     1        -5        19     1065      158
+##  8  2013     1     1        -3       -14      229       53
+##  9  2013     1     1        -3        -8      944      140
+## 10  2013     1     1        -2         8      733      138
+## # ... with 336,766 more rows
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+출력 편의를 위해 일부 데이터만 사용
+
+
+```r
+flights_sml &lt;- select(flights, year:day, ends_with("delay"), distance, air_time)
+flights_sml
+```
+
+```
+## # A tibble: 336,776 x 7
+##     year month   day dep_delay arr_delay distance air_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1  2013     1     1         2        11     1400      227
+##  2  2013     1     1         4        20     1416      227
+##  3  2013     1     1         2        33     1089      160
+##  4  2013     1     1        -1       -18     1576      183
+##  5  2013     1     1        -6       -25      762      116
+##  6  2013     1     1        -4        12      719      150
+##  7  2013     1     1        -5        19     1065      158
+##  8  2013     1     1        -3       -14      229       53
+##  9  2013     1     1        -3        -8      944      140
+## 10  2013     1     1        -2         8      733      138
+## # ... with 336,766 more rows
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+각 컬럼간의 계산으로 새로운 열을 만들 수 있음
+
+
+```r
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       speed = distance / air_time * 60
+)
+```
+
+```
+## # A tibble: 336,776 x 9
+##     year month   day dep_delay arr_delay distance air_time  gain    speed
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+##  1  2013     1     1         2        11     1400      227     9 370.0441
+##  2  2013     1     1         4        20     1416      227    16 374.2731
+##  3  2013     1     1         2        33     1089      160    31 408.3750
+##  4  2013     1     1        -1       -18     1576      183   -17 516.7213
+##  5  2013     1     1        -6       -25      762      116   -19 394.1379
+##  6  2013     1     1        -4        12      719      150    16 287.6000
+##  7  2013     1     1        -5        19     1065      158    24 404.4304
+##  8  2013     1     1        -3       -14      229       53   -11 259.2453
+##  9  2013     1     1        -3        -8      944      140    -5 404.5714
+## 10  2013     1     1        -2         8      733      138    10 318.6957
+## # ... with 336,766 more rows
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+컬럼을 지우거나 기존의 컬럼을 변경하는 것도 가능
+
+
+```r
+mutate(flights_sml,
+       arr_delay = NULL,
+       air_time = air_time / 60
+)
+```
+
+```
+## # A tibble: 336,776 x 6
+##     year month   day dep_delay distance  air_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+##  1  2013     1     1         2     1400 3.7833333
+##  2  2013     1     1         4     1416 3.7833333
+##  3  2013     1     1         2     1089 2.6666667
+##  4  2013     1     1        -1     1576 3.0500000
+##  5  2013     1     1        -6      762 1.9333333
+##  6  2013     1     1        -4      719 2.5000000
+##  7  2013     1     1        -5     1065 2.6333333
+##  8  2013     1     1        -3      229 0.8833333
+##  9  2013     1     1        -3      944 2.3333333
+## 10  2013     1     1        -2      733 2.3000000
+## # ... with 336,766 more rows
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+transmute()는 계산한 컬럼만 있는 테이블을 생성
+
+
+```r
+transmute(flights,
+          gain = arr_delay - dep_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain / hours
+)
+```
+
+```
+## # A tibble: 336,776 x 3
+##     gain     hours gain_per_hour
+##    &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+##  1     9 3.7833333      2.378855
+##  2    16 3.7833333      4.229075
+##  3    31 2.6666667     11.625000
+##  4   -17 3.0500000     -5.573770
+##  5   -19 1.9333333     -9.827586
+##  6    16 2.5000000      6.400000
+##  7    24 2.6333333      9.113924
+##  8   -11 0.8833333    -12.452830
+##  9    -5 2.3333333     -2.142857
+## 10    10 2.3000000      4.347826
+## # ... with 336,766 more rows
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+group_by()와 함께 [window function](http://dplyr.tidyverse.org/articles/window-functions.html) 들이 유용하게 사용됨
+
+
+```r
+flights_smlg &lt;- group_by(flights_sml, month)
+mutate(flights_smlg, rank = row_number(desc(arr_delay)))
+```
+
+```
+## # A tibble: 336,776 x 8
+## # Groups:   month [12]
+##     year month   day dep_delay arr_delay distance air_time  rank
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+##  1  2013     1     1         2        11     1400      227  6970
+##  2  2013     1     1         4        20     1416      227  5064
+##  3  2013     1     1         2        33     1089      160  3458
+##  4  2013     1     1        -1       -18     1576      183 21131
+##  5  2013     1     1        -6       -25      762      116 23925
+##  6  2013     1     1        -4        12      719      150  6699
+##  7  2013     1     1        -5        19     1065      158  5226
+##  8  2013     1     1        -3       -14      229       53 19019
+##  9  2013     1     1        -3        -8      944      140 15534
+## 10  2013     1     1        -2         8      733      138  7912
+## # ... with 336,766 more rows
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+filter()는 데이터 중에 조건에 해당하는 일부 데이터만 필터해서 사용. 논리 연산자와 결합하여 많이 사용하며 [이곳](https://mrchypark.github.io/r/operator/%EB%85%BC%EB%A6%AC-%EC%97%B0%EC%82%B0%EC%9E%90-%EC%A0%95%EB%A6%AC.html)에서 추가적으로 내용을 확인할 수 있음
+
+
+```r
+filter(flights, month == 1)
+```
+
+```
+## # A tibble: 27,004 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 26,994 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+&amp; 는 **and** 라는 뜻이며 조건을 추가할 때 사용
+
+
+```r
+filter(flights, month == 1 &amp; day == 1)
+```
+
+```
+## # A tibble: 842 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 832 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+| 는 **or** 라는 뜻
+
+
+```r
+filter(flights, month == 11 | month == 12)
+```
+
+```
+## # A tibble: 55,403 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    11     1        5           2359         6      352
+##  2  2013    11     1       35           2250       105      123
+##  3  2013    11     1      455            500        -5      641
+##  4  2013    11     1      539            545        -6      856
+##  5  2013    11     1      542            545        -3      831
+##  6  2013    11     1      549            600       -11      912
+##  7  2013    11     1      550            600       -10      705
+##  8  2013    11     1      554            600        -6      659
+##  9  2013    11     1      554            600        -6      826
+## 10  2013    11     1      554            600        -6      749
+## # ... with 55,393 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+**%in%**는 유용하게 사용하는 논리 연산자로 왼쪽에 있는 벡터가 오른쪽 벡터의 데이터 중 어느 하나라도 맞으면 출력
+
+
+```r
+filter(flights, month %in% c(11, 12))
+```
+
+```
+## # A tibble: 55,403 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    11     1        5           2359         6      352
+##  2  2013    11     1       35           2250       105      123
+##  3  2013    11     1      455            500        -5      641
+##  4  2013    11     1      539            545        -6      856
+##  5  2013    11     1      542            545        -3      831
+##  6  2013    11     1      549            600       -11      912
+##  7  2013    11     1      550            600       -10      705
+##  8  2013    11     1      554            600        -6      659
+##  9  2013    11     1      554            600        -6      826
+## 10  2013    11     1      554            600        -6      749
+## # ... with 55,393 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+! 는 local 데이터에서 결과를 반대로 뒤집는 역할을 하며 수학에서의 괄호와 같이 연산의 범위를 작성해 두는 것이 문제 발생 소지가 적어점
+
+
+```r
+filter(flights, !(arr_delay &gt; 120 | dep_delay &gt; 120))
+```
+
+```
+## # A tibble: 316,050 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 316,040 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()를 진행하기 위해서 데이터를 작성
+
+
+```r
+feb&lt;-filter(flights, month==2)
+dec&lt;-filter(flights, month==12)
+dim(feb); dim(dec)
+```
+
+```
+## [1] 24951    19
+```
+
+```
+## [1] 28135    19
+```
+
+```r
+nrow(feb)+nrow(dec)
+```
+
+```
+## [1] 53086
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()는 컬럼 이름을 기준으로 같은 컬럼 밑에 데이터를 붙여서 **묶어줌**. 
+
+
+```r
+bind_rows(feb, dec)
+```
+
+```
+## # A tibble: 53,086 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     2     1      456            500        -4      652
+##  2  2013     2     1      520            525        -5      816
+##  3  2013     2     1      527            530        -3      837
+##  4  2013     2     1      532            540        -8     1007
+##  5  2013     2     1      540            540         0      859
+##  6  2013     2     1      552            600        -8      714
+##  7  2013     2     1      552            600        -8      919
+##  8  2013     2     1      552            600        -8      655
+##  9  2013     2     1      553            600        -7      833
+## 10  2013     2     1      553            600        -7      821
+## # ... with 53,076 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+list()로 구분된 데이터도 **묶어줌**.
+
+
+```r
+bind_rows(list(feb, dec))
+```
+
+```
+## # A tibble: 53,086 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     2     1      456            500        -4      652
+##  2  2013     2     1      520            525        -5      816
+##  3  2013     2     1      527            530        -3      837
+##  4  2013     2     1      532            540        -8     1007
+##  5  2013     2     1      540            540         0      859
+##  6  2013     2     1      552            600        -8      714
+##  7  2013     2     1      552            600        -8      919
+##  8  2013     2     1      552            600        -8      655
+##  9  2013     2     1      553            600        -7      833
+## 10  2013     2     1      553            600        -7      821
+## # ... with 53,076 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()은 첫번째 인자로 받은 데이터를 컬럼을 기준으로 list()로 분리해 줌. 
+
+
+```r
+flights_mon&lt;-split(flights, flights$month)
+summary(flights_mon)
+```
+
+```
+##    Length Class  Mode
+## 1  19     tbl_df list
+## 2  19     tbl_df list
+## 3  19     tbl_df list
+## 4  19     tbl_df list
+## 5  19     tbl_df list
+## 6  19     tbl_df list
+## 7  19     tbl_df list
+## 8  19     tbl_df list
+## 9  19     tbl_df list
+## 10 19     tbl_df list
+## 11 19     tbl_df list
+## 12 19     tbl_df list
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()으로 분리된 12개의 list() 자료도 잘 합쳐줌
+
+
+```r
+nrow(flights)
+```
+
+```
+## [1] 336776
+```
+
+```r
+bind_rows(flights_mon)
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+다른 종류의 데이터도 **묶어줌**. c()는 vector를 생성하고, data_frame은 data.frame을 생성함
+
+
+```r
+bind_rows(
+  c(a = 1, b = 2),
+  data_frame(a = 3:4, b = 5:6),
+  c(a = 7, b = 8)
+)
+```
+
+```
+## # A tibble: 4 x 2
+##       a     b
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     2
+## 2     3     5
+## 3     4     6
+## 4     7     8
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 묶을 때 데이터를 구분하는 컬럼을 추가할 수 있음
+
+
+```r
+bind_rows(list(feb, dec), .id = "id")
+```
+
+```
+## # A tibble: 53,086 x 20
+##       id  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1     1  2013     2     1      456            500        -4      652
+##  2     1  2013     2     1      520            525        -5      816
+##  3     1  2013     2     1      527            530        -3      837
+##  4     1  2013     2     1      532            540        -8     1007
+##  5     1  2013     2     1      540            540         0      859
+##  6     1  2013     2     1      552            600        -8      714
+##  7     1  2013     2     1      552            600        -8      919
+##  8     1  2013     2     1      552            600        -8      655
+##  9     1  2013     2     1      553            600        -7      833
+## 10     1  2013     2     1      553            600        -7      821
+## # ... with 53,076 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 구분하는 컬럼에 대해 이름이 동작하는 방식
+
+
+```r
+bind_rows(list(a = feb, b = dec), .id = "data")
+```
+
+```
+## # A tibble: 53,086 x 20
+##     data  year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1     a  2013     2     1      456            500        -4      652
+##  2     a  2013     2     1      520            525        -5      816
+##  3     a  2013     2     1      527            530        -3      837
+##  4     a  2013     2     1      532            540        -8     1007
+##  5     a  2013     2     1      540            540         0      859
+##  6     a  2013     2     1      552            600        -8      714
+##  7     a  2013     2     1      552            600        -8      919
+##  8     a  2013     2     1      552            600        -8      655
+##  9     a  2013     2     1      553            600        -7      833
+## 10     a  2013     2     1      553            600        -7      821
+## # ... with 53,076 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+같은 이름의 컬럼이 없을 때는 NA로 채우면서 동작함
+
+
+```r
+bind_rows(data.frame(x = 1:3), data.frame(y = 1:4))
+```
+
+```
+##    x  y
+## 1  1 NA
+## 2  2 NA
+## 3  3 NA
+## 4 NA  1
+## 5 NA  2
+## 6 NA  3
+## 7 NA  4
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+arrange()는 지정되는 컬럼 순으로 오름차순 정렬해주는 함수
+
+
+```r
+arrange(flights, dep_delay)
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    12     7     2040           2123       -43       40
+##  2  2013     2     3     2022           2055       -33     2240
+##  3  2013    11    10     1408           1440       -32     1549
+##  4  2013     1    11     1900           1930       -30     2233
+##  5  2013     1    29     1703           1730       -27     1947
+##  6  2013     8     9      729            755       -26     1002
+##  7  2013    10    23     1907           1932       -25     2143
+##  8  2013     3    30     2030           2055       -25     2213
+##  9  2013     3     2     1431           1455       -24     1601
+## 10  2013     5     5      934            958       -24     1225
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+desc()는 내림차순 정렬로 방향을 바꾸는 helper 함수
+
+
+```r
+arrange(flights, desc(month), dep_delay)
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013    12     7     2040           2123       -43       40
+##  2  2013    12    25     2036           2059       -23     2313
+##  3  2013    12     4     1910           1930       -20     2101
+##  4  2013    12    11      710            730       -20     1039
+##  5  2013    12    10     1841           1900       -19     2028
+##  6  2013    12    14      921            940       -19     1256
+##  7  2013    12     6      811            829       -18     1119
+##  8  2013    12    30      657            715       -18      927
+##  9  2013    12     7     1658           1715       -17     1956
+## 10  2013    12     7     2043           2100       -17     2250
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+summarise()는 여러 데이터를 요약하여 특성을 파악하는 방식으로 동작하는 함수들을 적용할 때 사용.
+
+
+```r
+summarise(flights, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+```
+## # A tibble: 1 x 2
+##       mean      n
+##      &lt;dbl&gt;  &lt;int&gt;
+## 1 12.63907 336776
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()는 데이터에 **지정한 컬럼별**이라는 추가 조건을 지정하는 기능을 수행
+
+
+```r
+flights_g&lt;-group_by(flights, month)
+flights_g
+```
+
+```
+## # A tibble: 336,776 x 19
+## # Groups:   month [12]
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+```r
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+```
+## # A tibble: 12 x 3
+##    month      mean     n
+##    &lt;int&gt;     &lt;dbl&gt; &lt;int&gt;
+##  1     1 10.036665 27004
+##  2     2 10.816843 24951
+##  3     3 13.227076 28834
+##  4     4 13.938038 28330
+##  5     5 12.986859 28796
+##  6     6 20.846332 28243
+##  7     7 21.727787 29425
+##  8     8 12.611040 29327
+##  9     9  6.722476 27574
+## 10    10  6.243988 28889
+## 11    11  5.435362 27268
+## 12    12 16.576688 28135
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()에 의해 **지정한 컬럼별** summarise()연산을 수행함
+
+
+```r
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+```
+## # A tibble: 12 x 3
+##    month      mean     n
+##    &lt;int&gt;     &lt;dbl&gt; &lt;int&gt;
+##  1     1 10.036665 27004
+##  2     2 10.816843 24951
+##  3     3 13.227076 28834
+##  4     4 13.938038 28330
+##  5     5 12.986859 28796
+##  6     6 20.846332 28243
+##  7     7 21.727787 29425
+##  8     8 12.611040 29327
+##  9     9  6.722476 27574
+## 10    10  6.243988 28889
+## 11    11  5.435362 27268
+## 12    12 16.576688 28135
+```
+---
+
+### 열 결합(Join) - left_join()
+
+select()를 사용하여 데이터 준비
+
+
+```r
+flights2 &lt;- select(flights, year:day, hour, origin, dest, tailnum, carrier)
+flights2
+```
+
+```
+## # A tibble: 336,776 x 8
+##     year month   day  hour origin  dest tailnum carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL
+##  6  2013     1     1     5    EWR   ORD  N39463      UA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA
+## # ... with 336,766 more rows
+```
+---
+
+### 열 결합(Join) - left_join()
+
+left_join()은 왼쪽 데이터를 기준으로 하고, by로 지정된 컬럼이 같은 데이터임을 식별하는 key로 지정하여 오른쪽 데이터를 왼쪽 데이터에 결합하는 함수
+
+
+```r
+left_join(flights2, airlines, by = "carrier")
+```
+
+```
+## # A tibble: 336,776 x 9
+##     year month   day  hour origin  dest tailnum carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL
+##  6  2013     1     1     5    EWR   ORD  N39463      UA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA
+## # ... with 336,766 more rows, and 1 more variables: name &lt;chr&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+mutate(), match()등의 함수로 구현하려면 아래와 같음
+
+
+```r
+mutate(flights2, name = airlines$name[match(carrier, airlines$carrier)])
+```
+
+```
+## # A tibble: 336,776 x 9
+##     year month   day  hour origin  dest tailnum carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL
+##  6  2013     1     1     5    EWR   ORD  N39463      UA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA
+## # ... with 336,766 more rows, and 1 more variables: name &lt;chr&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+key 역할을 할 컬럼을 지정하지 않으면 양쪽 데이터에서 컬럼 이름이 같은 모든 컬럼을 key로 자동 지정
+
+
+```r
+left_join(flights2, weather)
+```
+
+```
+## Joining, by = c("year", "month", "day", "hour", "origin")
+```
+
+```
+## # A tibble: 336,776 x 18
+##     year month   day  hour origin  dest tailnum carrier  temp  dewp humid
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA    NA    NA    NA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA    NA    NA    NA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA    NA    NA    NA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6    NA    NA    NA
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL 39.92 26.06 57.33
+##  6  2013     1     1     5    EWR   ORD  N39463      UA    NA    NA    NA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6 39.02 26.06 59.37
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV 39.92 26.06 57.33
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6 39.02 26.06 59.37
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA 39.92 26.06 57.33
+## # ... with 336,766 more rows, and 7 more variables: wind_dir &lt;dbl&gt;,
+## #   wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;, precip &lt;dbl&gt;, pressure &lt;dbl&gt;,
+## #   visib &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로써 가능할 때 명시적인 지정이 있으면 작성된 컬럼만 key로 동작
+
+
+```r
+left_join(flights2, planes, by = "tailnum")
+```
+
+```
+## # A tibble: 336,776 x 16
+##    year.x month   day  hour origin  dest tailnum carrier year.y
+##     &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt;
+##  1   2013     1     1     5    EWR   IAH  N14228      UA   1999
+##  2   2013     1     1     5    LGA   IAH  N24211      UA   1998
+##  3   2013     1     1     5    JFK   MIA  N619AA      AA   1990
+##  4   2013     1     1     5    JFK   BQN  N804JB      B6   2012
+##  5   2013     1     1     6    LGA   ATL  N668DN      DL   1991
+##  6   2013     1     1     5    EWR   ORD  N39463      UA   2012
+##  7   2013     1     1     6    EWR   FLL  N516JB      B6   2000
+##  8   2013     1     1     6    LGA   IAD  N829AS      EV   1998
+##  9   2013     1     1     6    JFK   MCO  N593JB      B6   2004
+## 10   2013     1     1     6    LGA   ORD  N3ALAA      AA     NA
+## # ... with 336,766 more rows, and 7 more variables: type &lt;chr&gt;,
+## #   manufacturer &lt;chr&gt;, model &lt;chr&gt;, engines &lt;int&gt;, seats &lt;int&gt;,
+## #   speed &lt;int&gt;, engine &lt;chr&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로 동작했을 때 데이터가 잘못 되는 예
+
+
+```r
+left_join(flights2, planes)
+```
+
+```
+## Joining, by = c("year", "tailnum")
+```
+
+```
+## # A tibble: 336,776 x 15
+##     year month   day  hour origin  dest tailnum carrier  type manufacturer
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA  &lt;NA&gt;         &lt;NA&gt;
+##  2  2013     1     1     5    LGA   IAH  N24211      UA  &lt;NA&gt;         &lt;NA&gt;
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA  &lt;NA&gt;         &lt;NA&gt;
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6  &lt;NA&gt;         &lt;NA&gt;
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL  &lt;NA&gt;         &lt;NA&gt;
+##  6  2013     1     1     5    EWR   ORD  N39463      UA  &lt;NA&gt;         &lt;NA&gt;
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6  &lt;NA&gt;         &lt;NA&gt;
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV  &lt;NA&gt;         &lt;NA&gt;
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6  &lt;NA&gt;         &lt;NA&gt;
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA  &lt;NA&gt;         &lt;NA&gt;
+## # ... with 336,766 more rows, and 5 more variables: model &lt;chr&gt;,
+## #   engines &lt;int&gt;, seats &lt;int&gt;, speed &lt;int&gt;, engine &lt;chr&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+컬럼 이름이 다를 때는 아래와 같은 문법을 사용
+
+
+```r
+left_join(flights2, airports, c("dest" = "faa"))
+```
+
+```
+## # A tibble: 336,776 x 15
+##     year month   day  hour origin  dest tailnum carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL
+##  6  2013     1     1     5    EWR   ORD  N39463      UA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA
+## # ... with 336,766 more rows, and 7 more variables: name &lt;chr&gt;, lat &lt;dbl&gt;,
+## #   lon &lt;dbl&gt;, alt &lt;int&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;
+```
+---
+
+### 열 결합(Join) - left_join()
+
+rename()을 이용해 맞추는 방법도 가능
+
+
+```r
+left_join(flights2, rename(airports, dest=faa), by="dest")
+```
+
+```
+## # A tibble: 336,776 x 15
+##     year month   day  hour origin  dest tailnum carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;
+##  1  2013     1     1     5    EWR   IAH  N14228      UA
+##  2  2013     1     1     5    LGA   IAH  N24211      UA
+##  3  2013     1     1     5    JFK   MIA  N619AA      AA
+##  4  2013     1     1     5    JFK   BQN  N804JB      B6
+##  5  2013     1     1     6    LGA   ATL  N668DN      DL
+##  6  2013     1     1     5    EWR   ORD  N39463      UA
+##  7  2013     1     1     6    EWR   FLL  N516JB      B6
+##  8  2013     1     1     6    LGA   IAD  N829AS      EV
+##  9  2013     1     1     6    JFK   MCO  N593JB      B6
+## 10  2013     1     1     6    LGA   ORD  N3ALAA      AA
+## # ... with 336,766 more rows, and 7 more variables: name &lt;chr&gt;, lat &lt;dbl&gt;,
+## #   lon &lt;dbl&gt;, alt &lt;int&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;
+```
+
+---
+
+class: center, middle, title-slide
+
+## tidy data, long form과 wide form
 
 ---
 
@@ -87,6 +1333,7 @@ class: center, middle, title-slide
 
 ## [tidyverse][1] 패키지는
 
+.pull-left[
 1. RStudio가 개발, 관리하는 패키지    
 1. 공식 문서가 매우 잘 되어 있음    
 1. 사용자층이 두터워 영어로 검색하면 많은 질답을 찾을 수 있음    
@@ -94,7 +1341,39 @@ class: center, middle, title-slide
 1. 6개의 핵심 패키지 포함 23가지 패키지로 이루어진 메타 패키지    
 1. tidy data 라는 사상과 파이프 연산자로 대동단결    
 1. 사상에 영감을 받아 맞춰서 제작하는 개인 패키지가 많음(ex&gt; [tidyquant](https://github.com/business-science/tidyquant), [tidytext](https://github.com/juliasilge/tidytext) 등)
+]
+.pull-right[
 
+```r
+if (!requireNamespace("tidyverse")){
+  install.packages("tidyverse")}
+```
+
+```
+## Loading required namespace: tidyverse
+```
+
+```r
+library(tidyverse)
+```
+
+```
+## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+```
+
+```
+## Conflicts with tidy packages ----------------------------------------------
+```
+
+```
+## filter(): dplyr, stats
+## lag():    dplyr, stats
+```
+]
 ---
 
 ## tidy data 란
@@ -166,8 +1445,7 @@ plot(diff(log(sample(rnorm(10000,mean=10,sd=1),size=100,replace=FALSE))),col="re
 
 --
 
-
-#### %&gt;%를 사용하면 
+### %&gt;%를 사용하면 
 
 .pull-left[
 
@@ -186,12 +1464,389 @@ rnorm(10000,mean=10,sd=1) %&gt;%
 ]
 ---
 
-class: center, middle, title-slide
+## 파이프 연산자(%&gt;%)
 
-## 
+flights 데이터에 파이프 연산자 사용예 1
+
+
+```r
+flights %&gt;%
+  group_by(year,month,day) %&gt;%
+  summarise(delay=mean(dep_delay, na.rm = TRUE))
+```
+
+```
+## # A tibble: 365 x 4
+## # Groups:   year, month [?]
+##     year month   day     delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;
+##  1  2013     1     1 11.548926
+##  2  2013     1     2 13.858824
+##  3  2013     1     3 10.987832
+##  4  2013     1     4  8.951595
+##  5  2013     1     5  5.732218
+##  6  2013     1     6  7.148014
+##  7  2013     1     7  5.417204
+##  8  2013     1     8  2.553073
+##  9  2013     1     9  2.276477
+## 10  2013     1    10  2.844995
+## # ... with 355 more rows
+```
+---
+
+## 파이프 연산자(%&gt;%)
+
+group_by()는 filter()와도 함께 사용할 수 있음
+
+
+```r
+popular_dests &lt;- flights %&gt;% 
+  group_by(dest) %&gt;% 
+  filter(n() &gt; 365)
+popular_dests
+```
+
+```
+## # A tibble: 332,577 x 19
+## # Groups:   dest [77]
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # ... with 332,567 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+## #   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
 
 ---
 
+## 파이프 연산자(%&gt;%)
+
+사용할 데이터부터 순서대로 함수를 작성할 있는 장점
+
+
+```r
+popular_dests %&gt;% 
+  filter(arr_delay &gt; 0) %&gt;% 
+  mutate(prop_delay = arr_delay / sum(arr_delay)) %&gt;% 
+  select(year:day, dest, arr_delay, prop_delay)
+```
+
+```
+## # A tibble: 131,106 x 6
+## # Groups:   dest [77]
+##     year month   day  dest arr_delay   prop_delay
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1  2013     1     1   IAH        11 1.106740e-04
+##  2  2013     1     1   IAH        20 2.012255e-04
+##  3  2013     1     1   MIA        33 2.350026e-04
+##  4  2013     1     1   ORD        12 4.239594e-05
+##  5  2013     1     1   FLL        19 9.377853e-05
+##  6  2013     1     1   ORD         8 2.826396e-05
+##  7  2013     1     1   LAX         7 3.444441e-05
+##  8  2013     1     1   DFW        31 2.817951e-04
+##  9  2013     1     1   ATL        12 3.996017e-05
+## 10  2013     1     1   DTW        16 1.157257e-04
+## # ... with 131,096 more rows
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/tidyr/raw/master/man/figures/logo.png)][4]
+
+---
+
+## tidyr이 데이터를 tidy하게 만드는 4개 함수
+
+[tidyr][4]은 데이터를 tidy하게 만드는 4개 함수를 제공하고 추가적인 helper 함수를 함께 제공
+
+1. gather()   : wide form 데이터를 long form 으로 변환
+1. spread()   : long form 데이터를 wide form 으로 변환
+1. separate() : 하나의 컬럼을 두 개로 나눔
+1. unite()    : 두 개의 컬럼을 하나로 합침
+
+---
+
+## tidyr 준비
+
+tidyr, dplyr은 tidyverse에 포함된 패키지이기 때문에 tidyverse를 설치하고 불러왔다면 생략가능
+
+
+```r
+if (!requireNamespace("tidyr")) install.packages("tidyr")
+library(tidyr)
+```
+
+---
+
+### 데이터 소개
+
+tidyr 패키지는 패키지의 동작을 설명하기 위해 내장 데이터를 준비하고 있음
+
+
+```r
+table1
+```
+
+```
+## # A tibble: 6 x 4
+##       country  year  cases population
+##         &lt;chr&gt; &lt;int&gt;  &lt;int&gt;      &lt;int&gt;
+## 1 Afghanistan  1999    745   19987071
+## 2 Afghanistan  2000   2666   20595360
+## 3      Brazil  1999  37737  172006362
+## 4      Brazil  2000  80488  174504898
+## 5       China  1999 212258 1272915272
+## 6       China  2000 213766 1280428583
+```
+---
+
+### 데이터 소개
+
+long form 예시
+
+
+```r
+table2
+```
+
+```
+## # A tibble: 12 x 4
+##        country  year       type      count
+##          &lt;chr&gt; &lt;int&gt;      &lt;chr&gt;      &lt;int&gt;
+##  1 Afghanistan  1999      cases        745
+##  2 Afghanistan  1999 population   19987071
+##  3 Afghanistan  2000      cases       2666
+##  4 Afghanistan  2000 population   20595360
+##  5      Brazil  1999      cases      37737
+##  6      Brazil  1999 population  172006362
+##  7      Brazil  2000      cases      80488
+##  8      Brazil  2000 population  174504898
+##  9       China  1999      cases     212258
+## 10       China  1999 population 1272915272
+## 11       China  2000      cases     213766
+## 12       China  2000 population 1280428583
+```
+---
+
+### 데이터 소개
+
+한 컬럼에 두 개의 의미를 지닌 데이터가 들어 있는 경우
+
+
+```r
+table3
+```
+
+```
+## # A tibble: 6 x 3
+##       country  year              rate
+## *       &lt;chr&gt; &lt;int&gt;             &lt;chr&gt;
+## 1 Afghanistan  1999      745/19987071
+## 2 Afghanistan  2000     2666/20595360
+## 3      Brazil  1999   37737/172006362
+## 4      Brazil  2000   80488/174504898
+## 5       China  1999 212258/1272915272
+## 6       China  2000 213766/1280428583
+```
+---
+
+### 데이터 소개
+
+wide form 예시 1
+
+
+```r
+table4a
+```
+
+```
+## # A tibble: 3 x 3
+##       country `1999` `2000`
+## *       &lt;chr&gt;  &lt;int&gt;  &lt;int&gt;
+## 1 Afghanistan    745   2666
+## 2      Brazil  37737  80488
+## 3       China 212258 213766
+```
+---
+
+### 데이터 소개
+
+wide form 예시 2
+
+
+```r
+table4b
+```
+
+```
+## # A tibble: 3 x 3
+##       country     `1999`     `2000`
+## *       &lt;chr&gt;      &lt;int&gt;      &lt;int&gt;
+## 1 Afghanistan   19987071   20595360
+## 2      Brazil  172006362  174504898
+## 3       China 1272915272 1280428583
+```
+---
+
+### wide to long - gather()
+
+.pull-left[
+```{}
+# case of column name is value
+
+table4a
+table4a %&gt;% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+
+# case of value is column name
+table2
+spread(table2, key = type, value = count)
+
+# separate columns
+table3
+table3 %&gt;% 
+  separate(rate, into = c("cases", "population"))
+
+# separate columns with class set
+table3 %&gt;% 
+  separate(rate, into = c("cases", "population"), convert = TRUE)
+
+# separate int columns
+table3 %&gt;% 
+  separate(year, into = c("century", "year"), sep = 2)
+
+# unite two columns to new column
+table5 %&gt;% 
+  unite(new, century, year)
+
+# unite two columns to new column controll to sep characters
+table5 %&gt;% 
+  unite(new, century, year, sep = "")
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+
+---
+
+### long to wide - spread() 
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+
+---
+
+### 컬럼을 분리 - separate()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+
+---
+
+### 컬럼을 합침 - unite()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+
+```
+## # A tibble: 336,776 x 3
+##     year month   day
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1  2013     1     1
+##  2  2013     1     1
+##  3  2013     1     1
+##  4  2013     1     1
+##  5  2013     1     1
+##  6  2013     1     1
+##  7  2013     1     1
+##  8  2013     1     1
+##  9  2013     1     1
+## 10  2013     1     1
+## # ... with 336,766 more rows
+```
+]
+
+---
 
 # sql
 
@@ -298,36 +1953,6 @@ select *
 from A left join B on A.key = b.key;
 ```
 
-# dplyr + tidyr
-
-## pipe 연산자  %&gt;%
-
-```
-g(f(y)) == y %&gt;% f() %&gt;% g()
-
-g(f(x,y,z)) == y %&gt;% f(x, . , z) %&gt;% g
-```
-
-## dplyr
-
-filter    : 행에 조건을 줘서 부분을 불러옴    
-select    : 필요한 컬럼만 선택    
-mutate    : 새로운 컬럼을 계산해서 만듬     
-arrange   : 조건에 따라 재정렬    
-group_by  : 그룹을 조건으로 사용    
-summarise : 요약형 계산을 진행    
-
-## tidyr
-
-spread   : long form &gt; wide form    
-gather   : wide form &gt; long form      
-seperate : 한 컬럼내의 데이터를 지정 조건으로 분리    
-unite    : 여러 컬럼의 데이터를 한 컬럼으로 함침    
-extract  : 데이터를 분리하는 폼을 지정하여 분리     
-
-## 실습
-
-&lt;https://github.com/mrchypark/dabrp_classnote2/blob/master/codeForClass3.R&gt;
 
 ## data.table
 
@@ -429,202 +2054,23 @@ dbGetQuery(con, "select * from flights where arr_delay &gt; 120 or dep_delay &gt
 # inner join
 dbGetQuery(con, "select * from flights as a inner join planes as b on a.tailnum = b.tailnum")
 
-library(tidyverse)
-
-# data
-flights
-
-# filter like where
-filter(flights, month == 1, day == 1)
-jan1 &lt;- filter(flights, month == 1, day == 1)
-(dec25 &lt;- filter(flights, month == 12, day == 25))
-dec25 %&gt;% summary
-filter(flights, month == 11 | month == 12)
-nov_dec &lt;- filter(flights, month %in% c(11, 12))
-filter(flights, !(arr_delay &gt; 120 | dep_delay &gt; 120))
-filter(flights, arr_delay &lt;= 120, dep_delay &lt;= 120)
-
-# arrange like order by
-arrange(flights, year, month, day)
-arrange(flights, desc(arr_delay))
-
-# test NA|
-(df &lt;- tibble(x = c(5, 2, NA)))
-arrange(df, x)
-arrange(df, desc(x))
-
-# select like select
-select(flights, year, month, day)
-select(flights, year:day)
-head(flights)
-select(flights, -(year:day))
-
-rename(flights, tail_num = tailnum)
-select(flights, time_hour, air_time, everything())
-
-# ends_with with select
-flights_sml &lt;- select(flights, 
-                      year:day, 
-                      ends_with("delay"), 
-                      distance, 
-                      air_time
-)
-names(flights_sml)
-# mutate make new columns using calculate others
-mutate(flights_sml,
-       gain = arr_delay - dep_delay,
-       speed = distance / air_time * 60
-)
-
-mutate(flights_sml,
-       gain = arr_delay - dep_delay,
-       hours = air_time / 60,
-       gain_per_hour = gain / hours
-)
-
-# only get new columns
-transmute(flights,
-          gain = arr_delay - dep_delay,
-          hours = air_time / 60,
-          gain_per_hour = gain / hours
-)
-
-# extra functions
-
-(x &lt;- 1:10)
-lag(x)
-lead(x)
-
-# summarise what you want to get
-summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
-
-# group_by 
-by_day &lt;- group_by(flights, year, month, day)
-class(by_day)
-class(flights)
-summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
-
-daily &lt;- group_by(flights, year, month, day)
-(per_day   &lt;- summarise(daily, flights = n()))
-(per_month &lt;- summarise(per_day, flights = sum(flights)))
-(per_year  &lt;- summarise(per_month, flights = sum(flights)))
-
-# ungroup
-daily %&gt;% 
-  ungroup() %&gt;% 
-  summarise(flights = n())
-
-ungroup(daily)
-
-# with pipe
-flights_sml %&gt;% 
-  group_by(year, month, day) %&gt;%
-  filter(rank(desc(arr_delay)) &lt; 10)
-filter(group_by(flights_sml, year, month, day), rank(desc(arr_delay)) &lt; 10)
-
-summarise(group_by(flights, year, month, day), 
-          delay = mean(dep_delay, na.rm = TRUE))
 
 flights %&gt;%
   group_by(year,month,day) %&gt;%
   summarise(delay=mean(dep_delay, na.rm = TRUE))
 
 
-# assign values
-popular_dests &lt;- flights %&gt;% 
-  group_by(dest) %&gt;% 
-  filter(n() &gt; 365)
-popular_dests
-popular_dests &lt;- filter(group_by(flights, dest), n() &gt; 365)
-popular_dests
 
-popular_dests %&gt;% 
-  filter(arr_delay &gt; 0) %&gt;% 
-  mutate(prop_delay = arr_delay / sum(arr_delay)) %&gt;% 
-  select(year:day, dest, arr_delay, prop_delay)
-popular_dests
-# tidyr examples
-table1
-table2
-table3
-table4a
-table4b
-
-# case of column name is value
-
-table4a
-table4a %&gt;% 
-  gather(`1999`, `2000`, key = "year", value = "cases")
-
-# case of value is column name
-table2
-spread(table2, key = type, value = count)
-
-# separate columns
-table3
-table3 %&gt;% 
-  separate(rate, into = c("cases", "population"))
-
-# separate columns with class set
-table3 %&gt;% 
-  separate(rate, into = c("cases", "population"), convert = TRUE)
-
-# separate int columns
-table3 %&gt;% 
-  separate(year, into = c("century", "year"), sep = 2)
-
-# unite two columns to new column
-table5 %&gt;% 
-  unite(new, century, year)
-
-# unite two columns to new column controll to sep characters
-table5 %&gt;% 
-  unite(new, century, year, sep = "")
-
-
-# join example
-
-flights2 &lt;- flights %&gt;% 
-  select(year:day, hour, origin, dest, tailnum, carrier)
-
-flights2
-
-# left join with dplyr
-flights2 %&gt;%
-  select(-origin, -dest) %&gt;% 
-  left_join(airlines, by = "carrier")
-
-# left join with dplyr without join function
-flights2 %&gt;%
-  select(-origin, -dest) %&gt;% 
-  mutate(name = airlines$name[match(carrier, airlines$carrier)])
-
-# join without key
-flights2 %&gt;% 
-  left_join(weather)
-
-
-flights2 %&gt;% 
-  left_join(planes, by = "tailnum")
-
-flights2 %&gt;% 
-  left_join(planes)
-
-# join with diff key names
-
-flights2 %&gt;% 
-  left_join(airports, c("dest" = "faa"))
-
-flights2 %&gt;% 
-  left_join(airports, c("origin" = "faa"))
 
 
 ## dplyr with db
 library(dplyr)
+library(dbplyr)
 library(RSQLite)
 
 sqlite_db = src_sqlite('sqlite_db.sqlite', 
                        create = T)
+                       
 copy_to(sqlite_db, mtcars)
 
 src_tbls(sqlite_db)
@@ -707,6 +2153,8 @@ flights[carrier == "AA", .N, by = .(origin, dest)][order(origin, -dest)][1:10,]
 
 [1]: https://www.tidyverse.org/
 [2]: https://mrchypark.github.io/kisa_finR/#(5)
+[3]: http://dplyr.tidyverse.org/
+[4]: http://tidyr.tidyverse.org/
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

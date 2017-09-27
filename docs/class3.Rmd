@@ -36,21 +36,18 @@ class: center, middle, title-slide
 
 1. 수업의 목표
 
-2. 단정한 데이터란
-    - tidy data
-    - long form과 wide form
-    - 실습
+2. 데이터를 다루는 주요 7가지 동작
+    - 데이터 소개 : nycflights13
+    - dplyr을 활용한 주요 7가지 동작
 
-3. tidy 데이터를 위한 dplyr+tidyr
-    - DBI 소개와 SQLite
-    - DBI 함수의 동작
-    - 실습
-    
-4. 
-    - 클라우드 서비스 이용하기
-    - MySQL 연결
-    - BigQuery 연결
-    
+3. tidy data, long form과 wide form
+    - 함수를 연결하는 파이프 연산자
+    - tidyr로 데이터를 tidy하게 만들기
+
+4. 데이터 소스에 연결하기
+    - 데이터 소스 소개와 연결 패키지 dbplyr, dtplyr
+    - 데이터 소스와 함께 사용하는 dplyr 함수
+
 5. 과제
 
 
@@ -68,7 +65,7 @@ class: center, middle, title-slide
 
 ### 2. tidy data, long form과 wide form의 장단점을 설명할 수 있다.
 
-### 3. 파이프 연산자를 이용하여 R의 명령어를 결합하여 작성할 수 있다.
+### 3. 데이터 베이스의 테이블을 R 객체에 연결하여 데이터를 다룰 수 있다.
 
 ---
 
@@ -80,6 +77,467 @@ class: center, middle, title-slide
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
 
+---
+
+## 실습 데이터 소개
+
+[nycflights13](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)는 2013년 미국의 비행기 운항기록에 관련된 airlines, airports, flights, planes, weather의 5개 데이터를 가지고 있는 데이터 패키지
+
+```{r, message=F}
+if (!requireNamespace("nycflights13")) install.packages("nycflights13")
+library(nycflights13)
+nycflights13::flights
+```
+
+---
+
+## [nycflights13 코드북](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)
+
+```{r, message=F}
+str(flights)
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)][3]
+
+---
+
+## 데이터를 다루는 주요 7가지 동작
+
+.pull-left[
+[dplyr][3]은 데이터를 다루는 주요 7가지 동작 자체를 함수로 가지고 추가적인 helper 함수를 함께 제공
+
+1. 열 방향: 선택 - select()
+1. 열 방향: 계산 - mutate()
+1. 행 방향: 조건 - filter()
+1. 행 방향: 추가 - bind_rows()
+1. 행 방향: 정렬 - arrange()
+1. 그룹 계산 - group_by() + summarise()
+1. 열 결합 - left_join()
+]
+.pull-right[
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+]
+
+---
+
+## dplyr 준비
+
+```{r}
+if (!requireNamespace("dplyr")) install.packages("dplyr")
+library(dplyr)
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+숫자에서만 제공하던 from:to 문법을 컬럼 순서를 기준으로 지원
+.pull-left[
+```{}
+select(flights, year:day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+
+select(flights, year:day)
+
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+-(마이너스)는 지정한 컬럼을 제외하고 전부라는 의미
+```{r}
+select(flights, -(year:day))
+
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+everything() 같은 helper 함수를 제공 everything()은 select()내에 선언된 컬럼을 제외한 나머지 전부라는 의미. 
+
+```{r}
+select(flights, time_hour, air_time, everything())
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+ends_with()같이 글자의 일부에 해당하는 컬럼 전부를 가져오는 helper 함수도 있음. 정규표현식의 주요 기능을 함수로 제공. ?select로 확인
+
+```{r}
+select(flights, year:day, ends_with("delay"), distance, air_time)
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+출력 편의를 위해 일부 데이터만 사용
+
+```{r}
+flights_sml <- select(flights, year:day, ends_with("delay"), distance, air_time)
+flights_sml
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+각 컬럼간의 계산으로 새로운 열을 만들 수 있음
+
+```{r}
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       speed = distance / air_time * 60
+)
+
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+컬럼을 지우거나 기존의 컬럼을 변경하는 것도 가능
+
+```{r}
+mutate(flights_sml,
+       arr_delay = NULL,
+       air_time = air_time / 60
+)
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+transmute()는 계산한 컬럼만 있는 테이블을 생성
+
+```{r}
+transmute(flights,
+          gain = arr_delay - dep_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain / hours
+)
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+group_by()와 함께 [window function](http://dplyr.tidyverse.org/articles/window-functions.html) 들이 유용하게 사용됨
+
+```{r}
+flights_smlg <- group_by(flights_sml, month)
+mutate(flights_smlg, rank = row_number(desc(arr_delay)))
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+filter()는 데이터 중에 조건에 해당하는 일부 데이터만 필터해서 사용. 논리 연산자와 결합하여 많이 사용하며 [이곳](https://mrchypark.github.io/r/operator/%EB%85%BC%EB%A6%AC-%EC%97%B0%EC%82%B0%EC%9E%90-%EC%A0%95%EB%A6%AC.html)에서 추가적으로 내용을 확인할 수 있음
+
+```{r}
+filter(flights, month == 1)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+& 는 **and** 라는 뜻이며 조건을 추가할 때 사용
+
+```{r}
+filter(flights, month == 1 & day == 1)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+| 는 **or** 라는 뜻
+
+```{r}
+filter(flights, month == 11 | month == 12)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+**%in%**는 유용하게 사용하는 논리 연산자로 왼쪽에 있는 벡터가 오른쪽 벡터의 데이터 중 어느 하나라도 맞으면 출력
+
+```{r}
+filter(flights, month %in% c(11, 12))
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+! 는 local 데이터에서 결과를 반대로 뒤집는 역할을 하며 수학에서의 괄호와 같이 연산의 범위를 작성해 두는 것이 문제 발생 소지가 적어점
+
+```{r}
+filter(flights, !(arr_delay > 120 | dep_delay > 120))
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()를 진행하기 위해서 데이터를 작성
+
+```{r}
+feb<-filter(flights, month==2)
+dec<-filter(flights, month==12)
+dim(feb); dim(dec)
+nrow(feb)+nrow(dec)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()는 컬럼 이름을 기준으로 같은 컬럼 밑에 데이터를 붙여서 **묶어줌**. 
+
+```{r}
+bind_rows(feb, dec)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+list()로 구분된 데이터도 **묶어줌**.
+
+```{r}
+bind_rows(list(feb, dec))
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()은 첫번째 인자로 받은 데이터를 컬럼을 기준으로 list()로 분리해 줌. 
+
+```{r}
+flights_mon<-split(flights, flights$month)
+summary(flights_mon)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()으로 분리된 12개의 list() 자료도 잘 합쳐줌
+
+```{r}
+nrow(flights)
+bind_rows(flights_mon)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+다른 종류의 데이터도 **묶어줌**. c()는 vector를 생성하고, data_frame은 data.frame을 생성함
+
+```{r}
+bind_rows(
+  c(a = 1, b = 2),
+  data_frame(a = 3:4, b = 5:6),
+  c(a = 7, b = 8)
+)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 묶을 때 데이터를 구분하는 컬럼을 추가할 수 있음
+
+```{r}
+bind_rows(list(feb, dec), .id = "id")
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 구분하는 컬럼에 대해 이름이 동작하는 방식
+
+```{r}
+bind_rows(list(a = feb, b = dec), .id = "data")
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+같은 이름의 컬럼이 없을 때는 NA로 채우면서 동작함
+
+```{r}
+bind_rows(data.frame(x = 1:3), data.frame(y = 1:4))
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+arrange()는 지정되는 컬럼 순으로 오름차순 정렬해주는 함수
+
+```{r}
+arrange(flights, dep_delay)
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+desc()는 내림차순 정렬로 방향을 바꾸는 helper 함수
+
+```{r}
+arrange(flights, desc(month), dep_delay)
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+summarise()는 여러 데이터를 요약하여 특성을 파악하는 방식으로 동작하는 함수들을 적용할 때 사용.
+
+```{r}
+summarise(flights, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()는 데이터에 **지정한 컬럼별**이라는 추가 조건을 지정하는 기능을 수행
+
+```{r}
+flights_g<-group_by(flights, month)
+flights_g
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()에 의해 **지정한 컬럼별** summarise()연산을 수행함
+
+```{r}
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+---
+
+### 열 결합(Join) - left_join()
+
+select()를 사용하여 데이터 준비
+
+```{r}
+flights2 <- select(flights, year:day, hour, origin, dest, tailnum, carrier)
+flights2
+```
+---
+
+### 열 결합(Join) - left_join()
+
+left_join()은 왼쪽 데이터를 기준으로 하고, by로 지정된 컬럼이 같은 데이터임을 식별하는 key로 지정하여 오른쪽 데이터를 왼쪽 데이터에 결합하는 함수
+
+```{r}
+left_join(flights2, airlines, by = "carrier")
+```
+---
+
+### 열 결합(Join) - left_join()
+
+mutate(), match()등의 함수로 구현하려면 아래와 같음
+
+```{r}
+mutate(flights2, name = airlines$name[match(carrier, airlines$carrier)])
+```
+---
+
+### 열 결합(Join) - left_join()
+
+key 역할을 할 컬럼을 지정하지 않으면 양쪽 데이터에서 컬럼 이름이 같은 모든 컬럼을 key로 자동 지정
+
+```{r}
+left_join(flights2, weather)
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로써 가능할 때 명시적인 지정이 있으면 작성된 컬럼만 key로 동작
+
+```{r}
+left_join(flights2, planes, by = "tailnum")
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로 동작했을 때 데이터가 잘못 되는 예
+
+```{r}
+left_join(flights2, planes)
+```
+---
+
+### 열 결합(Join) - left_join()
+
+컬럼 이름이 다를 때는 아래와 같은 문법을 사용
+
+```{r}
+left_join(flights2, airports, c("dest" = "faa"))
+```
+---
+
+### 열 결합(Join) - left_join()
+
+rename()을 이용해 맞추는 방법도 가능
+
+```{r}
+left_join(flights2, rename(airports, dest=faa), by="dest")
+```
+
+---
+
+class: center, middle, title-slide
+
+## tidy data, long form과 wide form
 
 ---
 
@@ -93,6 +551,7 @@ class: center, middle, title-slide
 
 ## [tidyverse][1] 패키지는
 
+.pull-left[
 1. RStudio가 개발, 관리하는 패키지    
 1. 공식 문서가 매우 잘 되어 있음    
 1. 사용자층이 두터워 영어로 검색하면 많은 질답을 찾을 수 있음    
@@ -100,7 +559,14 @@ class: center, middle, title-slide
 1. 6개의 핵심 패키지 포함 23가지 패키지로 이루어진 메타 패키지    
 1. tidy data 라는 사상과 파이프 연산자로 대동단결    
 1. 사상에 영감을 받아 맞춰서 제작하는 개인 패키지가 많음(ex> [tidyquant](https://github.com/business-science/tidyquant), [tidytext](https://github.com/juliasilge/tidytext) 등)
-
+]
+.pull-right[
+```{r}
+if (!requireNamespace("tidyverse")){
+  install.packages("tidyverse")}
+library(tidyverse)
+```
+]
 ---
 
 ## tidy data 란
@@ -191,12 +657,208 @@ rnorm(10000,mean=10,sd=1) %>%
 ]
 ---
 
-class: center, middle, title-slide
+## 파이프 연산자(%>%)
 
-[![](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)][3]
+flights 데이터에 파이프 연산자 사용예 1
+
+```{r}
+flights %>%
+  group_by(year,month,day) %>%
+  summarise(delay=mean(dep_delay, na.rm = TRUE))
+```
+---
+
+## 파이프 연산자(%>%)
+
+group_by()는 filter()와도 함께 사용할 수 있음
+
+```{r}
+popular_dests <- flights %>% 
+  group_by(dest) %>% 
+  filter(n() > 365)
+popular_dests
+
+```
 
 ---
 
+## 파이프 연산자(%>%)
+
+사용할 데이터부터 순서대로 함수를 작성할 있는 장점
+
+```{r}
+popular_dests %>% 
+  filter(arr_delay > 0) %>% 
+  mutate(prop_delay = arr_delay / sum(arr_delay)) %>% 
+  select(year:day, dest, arr_delay, prop_delay)
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/tidyr/raw/master/man/figures/logo.png)][4]
+
+---
+
+## tidyr이 데이터를 tidy하게 만드는 4개 함수
+
+[tidyr][4]은 데이터를 tidy하게 만드는 4개 함수를 제공하고 추가적인 helper 함수를 함께 제공
+
+1. gather()   : wide form 데이터를 long form 으로 변환
+1. spread()   : long form 데이터를 wide form 으로 변환
+1. separate() : 하나의 컬럼을 두 개로 나눔
+1. unite()    : 두 개의 컬럼을 하나로 합침
+
+---
+
+## tidyr 준비
+
+tidyr, dplyr은 tidyverse에 포함된 패키지이기 때문에 tidyverse를 설치하고 불러왔다면 생략가능
+
+```{r}
+if (!requireNamespace("tidyr")) install.packages("tidyr")
+library(tidyr)
+```
+
+---
+
+### 데이터 소개
+
+tidyr 패키지는 패키지의 동작을 설명하기 위해 내장 데이터를 준비하고 있음
+
+```{r}
+table1
+```
+---
+
+### 데이터 소개
+
+long form 예시
+
+```{r}
+table2
+```
+---
+
+### 데이터 소개
+
+한 컬럼에 두 개의 의미를 지닌 데이터가 들어 있는 경우
+
+```{r}
+table3
+```
+---
+
+### 데이터 소개
+
+wide form 예시 1
+
+```{r}
+table4a
+```
+---
+
+### 데이터 소개
+
+wide form 예시 2
+
+```{r}
+table4b
+```
+---
+
+### wide to long - gather()
+
+.pull-left[
+```{}
+# case of column name is value
+
+table4a
+table4a %>% 
+  gather(`1999`, `2000`, key = "year", value = "cases")
+
+# case of value is column name
+table2
+spread(table2, key = type, value = count)
+
+# separate columns
+table3
+table3 %>% 
+  separate(rate, into = c("cases", "population"))
+
+# separate columns with class set
+table3 %>% 
+  separate(rate, into = c("cases", "population"), convert = TRUE)
+
+# separate int columns
+table3 %>% 
+  separate(year, into = c("century", "year"), sep = 2)
+
+# unite two columns to new column
+table5 %>% 
+  unite(new, century, year)
+
+# unite two columns to new column controll to sep characters
+table5 %>% 
+  unite(new, century, year, sep = "")
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+
+---
+
+### long to wide - spread() 
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+
+---
+
+### 컬럼을 분리 - separate()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+
+---
+
+### 컬럼을 합침 - unite()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+
+---
 
 # sql
 
@@ -303,26 +965,6 @@ select *
 from A left join B on A.key = b.key;
 ```
 
-## dplyr
-
-filter    : 행에 조건을 줘서 부분을 불러옴    
-select    : 필요한 컬럼만 선택    
-mutate    : 새로운 컬럼을 계산해서 만듬     
-arrange   : 조건에 따라 재정렬    
-group_by  : 그룹을 조건으로 사용    
-summarise : 요약형 계산을 진행    
-
-## tidyr
-
-spread   : long form > wide form    
-gather   : wide form > long form      
-seperate : 한 컬럼내의 데이터를 지정 조건으로 분리    
-unite    : 여러 컬럼의 데이터를 한 컬럼으로 함침    
-extract  : 데이터를 분리하는 폼을 지정하여 분리     
-
-## 실습
-
-<https://github.com/mrchypark/dabrp_classnote2/blob/master/codeForClass3.R>
 
 ## data.table
 
@@ -424,202 +1066,23 @@ dbGetQuery(con, "select * from flights where arr_delay > 120 or dep_delay > 120"
 # inner join
 dbGetQuery(con, "select * from flights as a inner join planes as b on a.tailnum = b.tailnum")
 
-library(tidyverse)
-
-# data
-flights
-
-# filter like where
-filter(flights, month == 1, day == 1)
-jan1 <- filter(flights, month == 1, day == 1)
-(dec25 <- filter(flights, month == 12, day == 25))
-dec25 %>% summary
-filter(flights, month == 11 | month == 12)
-nov_dec <- filter(flights, month %in% c(11, 12))
-filter(flights, !(arr_delay > 120 | dep_delay > 120))
-filter(flights, arr_delay <= 120, dep_delay <= 120)
-
-# arrange like order by
-arrange(flights, year, month, day)
-arrange(flights, desc(arr_delay))
-
-# test NA|
-(df <- tibble(x = c(5, 2, NA)))
-arrange(df, x)
-arrange(df, desc(x))
-
-# select like select
-select(flights, year, month, day)
-select(flights, year:day)
-head(flights)
-select(flights, -(year:day))
-
-rename(flights, tail_num = tailnum)
-select(flights, time_hour, air_time, everything())
-
-# ends_with with select
-flights_sml <- select(flights, 
-                      year:day, 
-                      ends_with("delay"), 
-                      distance, 
-                      air_time
-)
-names(flights_sml)
-# mutate make new columns using calculate others
-mutate(flights_sml,
-       gain = arr_delay - dep_delay,
-       speed = distance / air_time * 60
-)
-
-mutate(flights_sml,
-       gain = arr_delay - dep_delay,
-       hours = air_time / 60,
-       gain_per_hour = gain / hours
-)
-
-# only get new columns
-transmute(flights,
-          gain = arr_delay - dep_delay,
-          hours = air_time / 60,
-          gain_per_hour = gain / hours
-)
-
-# extra functions
-
-(x <- 1:10)
-lag(x)
-lead(x)
-
-# summarise what you want to get
-summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
-
-# group_by 
-by_day <- group_by(flights, year, month, day)
-class(by_day)
-class(flights)
-summarise(by_day, delay = mean(dep_delay, na.rm = TRUE))
-
-daily <- group_by(flights, year, month, day)
-(per_day   <- summarise(daily, flights = n()))
-(per_month <- summarise(per_day, flights = sum(flights)))
-(per_year  <- summarise(per_month, flights = sum(flights)))
-
-# ungroup
-daily %>% 
-  ungroup() %>% 
-  summarise(flights = n())
-
-ungroup(daily)
-
-# with pipe
-flights_sml %>% 
-  group_by(year, month, day) %>%
-  filter(rank(desc(arr_delay)) < 10)
-filter(group_by(flights_sml, year, month, day), rank(desc(arr_delay)) < 10)
-
-summarise(group_by(flights, year, month, day), 
-          delay = mean(dep_delay, na.rm = TRUE))
 
 flights %>%
   group_by(year,month,day) %>%
   summarise(delay=mean(dep_delay, na.rm = TRUE))
 
 
-# assign values
-popular_dests <- flights %>% 
-  group_by(dest) %>% 
-  filter(n() > 365)
-popular_dests
-popular_dests <- filter(group_by(flights, dest), n() > 365)
-popular_dests
 
-popular_dests %>% 
-  filter(arr_delay > 0) %>% 
-  mutate(prop_delay = arr_delay / sum(arr_delay)) %>% 
-  select(year:day, dest, arr_delay, prop_delay)
-popular_dests
-# tidyr examples
-table1
-table2
-table3
-table4a
-table4b
-
-# case of column name is value
-
-table4a
-table4a %>% 
-  gather(`1999`, `2000`, key = "year", value = "cases")
-
-# case of value is column name
-table2
-spread(table2, key = type, value = count)
-
-# separate columns
-table3
-table3 %>% 
-  separate(rate, into = c("cases", "population"))
-
-# separate columns with class set
-table3 %>% 
-  separate(rate, into = c("cases", "population"), convert = TRUE)
-
-# separate int columns
-table3 %>% 
-  separate(year, into = c("century", "year"), sep = 2)
-
-# unite two columns to new column
-table5 %>% 
-  unite(new, century, year)
-
-# unite two columns to new column controll to sep characters
-table5 %>% 
-  unite(new, century, year, sep = "")
-
-
-# join example
-
-flights2 <- flights %>% 
-  select(year:day, hour, origin, dest, tailnum, carrier)
-
-flights2
-
-# left join with dplyr
-flights2 %>%
-  select(-origin, -dest) %>% 
-  left_join(airlines, by = "carrier")
-
-# left join with dplyr without join function
-flights2 %>%
-  select(-origin, -dest) %>% 
-  mutate(name = airlines$name[match(carrier, airlines$carrier)])
-
-# join without key
-flights2 %>% 
-  left_join(weather)
-
-
-flights2 %>% 
-  left_join(planes, by = "tailnum")
-
-flights2 %>% 
-  left_join(planes)
-
-# join with diff key names
-
-flights2 %>% 
-  left_join(airports, c("dest" = "faa"))
-
-flights2 %>% 
-  left_join(airports, c("origin" = "faa"))
 
 
 ## dplyr with db
 library(dplyr)
+library(dbplyr)
 library(RSQLite)
 
 sqlite_db = src_sqlite('sqlite_db.sqlite', 
                        create = T)
+                       
 copy_to(sqlite_db, mtcars)
 
 src_tbls(sqlite_db)
@@ -703,3 +1166,4 @@ flights[carrier == "AA", .N, by = .(origin, dest)][order(origin, -dest)][1:10,]
 [1]: https://www.tidyverse.org/
 [2]: https://mrchypark.github.io/kisa_finR/#(5)
 [3]: http://dplyr.tidyverse.org/
+[4]: http://tidyr.tidyverse.org/
