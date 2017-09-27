@@ -79,10 +79,112 @@ class: center, middle, title-slide
 
 class: center, middle, title-slide
 
-## 데이터를 다루는 dplyr과 파이프 연산자(%&gt;%)
+# tidy data + universe 
+
+[![](https://github.com/tidyverse/tidyverse/raw/master/man/figures/logo.png)][1]
 
 ---
 
+## [tidyverse][1] 패키지는
+
+1. RStudio가 개발, 관리하는 패키지    
+1. 공식 문서가 매우 잘 되어 있음    
+1. 사용자층이 두터워 영어로 검색하면 많은 질답을 찾을 수 있음    
+1. 커뮤니티 설명글도 매우 많음    
+1. 6개의 핵심 패키지 포함 23가지 패키지로 이루어진 메타 패키지    
+1. tidy data 라는 사상과 파이프 연산자로 대동단결    
+1. 사상에 영감을 받아 맞춰서 제작하는 개인 패키지가 많음(ex&gt; [tidyquant](https://github.com/business-science/tidyquant), [tidytext](https://github.com/juliasilge/tidytext) 등)
+
+---
+
+## tidy data 란
+
+1. [Hadley Wickham](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)  2. [고감자님의 블로그](http://freesearch.pe.kr/archives/3942)  3. [헬로우데이터과학](http://www.hellodatascience.com/?p=287)
+
+
+1.1 Each variable forms a column.    
+1.2 각 변수는 개별의 열(column)으로 존재한다.    
+1.3 각 열에는 개별 속성이 들어간다.    
+
+2.1 Each observation forms a row.    
+2.2 각 관측치는 행(row)를 구성한다.    
+2.3 각 행에는 개별 관찰 항목이 들어간다.    
+
+3.1 Each type of observational unit forms a table.    
+3.2 각 테이블은 단 하나의 관측기준에 의해서 조직된 데이터를 저장한다.    
+3.3 각 테이블에는 단일 유형의 데이터가 들어간다.    
+
+.footnote[
+  \* 출처 : [금융데이터 분석을 위한 R 입문][2]
+]
+---
+
+## tidy data 란
+
+![](http://garrettgman.github.io/images/tidy-1.png)
+
+.footnote[
+  \* 출처 : [Garrett Grolemund의 Data Science with R 블로그](http://garrettgman.github.io/tidying/)
+]
+
+---
+
+## long form vs wide form
+
+.pull-left[
+### long form
+
+1. 컴퓨터가 계산하기 좋은 모양
+1. tidy data의 요건을 충족
+1. tidyverse의 패키지 대부분의 입력 형태
+]
+.pull-right[
+### wide form
+
+1. 사람이 눈으로 보기 좋은 모양
+1. 2개 변수에 대한 값만 확인 가능
+1. dashboard 형이라고도 하며 조인 등 연산이 어려움
+]
+
+---
+
+class: center, middle, title-slide
+
+## 함수를 연결하는 파이프 연산자(%&gt;%)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/pipes.png)
+
+---
+
+## 파이프 연산자(%&gt;%)
+
+함수를 중첩해서 사용할 일이 점점 빈번해 짐
+
+```{}
+plot(diff(log(sample(rnorm(10000,mean=10,sd=1),size=100,replace=FALSE))),col="red",type="l")
+```
+
+--
+
+
+#### %&gt;%를 사용하면 
+
+.pull-left[
+
+1. 생각의 순서대로 함수를 작성할 수 있음
+1. 중간 변수 저장을 할 필요가 없음
+1. 순서가 읽이 용이하여 기억하기 좋음
+]
+.pull-right[
+```{}
+rnorm(10000,mean=10,sd=1) %&gt;%
+  sample(size=100,replace=FALSE) %&gt;%
+  log %&gt;%
+  diff %&gt;%
+  plot(col="red",type="l")
+```
+]
+---
 
 class: center, middle, title-slide
 
@@ -600,6 +702,11 @@ flights[carrier == "AA", .N, by = .(origin,dest)]
 # add options
 flights[carrier == "AA", .N, by = .(origin, dest)][order(origin, -dest)][1:10,]
 ## like pipe %&gt;%      [][][]....[]
+
+
+
+[1]: https://www.tidyverse.org/
+[2]: https://mrchypark.github.io/kisa_finR/#(5)
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
