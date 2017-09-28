@@ -683,7 +683,7 @@ popular_dests
 
 ## 파이프 연산자(%>%)
 
-사용할 데이터부터 순서대로 함수를 작성할 있는 장점
+사용할 데이터부터 순서대로 함수를 작성할 수 있는 장점
 
 ```{r}
 popular_dests %>% 
@@ -847,13 +847,18 @@ table3 %>%
 ```{r}
 table3 %>% 
   separate(rate
-           ,into = c("cases", "population"))
+   , into = c("cases"
+        , "population")
+        )
 ```
 ]
 .pull-right[
 ```{r}
 table3 %>% 
-  separate(rate, into = c("cases", "population"), convert = TRUE)
+  separate(rate
+   , into = c("cases"
+        , "population")
+        , convert = TRUE)
 ```
 ]
 
@@ -874,6 +879,8 @@ table5 %>%
   unite(new, century, year)
 ```
 ]
+
+---
 
 ### 구분자 지정
 
@@ -924,49 +931,139 @@ library(dtplyr)
 
 ## R 데이터를 DB 테이블로 만들기 copy_to()
 
-copy_to()는 DBI의 dbWriteTable()과 같은 기능을 수행합니다. dplyr 패키지에 속한 copy_to()는 성능 개선을 통해 dbWriteTable() 보다 빠른 속도를 제공하는 것으로 알려져 있습니다.
+copy_to()는 DBI의 dbWriteTable()과 같은 기능을 수행. dplyr 패키지에 속한 copy_to()는 성능 개선을 통해 dbWriteTable() 보다 빠른 속도를 제공함
 
 ```{r}
 library(RSQLite)
 library(nycflights13)
 
-conn <- dbConnect(SQLite(), dbname = "./test.db")
+conn <- dbConnect(SQLite())
 
 copy_to(conn
         , flights
+        , temporary = FALSE
         , name = 'flights')
 dbListTables(conn)
-
 ```
 
 ---
 
-## tbl()
+## 테이블의 연결정보를 R 객체에 저장 - tbl()
 
-dbplyr과 DBI, dplyr로 데이터베이스의 테이블을 dplyr 문법으로 다루기 위해서는 DBI 패키지에서 conn 객체와 같이 테이블의 연결정보를 담고 있는 R 객체가 필요합니다. tbl()는 DB내 테이블 연결정보를 R 객체로 만드는 함수입니다.
+dbplyr과 DBI, dplyr로 데이터베이스의 테이블을 dplyr 문법으로 다루기 위해서는 DBI 패키지에서 conn 객체와 같이 테이블의 연결정보를 담고 있는 R 객체가 필요. tbl()는 DB내 테이블 연결정보를 R 객체로 만드는 함수
+
+```{r}
+tb_flights <- tbl(conn, "flights")
+```
 
 ---
 
 ### 속도를 빠르게 하는 indexes 옵션
 
+copy_to()를 진행할 때 key 역할을 수행할 컬럼을 미리 지정해주면 관련 컬럼을 사용하는 연산(group_by에 key 컬럼 사용 등)에서 속도를 높일 있음
+
+```{r}
+copy_to(conn,
+        flights,
+        name = 'flights_idx',
+        temporary = FALSE,
+        indexes = list("carrier"))
+
+tb_flights <- tbl(conn, "flights")
+tb_flights_idx <- tbl(conn, "flights_idx")
+```
+
 ---
 
-### show_query()
+### 함수 속도를 비교 - microbenchmark()
+
+함수의 속도와 결과를 비교해서 같은 결과에 빠른 속도의 함수를 사용하기 위해 비교 테스트를 진행
+
+```{r}
+if (!requireNamespace("microbenchmark")) install.packages("microbenchmark")
+library(microbenchmark)
+```
+
+---
+
+### indexes 속도 비교
+
+```{r}
+microbenchmark(tbl(conn, 'flights') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect(),
+               tbl(conn, 'flights_idx') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect(),
+               times = 10)
+```
 
 ---
 
 ### collect()
 
+collect()는 DB에 전달하는 명령의 최종 결과를 R 객체로 가져오는 역할을 수행합니다.
+
+```{r}
+tbl(conn, 'flights') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect()
+```
 
 ---
 
+### 결과를 테이블로 저장 - compute()
+
+compute()는 collect()와는 달리 연산된 결과를 R 객체로 저장하는 것이 아니라 새로 이름지은 테이블로 DB에 저장하는 동작을 수행
+
+```{r}
+dbListTables(conn)
+tbl(conn, 'flights') %>%
+  group_by(tailnum) %>%
+  summarise(count=n(),
+            mean_distance = mean(distance),
+            total_distance = sum(distance)) %>%
+  filter(!is.na(tailnum)) %>%
+  compute(name = 'planes_distance')
+```
+
+---
+  
+### 테이블 저장 결과 확인
+
+```{r}
+dbListTables(conn)
+```
+```{r}
+dbReadTable(conn, "planes_distance")
+```
+
+---
+
+### show_query()
+
+show_query()는 dplyr로 구성된 함수의 연결이 query문으로 어떻게 변환되는지를 보여줌
+
+```{r}
+copy_to(conn, planes, name = 'planes', temporary = FALSE)
+tbl(conn, 'planes_distance') %>%
+  inner_join(tbl(conn, 'planes'), by='tailnum') %>%
+  arrange(desc(total_distance)) %>%
+  select(total_distance, manufacturer, model) %>%
+  show_query()
+```
+
+---
 
 ## 과제
 
 - recomen 폴더에 있는 6개 데이터를 활용해서 다음장의 6개 질문에 답해주세요.
 - 데이터가 5개이신 분은 아래 코드를 실행해서 다운로드해주세요. 1.4G라 시간이 좀 걸립니다.    
 
-```
+```{}
 chk<-file.info("./recomen/tran.csv")
 if(is.na(chk$size)){
   recoment<-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
@@ -979,6 +1076,8 @@ if(is.na(chk$size)){
 - 답을 구하기 위한 코드와 답을 class3assignment 폴더에 class3_[이름].R로 제출해주세요.(답은 주석으로 작성)
 - sql, dplyr+tidyr, data.table 등 무엇이든 사용하시고, 외부서비스도 가능하시면 무엇이든 사용하세요. 몇 문제는 계산 시간이 오래걸릴 수 있습니다.
 
+---
+
 ## 문제
 
 1. receiptNum가 "6998419"인 구매기록의 가격(amout)의 합은 얼마인가요?
@@ -988,8 +1087,6 @@ if(is.na(chk$size)){
 5. 경쟁사의 이용기록이 가장 많은 사용자의 성별은 무엇입니까?
   (competitor 데이터에서 1row가 1건이라고 가정)
 6. 한번에 3개 이상 구매한 경우에 가장 많이 구매에 포함된 제품 카테고리(cate_3)는 무엇입니까?
-
----
 
 
 [1]: https://www.tidyverse.org/
