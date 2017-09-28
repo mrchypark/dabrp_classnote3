@@ -32,3 +32,31 @@ flights2 <- select(flights, year:day, hour, origin, dest, tailnum, carrier)
 flights2
 
 left_join(flights2, airlines, by = "carrier")
+
+if(!requireNamespace("dbplyr")) install.packages("dbplyr")
+library(dbplyr)
+
+if (!requireNamespace("dtplyr")) install.packages("dtplyr")
+## Loading required namespace: dtplyr
+library(dtplyr)
+
+library(RSQLite)
+library(nycflights13)
+
+conn <- dbConnect(SQLite())
+
+copy_to(conn
+        , flights
+        , temporary = FALSE
+        , name = 'flights')
+
+dbListTables(conn)
+
+tb_flights <- tbl(conn, "flights")
+
+tbl(conn, 'flight')%>%
+  group_by(carrier) %>%
+  summarise(count = n()) %>%
+  collect()
+
+
