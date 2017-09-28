@@ -26,7 +26,7 @@ vignettes/*.pdf
 .Rproj.user
 <<<<<<< HEAD
 =======
-*.sqlite
+
 *.db
 >>>>>>> e668752bfb39a91aefeb1f40836c6c6d30af23ac
 data/recomen/tran.csv
