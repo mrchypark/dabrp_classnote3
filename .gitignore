@@ -34,5 +34,10 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
+<<<<<<< HEAD
+=======
+*.sqlite
+*.db
+>>>>>>> b4b5d8c47d61ba87530740860420f357dc82f94e
 
 data/recomen/tran.csv
