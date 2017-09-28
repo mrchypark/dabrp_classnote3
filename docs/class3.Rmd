@@ -1064,11 +1064,12 @@ tbl(conn, 'planes_distance') %>%
 - 데이터가 5개이신 분은 아래 코드를 실행해서 다운로드해주세요. 1.4G라 시간이 좀 걸립니다.    
 
 ```{}
-chk<-file.info("./recomen/tran.csv")
+chk<-file.info("./data/recomen/tran.csv")
 if(is.na(chk$size)){
   recoment<-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
-  dir.create("./recomen", showWarnings = F)
-  download.file(recoment,destfile="./recomen/tran.csv",mode='wb')
+  dir.create("./data", showWarnings = F)
+  dir.create("./data/recomen", showWarnings = F)
+  download.file(recoment,destfile="./data/recomen/tran.csv",mode='wb')
 }
 
 ```    
