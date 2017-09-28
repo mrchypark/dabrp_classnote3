@@ -2,7 +2,7 @@
 # git remote -v 로 확인
 # 땡겨올 주소 추가: git remote add root http://github.com/mrchypark/dabrp_classnote3
 # 이후 확인해 보면 내주소는 origin, 위에 추가한건 root로 되어 있음을 확인
-# 그후 git pull origin master 를 입력하면 동기화가 완료됨
+# 그후 git pull root master 를 입력하면 동기화가 완료됨
 
 
 # data.table 패키지가 있는지 확인하고 없으면 설치합니다.
