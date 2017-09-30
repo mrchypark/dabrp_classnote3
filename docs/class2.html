@@ -155,19 +155,19 @@ if (!requireNamespace("data.table")) install.packages("data.table")
 library(data.table)
 
 # tran.csv 파일이 data/recomen 폴더에 있는지 확인 합니다.
-chk&lt;-dir("../data/recomen", pattern = "tran.csv")
+chk&lt;-dir("./data/recomen", pattern = "tran.csv")
 # 없으면 다운로드합니다.
 if(identical(chk,character(0))){
   recoment&lt;-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
-  download.file(recoment,destfile="../data/recomen/tran.csv",mode='wb')
+  download.file(recoment,destfile="./data/recomen/tran.csv",mode='wb')
 }
 # fread 함수를 이용해서 csv 파일을 R객체로 불러옵니다.
-chennel&lt;-fread("../data/recomen/chennel.csv")
-competitor&lt;-fread("../data/recomen/competitor.csv")
-customer&lt;-fread("../data/recomen/customer.csv")
-item&lt;-fread("../data/recomen/item.csv")
-membership&lt;-fread("../data/recomen/membership.csv")
-tran&lt;-fread("../data/recomen/tran.csv")
+chennel&lt;-fread("./data/recomen/chennel.csv")
+competitor&lt;-fread("./data/recomen/competitor.csv")
+customer&lt;-fread("./data/recomen/customer.csv")
+item&lt;-fread("./data/recomen/item.csv")
+membership&lt;-fread("./data/recomen/membership.csv")
+tran&lt;-fread("./data/recomen/tran.csv")
 ```
 
 

@@ -1,0 +1,1096 @@
+---
+title: "(3주차)데이터 분석을 위한 중급 R 프로그래밍 CAMP 3기"
+author: "박찬엽"
+date: "2017년 9월 28일"
+output:
+  xaringan::moon_reader:
+    seal: false
+    css: ["default", "class.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = T, fig.height = 5)
+```
+
+class: center, middle, title-slide
+
+## 데이터 분석의 기본이 되는 데이터전처리
+#### Step1. 데이터 전처리를 위한 기초 학습하기
+### <https://mrchypark.github.io/dabrp_classnote3/class3>
+
+### 박찬엽
+
+### 2017년 9월 21일
+---
+
+## 목차
+
+0. 과제 질답
+
+1. 수업의 목표
+
+2. 데이터를 다루는 주요 7가지 동작
+    - 데이터 소개 : nycflights13
+    - dplyr을 활용한 주요 7가지 동작
+
+3. tidy data, long form과 wide form
+    - 함수를 연결하는 파이프 연산자
+    - tidyr로 데이터를 tidy하게 만들기
+
+4. 데이터 소스에 연결하기
+    - 데이터 소스 소개와 연결 패키지 dbplyr, dtplyr
+    - 데이터 소스와 함께 사용하는 dplyr 함수
+
+5. 과제
+
+---
+
+class: center, middle, title-slide
+
+## 과제 질답
+
+---
+
+## 수업의 목표
+
+### 1. 데이터를 다루는 주요 7가지 동작을 설명할 수 있다.
+
+### 2. tidy data, long form과 wide form의 장단점을 설명할 수 있다.
+
+### 3. 데이터 베이스의 테이블을 R 객체에 연결하여 데이터를 다룰 수 있다.
+
+---
+
+class: center, middle, title-slide
+
+## 데이터를 다루는 주요 7가지 동작
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+
+---
+
+## 실습 데이터 소개
+
+[nycflights13](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)는 2013년 미국의 비행기 운항기록에 관련된 airlines, airports, flights, planes, weather의 5개 데이터를 가지고 있는 데이터 패키지
+
+```{r, message=F}
+if (!requireNamespace("nycflights13")) install.packages("nycflights13")
+library(nycflights13)
+nycflights13::flights
+```
+
+---
+
+## [nycflights13 코드북](https://cran.r-project.org/web/packages/nycflights13/nycflights13.pdf)
+
+```{r, message=F}
+str(flights)
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/dplyr/raw/master/man/figures/logo.png)][3]
+
+---
+
+## 데이터를 다루는 주요 7가지 동작
+
+.pull-left[
+[dplyr][3]은 데이터를 다루는 주요 7가지 동작 자체를 함수로 가지고 추가적인 helper 함수를 함께 제공
+
+1. 열 방향: 선택 - select()
+1. 열 방향: 계산 - mutate()
+1. 행 방향: 조건 - filter()
+1. 행 방향: 추가 - bind_rows()
+1. 행 방향: 정렬 - arrange()
+1. 그룹 계산 - group_by() + summarise()
+1. 열 결합 - left_join()
+]
+.pull-right[
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+]
+
+---
+
+## dplyr 준비
+
+```{r}
+if (!requireNamespace("dplyr")) install.packages("dplyr")
+library(dplyr)
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+데이터에서 컬럼을 선택하여 사용함. select()는 선언된 순서대로 컬럼을 정렬함
+.pull-left[
+```{}
+select(flights, year, month, day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+select(flights, year, month, day)
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+숫자에서만 제공하던 from:to 문법을 컬럼 순서를 기준으로 지원
+.pull-left[
+```{}
+select(flights, year:day)
+```
+]
+.pull-right[
+```{r echo=FALSE}
+
+select(flights, year:day)
+
+```
+]
+---
+
+### 열 방향: 선택 - select()
+
+-(마이너스)는 지정한 컬럼을 제외하고 전부라는 의미
+```{r}
+select(flights, -(year:day))
+
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+everything() 같은 helper 함수를 제공 everything()은 select()내에 선언된 컬럼을 제외한 나머지 전부라는 의미. 
+
+```{r}
+select(flights, time_hour, air_time, everything())
+```
+
+---
+
+### 열 방향: 선택 - select()
+
+ends_with()같이 글자의 일부에 해당하는 컬럼 전부를 가져오는 helper 함수도 있음. 정규표현식의 주요 기능을 함수로 제공. ?select로 확인
+
+```{r}
+select(flights, year:day, ends_with("delay"), distance, air_time)
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+출력 편의를 위해 일부 데이터만 사용
+
+```{r}
+flights_sml <- select(flights, year:day, ends_with("delay"), distance, air_time)
+flights_sml
+```
+
+---
+
+### 열 방향: 계산 - mutate()
+
+각 컬럼간의 계산으로 새로운 열을 만들 수 있음
+
+```{r}
+mutate(flights_sml,
+       gain = arr_delay - dep_delay,
+       speed = distance / air_time * 60
+)
+
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+컬럼을 지우거나 기존의 컬럼을 변경하는 것도 가능
+
+```{r}
+mutate(flights_sml,
+       arr_delay = NULL,
+       air_time = air_time / 60
+)
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+transmute()는 계산한 컬럼만 있는 테이블을 생성
+
+```{r}
+transmute(flights,
+          gain = arr_delay - dep_delay,
+          hours = air_time / 60,
+          gain_per_hour = gain / hours
+)
+```
+
+
+---
+
+### 열 방향: 계산 - mutate()
+
+group_by()와 함께 [window function](http://dplyr.tidyverse.org/articles/window-functions.html) 들이 유용하게 사용됨
+
+```{r}
+flights_smlg <- group_by(flights_sml, month)
+mutate(flights_smlg, rank = row_number(desc(arr_delay)))
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+filter()는 데이터 중에 조건에 해당하는 일부 데이터만 필터해서 사용. 논리 연산자와 결합하여 많이 사용하며 [이곳](https://mrchypark.github.io/r/operator/%EB%85%BC%EB%A6%AC-%EC%97%B0%EC%82%B0%EC%9E%90-%EC%A0%95%EB%A6%AC.html)에서 추가적으로 내용을 확인할 수 있음
+
+```{r}
+filter(flights, month == 1)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+& 는 **and** 라는 뜻이며 조건을 추가할 때 사용
+
+```{r}
+filter(flights, month == 1 & day == 1)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+| 는 **or** 라는 뜻
+
+```{r}
+filter(flights, month == 11 | month == 12)
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+**%in%**는 유용하게 사용하는 논리 연산자로 왼쪽에 있는 벡터가 오른쪽 벡터의 데이터 중 어느 하나라도 맞으면 출력
+
+```{r}
+filter(flights, month %in% c(11, 12))
+```
+
+---
+
+### 행 방향: 조건 - filter()
+
+! 는 local 데이터에서 결과를 반대로 뒤집는 역할을 하며 수학에서의 괄호와 같이 연산의 범위를 작성해 두는 것이 문제 발생 소지가 적어점
+
+```{r}
+filter(flights, !(arr_delay > 120 | dep_delay > 120))
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()를 진행하기 위해서 데이터를 작성
+
+```{r}
+feb<-filter(flights, month==2)
+dec<-filter(flights, month==12)
+dim(feb); dim(dec)
+nrow(feb)+nrow(dec)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+bind_rows()는 컬럼 이름을 기준으로 같은 컬럼 밑에 데이터를 붙여서 **묶어줌**. 
+
+```{r}
+bind_rows(feb, dec)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+list()로 구분된 데이터도 **묶어줌**.
+
+```{r}
+bind_rows(list(feb, dec))
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()은 첫번째 인자로 받은 데이터를 컬럼을 기준으로 list()로 분리해 줌. 
+
+```{r}
+flights_mon<-split(flights, flights$month)
+summary(flights_mon)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+split()으로 분리된 12개의 list() 자료도 잘 합쳐줌
+
+```{r}
+nrow(flights)
+bind_rows(flights_mon)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+다른 종류의 데이터도 **묶어줌**. c()는 vector를 생성하고, data_frame은 data.frame을 생성함
+
+```{r}
+bind_rows(
+  c(a = 1, b = 2),
+  data_frame(a = 3:4, b = 5:6),
+  c(a = 7, b = 8)
+)
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 묶을 때 데이터를 구분하는 컬럼을 추가할 수 있음
+
+```{r}
+bind_rows(list(feb, dec), .id = "id")
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+데이터를 구분하는 컬럼에 대해 이름이 동작하는 방식
+
+```{r}
+bind_rows(list(a = feb, b = dec), .id = "data")
+```
+
+---
+
+### 행 방향: 추가 - bind_rows()
+
+같은 이름의 컬럼이 없을 때는 NA로 채우면서 동작함
+
+```{r}
+bind_rows(data.frame(x = 1:3), data.frame(y = 1:4))
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+arrange()는 지정되는 컬럼 순으로 오름차순 정렬해주는 함수
+
+```{r}
+arrange(flights, dep_delay)
+```
+
+---
+
+### 행 방향: 정렬 - arrange()
+
+desc()는 내림차순 정렬로 방향을 바꾸는 helper 함수
+
+```{r}
+arrange(flights, desc(month), dep_delay)
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+summarise()는 여러 데이터를 요약하여 특성을 파악하는 방식으로 동작하는 함수들을 적용할 때 사용.
+
+```{r}
+summarise(flights, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()는 데이터에 **지정한 컬럼별**이라는 추가 조건을 지정하는 기능을 수행
+
+```{r}
+flights_g<-group_by(flights, month)
+flights_g
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+
+---
+
+### 그룹 계산 - group_by() + summarise()
+
+group_by()에 의해 **지정한 컬럼별** summarise()연산을 수행함
+
+```{r}
+summarise(flights_g, mean = mean(dep_delay, na.rm=T), n = n())
+```
+---
+
+### 열 결합(Join) - left_join()
+
+select()를 사용하여 데이터 준비
+
+```{r}
+flights2 <- select(flights, year:day, hour, origin, dest, tailnum, carrier)
+flights2
+```
+---
+
+### 열 결합(Join) - left_join()
+
+left_join()은 왼쪽 데이터를 기준으로 하고, by로 지정된 컬럼이 같은 데이터임을 식별하는 key로 지정하여 오른쪽 데이터를 왼쪽 데이터에 결합하는 함수
+
+```{r}
+left_join(flights2, airlines, by = "carrier")
+```
+---
+
+### 열 결합(Join) - left_join()
+
+mutate(), match()등의 함수로 구현하려면 아래와 같음
+
+```{r}
+mutate(flights2, name = airlines$name[match(carrier, airlines$carrier)])
+```
+---
+
+### 열 결합(Join) - left_join()
+
+key 역할을 할 컬럼을 지정하지 않으면 양쪽 데이터에서 컬럼 이름이 같은 모든 컬럼을 key로 자동 지정
+
+```{r}
+left_join(flights2, weather)
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로써 가능할 때 명시적인 지정이 있으면 작성된 컬럼만 key로 동작
+
+```{r}
+left_join(flights2, planes, by = "tailnum")
+```
+---
+
+### 열 결합(Join) - left_join()
+
+여러 컬럼이 key로 동작했을 때 데이터가 잘못 되는 예
+
+```{r}
+left_join(flights2, planes)
+```
+---
+
+### 열 결합(Join) - left_join()
+
+컬럼 이름이 다를 때는 아래와 같은 문법을 사용
+
+```{r}
+left_join(flights2, airports, c("dest" = "faa"))
+```
+---
+
+### 열 결합(Join) - left_join()
+
+rename()을 이용해 맞추는 방법도 가능
+
+```{r}
+left_join(flights2, rename(airports, dest=faa), by="dest")
+```
+
+---
+
+class: center, middle, title-slide
+
+## tidy data, long form과 wide form
+
+---
+
+class: center, middle, title-slide
+
+# tidy data + universe 
+
+[![](https://github.com/tidyverse/tidyverse/raw/master/man/figures/logo.png)][1]
+
+---
+
+## [tidyverse][1] 패키지는
+
+.pull-left[
+1. RStudio가 개발, 관리하는 패키지    
+1. 공식 문서가 매우 잘 되어 있음    
+1. 사용자층이 두터워 영어로 검색하면 많은 질답을 찾을 수 있음    
+1. 커뮤니티 설명글도 매우 많음    
+1. 6개의 핵심 패키지 포함 23가지 패키지로 이루어진 메타 패키지    
+1. tidy data 라는 사상과 파이프 연산자로 대동단결    
+1. 사상에 영감을 받아 맞춰서 제작하는 개인 패키지가 많음(ex> [tidyquant](https://github.com/business-science/tidyquant), [tidytext](https://github.com/juliasilge/tidytext) 등)
+]
+.pull-right[
+```{r}
+if (!requireNamespace("tidyverse")){
+  install.packages("tidyverse")}
+library(tidyverse)
+```
+]
+---
+
+## tidy data 란
+
+1. [Hadley Wickham](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)  2. [고감자님의 블로그](http://freesearch.pe.kr/archives/3942)  3. [헬로우데이터과학](http://www.hellodatascience.com/?p=287)
+
+
+1.1 Each variable forms a column.    
+1.2 각 변수는 개별의 열(column)으로 존재한다.    
+1.3 각 열에는 개별 속성이 들어간다.    
+
+2.1 Each observation forms a row.    
+2.2 각 관측치는 행(row)를 구성한다.    
+2.3 각 행에는 개별 관찰 항목이 들어간다.    
+
+3.1 Each type of observational unit forms a table.    
+3.2 각 테이블은 단 하나의 관측기준에 의해서 조직된 데이터를 저장한다.    
+3.3 각 테이블에는 단일 유형의 데이터가 들어간다.    
+
+.footnote[
+  \* 출처 : [금융데이터 분석을 위한 R 입문][2]
+]
+---
+
+## tidy data 란
+
+![](http://garrettgman.github.io/images/tidy-1.png)
+
+.footnote[
+  \* 출처 : [Garrett Grolemund의 Data Science with R 블로그](http://garrettgman.github.io/tidying/)
+]
+
+---
+
+## long form vs wide form
+
+.pull-left[
+### long form
+
+1. 컴퓨터가 계산하기 좋은 모양
+1. tidy data의 요건을 충족
+1. tidyverse의 패키지 대부분의 입력 형태
+]
+.pull-right[
+### wide form
+
+1. 사람이 눈으로 보기 좋은 모양
+1. 2개 변수에 대한 값만 확인 가능
+1. dashboard 형이라고도 하며 조인 등 연산이 어려움
+]
+
+---
+
+class: center, middle, title-slide
+
+## 함수를 연결하는 파이프 연산자(%>%)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/pipes.png)
+
+---
+
+## 파이프 연산자(%>%)
+
+함수를 중첩해서 사용할 일이 점점 빈번해 짐
+
+```{}
+plot(diff(log(sample(rnorm(10000,mean=10,sd=1),size=100,replace=FALSE))),col="red",type="l")
+```
+
+--
+
+### %>%를 사용하면 
+
+.pull-left[
+
+1. 생각의 순서대로 함수를 작성할 수 있음
+1. 중간 변수 저장을 할 필요가 없음
+1. 순서가 읽이 용이하여 기억하기 좋음
+]
+.pull-right[
+```{}
+rnorm(10000,mean=10,sd=1) %>%
+  sample(size=100,replace=FALSE) %>%
+  log %>%
+  diff %>%
+  plot(col="red",type="l")
+```
+]
+---
+
+## 파이프 연산자(%>%)
+
+flights 데이터에 파이프 연산자 사용예 1
+
+```{r}
+flights %>%
+  group_by(year,month,day) %>%
+  summarise(delay=mean(dep_delay, na.rm = TRUE))
+```
+---
+
+## 파이프 연산자(%>%)
+
+group_by()는 filter()와도 함께 사용할 수 있음
+
+```{r}
+popular_dests <- flights %>% 
+  group_by(dest) %>% 
+  filter(n() > 365)
+popular_dests
+
+```
+
+---
+
+## 파이프 연산자(%>%)
+
+사용할 데이터부터 순서대로 함수를 작성할 수 있는 장점
+
+```{r}
+popular_dests %>% 
+  filter(arr_delay > 0) %>% 
+  mutate(prop_delay = arr_delay / sum(arr_delay)) %>% 
+  select(year:day, dest, arr_delay, prop_delay)
+```
+
+---
+
+class: center, middle, title-slide
+
+[![](https://github.com/tidyverse/tidyr/raw/master/man/figures/logo.png)][4]
+
+---
+
+## tidyr이 데이터를 tidy하게 만드는 4개 함수
+
+[tidyr][4]은 데이터를 tidy하게 만드는 4개 함수를 제공하고 추가적인 helper 함수를 함께 제공
+
+1. gather()   : wide form 데이터를 long form 으로 변환
+1. spread()   : long form 데이터를 wide form 으로 변환
+1. separate() : 하나의 컬럼을 두 개로 나눔
+1. unite()    : 두 개의 컬럼을 하나로 합침
+
+---
+
+## tidyr 준비
+
+tidyr, dplyr은 tidyverse에 포함된 패키지이기 때문에 tidyverse를 설치하고 불러왔다면 생략가능
+
+```{r}
+if (!requireNamespace("tidyr")) install.packages("tidyr")
+library(tidyr)
+```
+
+---
+
+### 데이터 소개
+
+tidyr 패키지는 패키지의 동작을 설명하기 위해 내장 데이터를 준비하고 있음
+
+```{r}
+table1
+```
+---
+
+### 데이터 소개
+
+long form 예시
+
+```{r}
+table2
+```
+---
+
+### 데이터 소개
+
+한 컬럼에 두 개의 의미를 지닌 데이터가 들어 있는 경우
+
+```{r}
+table3
+```
+---
+
+### 데이터 소개
+
+wide form 예시 1
+
+```{r}
+table4a
+```
+---
+
+### 데이터 소개
+
+wide form 예시 2
+
+```{r}
+table4b
+```
+---
+
+### wide to long - gather()
+
+gather()는 wide form의 데이터를 long form으로 바꾸는 역할을 수행. gather(data, key = "컬럼 이름이 데이터로 들어갈 그 컬럼의 이름", value = "매트릭스로 펼쳐져 있는 데이터가 모이는 컬럼의 이름", "데이터로 들어갈 컬럼들을 지정")의 형태로 작성. "데이터로 들어갈 컬럼들을 지정"은 위치에 자유로움.
+
+.pull-left[
+
+값에 해당하는 데이터의 이동이 중요함. 메트릭스 모양이 한 줄의 컬럼으로 변경되는 것을 확인
+
+```{r}
+table4a
+```
+]
+.pull-right[
+```{r}
+table4a %>% 
+  gather(`1999`, `2000`
+         , key = "year"
+         , value = "cases")
+```
+]
+
+---
+
+### gather()의 동작
+
+값에 해당하는 데이터는 matrix -> column, 지정한 컬럼들은 key의 데이터로 변경
+
+![](http://garrettgman.github.io/images/tidy-9.png)
+
+---
+
+### long to wide - spread() 
+
+spread()는 하나의 컬럼으로 되어 있는 데이터를 메트릭스의 형태로 **흩뿌리는** 동작을 수행. spread(data, key = "컬럼에 위치할 데이터가 있는 컬럼", value = "메트릭스 모양이로 펼쳐질 데이터가 있는 컬럼") 으로 작성
+
+.pull-left[
+```{r}
+table2
+```
+]
+.pull-right[
+```{r}
+table2 %>% 
+  spread(key = type, value = count)
+```
+]
+
+---
+
+### spread()의 동작
+
+![](http://garrettgman.github.io/images/tidy-8.png)
+
+---
+
+### 하나의 컬럼을 나누기 - separate()
+
+아래와 같이 여러 부호로 그 의미가 나누어져있지만 한 컬럼에 데이터가 있는 경우 컬럼을 의미 단위로 분리하는 역할을 수행. into = c("나눠질 때 첫번째 컬럼 이름","나눠질 때 두번째 컬럼 이름")으로 새로 생성되는 컬럼의 이름을 지정할 수 있음
+
+.pull-left[
+```{r}
+table3
+```
+]
+.pull-right[
+```{r}
+table3 %>% 
+  separate(rate
+           ,into = c("cases", "population"))
+```
+]
+
+---
+
+### 간단한 형변환은 옵션으로 제공
+
+.pull-left[
+```{r}
+table3 %>% 
+  separate(rate
+   , into = c("cases"
+        , "population")
+        )
+```
+]
+.pull-right[
+```{r}
+table3 %>% 
+  separate(rate
+   , into = c("cases"
+        , "population")
+        , convert = TRUE)
+```
+]
+
+---
+
+### 두 컬럼을 합치기 - unite()
+
+unite()는 두 컬럼을 paste0()와 비슷하게 합쳐주는 역할을 수행
+
+.pull-left[
+```{r}
+table5
+```
+]
+.pull-right[
+```{r}
+table5 %>% 
+  unite(new, century, year)
+```
+]
+
+---
+
+### 구분자 지정
+
+sep 인자를 이용해 구분자로 사용할 문자열을 지정할 수 있음
+
+.pull-left[
+```{r}
+table5 %>% 
+  unite(new, century, year)
+```
+]
+.pull-right[
+```{r}
+table5 %>% 
+  unite(new, century, year, sep = "")
+```
+]
+
+---
+
+class: center, middle, title-slide
+
+## 데이터 소스에 연결하기
+
+---
+
+## 데이터 소스로서 DBI
+
+DBI 패키지가 연결하는 database의 연결정보를 바탕으로 dplyr 문법을 사용할 수 있습니다. 그렇게 하기 위해서는 dbplyr 패키지가 필요합니다.
+
+```{r}
+if (!requireNamespace("dbplyr")) install.packages("dbplyr")
+library(dbplyr)
+```
+
+---
+
+### data.table
+
+데이터 소스로서 data.table을 사용할 수 있습니다. data.table을 사용하기 위해서는 dtplyr 패키지를 설치해야 합니다. data.table의 독립적인 동작은 [cheat sheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf)을 확인해주세요.
+
+```{r}
+if (!requireNamespace("dtplyr")) install.packages("dtplyr")
+library(dtplyr)
+```
+
+---
+
+## R 데이터를 DB 테이블로 만들기 copy_to()
+
+copy_to()는 DBI의 dbWriteTable()과 같은 기능을 수행. dplyr 패키지에 속한 copy_to()는 성능 개선을 통해 dbWriteTable() 보다 빠른 속도를 제공함
+
+```{r}
+library(RSQLite)
+library(nycflights13)
+
+conn <- dbConnect(SQLite())
+
+copy_to(conn
+        , flights
+        , temporary = FALSE
+        , name = 'flights')
+dbListTables(conn)
+```
+
+---
+
+## 테이블의 연결정보를 R 객체에 저장 - tbl()
+
+dbplyr과 DBI, dplyr로 데이터베이스의 테이블을 dplyr 문법으로 다루기 위해서는 DBI 패키지에서 conn 객체와 같이 테이블의 연결정보를 담고 있는 R 객체가 필요. tbl()는 DB내 테이블 연결정보를 R 객체로 만드는 함수
+
+```{r}
+tb_flights <- tbl(conn, "flights")
+```
+
+---
+
+### 속도를 빠르게 하는 indexes 옵션
+
+copy_to()를 진행할 때 key 역할을 수행할 컬럼을 미리 지정해주면 관련 컬럼을 사용하는 연산(group_by에 key 컬럼 사용 등)에서 속도를 높일 있음
+
+```{r}
+copy_to(conn,
+        flights,
+        name = 'flights_idx',
+        temporary = FALSE,
+        indexes = list("carrier"))
+
+tb_flights <- tbl(conn, "flights")
+tb_flights_idx <- tbl(conn, "flights_idx")
+```
+
+---
+
+### 함수 속도를 비교 - microbenchmark()
+
+함수의 속도와 결과를 비교해서 같은 결과에 빠른 속도의 함수를 사용하기 위해 비교 테스트를 진행
+
+```{r}
+if (!requireNamespace("microbenchmark")) install.packages("microbenchmark")
+library(microbenchmark)
+```
+
+---
+
+### indexes 속도 비교
+
+```{r}
+microbenchmark(tbl(conn, 'flights') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect(),
+               tbl(conn, 'flights_idx') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect(),
+               times = 10)
+```
+
+---
+
+### collect()
+
+collect()는 DB에 전달하는 명령의 최종 결과를 R 객체로 가져오는 역할을 수행합니다.
+
+```{r}
+tbl(conn, 'flights') %>%
+                 group_by(carrier) %>%
+                 summarise(count = n()) %>%
+                 collect()
+```
+
+---
+
+### 결과를 테이블로 저장 - compute()
+
+compute()는 collect()와는 달리 연산된 결과를 R 객체로 저장하는 것이 아니라 새로 이름지은 테이블로 DB에 저장하는 동작을 수행
+
+```{r}
+dbListTables(conn)
+tbl(conn, 'flights') %>%
+  group_by(tailnum) %>%
+  summarise(count=n(),
+            mean_distance = mean(distance),
+            total_distance = sum(distance)) %>%
+  filter(!is.na(tailnum)) %>%
+  compute(name = 'planes_distance')
+```
+
+---
+  
+### 테이블 저장 결과 확인
+
+```{r}
+dbListTables(conn)
+```
+```{r}
+dbReadTable(conn, "planes_distance")
+```
+
+---
+
+### show_query()
+
+show_query()는 dplyr로 구성된 함수의 연결이 query문으로 어떻게 변환되는지를 보여줌
+
+```{r}
+copy_to(conn, planes, name = 'planes', temporary = FALSE)
+tbl(conn, 'planes_distance') %>%
+  inner_join(tbl(conn, 'planes'), by='tailnum') %>%
+  arrange(desc(total_distance)) %>%
+  select(total_distance, manufacturer, model) %>%
+  show_query()
+```
+
+---
+
+## 과제
+
+- recomen 폴더에 있는 6개 데이터를 활용해서 다음장의 6개 질문에 답해주세요.
+- 데이터가 5개이신 분은 아래 코드를 실행해서 다운로드해주세요. 1.4G라 시간이 좀 걸립니다.    
+
+```{}
+chk<-file.info("./data/recomen/tran.csv")
+if(is.na(chk$size)){
+  recoment<-"http://rcoholic.duckdns.org/oc/index.php/s/jISrPutj4ocLci2/download"
+  dir.create("./data", showWarnings = F)
+  dir.create("./data/recomen", showWarnings = F)
+  download.file(recoment,destfile="./data/recomen/tran.csv",mode='wb')
+}
+
+```    
+
+- 답을 구하기 위한 코드와 답을 class3assignment 폴더에 class3_[이름].R로 제출해주세요.(답은 주석으로 작성)
+- sql, dplyr+tidyr, data.table 등 무엇이든 사용하시고, 외부서비스도 가능하시면 무엇이든 사용하세요. 몇 문제는 계산 시간이 오래걸릴 수 있습니다.
+
+---
+
+## 문제
+
+1. receiptNum가 "6998419"인 구매기록의 가격(amout)의 합은 얼마인가요?
+2. 가장 비싼 item은 무엇인가요?
+3. 사용자들이 가장 많이 사용한 체널은 mobile/app과 onlinemall 중에 무엇입니까?
+4. 월매출이 2015년 03월 가장 높은 매장의 storeCode는 무엇인가요?
+5. 경쟁사의 이용기록이 가장 많은 사용자의 성별은 무엇입니까?
+  (competitor 데이터에서 1row가 1건이라고 가정)
+6. 한번에 3개 이상 구매한 경우에 가장 많이 구매에 포함된 제품 카테고리(cate_3)는 무엇입니까?
+
+
+[1]: https://www.tidyverse.org/
+[2]: https://mrchypark.github.io/kisa_finR/#(5)
+[3]: http://dplyr.tidyverse.org/
+[4]: http://tidyr.tidyverse.org/
