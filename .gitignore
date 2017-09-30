@@ -26,5 +26,4 @@ vignettes/*.pdf
 .Rproj.user
 
 data/recomen/tran.csv
-*.db
 
