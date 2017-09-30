@@ -24,9 +24,7 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Rproj.user
-<<<<<<< HEAD
-=======
 
-*.db
->>>>>>> e668752bfb39a91aefeb1f40836c6c6d30af23ac
 data/recomen/tran.csv
+*.db
+
