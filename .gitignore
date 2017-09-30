@@ -25,6 +25,5 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
+
 data/recomen/tran.csv
-
-
