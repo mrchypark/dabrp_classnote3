@@ -235,7 +235,7 @@ str(customer, max.level=1)
 ## Classes 'data.table' and 'data.frame':	19383 obs. of  4 variables:
 ##  $ cusID: int  1 2 3 4 5 6 7 8 9 10 ...
 ##  $ sex  : chr  "M" "M" "M" "F" ...
-##  $ age  : chr  "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" "60\xec꽭\xec씠\xec긽" ...
+##  $ age  : chr  "60세이상" "60세이상" "60세이상" "60세이상" ...
 ##  $ area : int  60 100 33 16 100 240 36 10 100 24 ...
 ##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
@@ -257,15 +257,14 @@ str(item, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	4386 obs. of  6 variables:
+## Classes 'data.table' and 'data.frame':	4386 obs. of  6 variables:
 ##  $ partner    : chr  "A" "A" "A" "A" ...
-##  $ cate_1     : chr  "01" "01" "01" "01" ...
-##  $ cate_2     : chr  "0101" "0101" "0101" "0101" ...
+##  $ cate_1     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ cate_2     : int  101 101 101 101 101 101 102 102 102 102 ...
 ##  $ cate_3     : chr  "A010101" "A010102" "A010103" "A010104" ...
 ##  $ cate_2_name: chr  "일용잡화" "일용잡화" "일용잡화" "일용잡화" ...
 ##  $ cate_3_name: chr  "위생세제" "휴지류" "뷰티상품" "일용잡화" ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
 
 ---
@@ -284,7 +283,7 @@ str(membership, max.level=1)
 ```
 ## Classes 'data.table' and 'data.frame':	7456 obs. of  3 variables:
 ##  $ cusID     : int  11 21 37 43 44 61 65 69 76 79 ...
-##  $ memberShip: chr  "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" "\xed븯\xec씠留덊듃" ...
+##  $ memberShip: chr  "하이마트" "하이마트" "하이마트" "하이마트" ...
 ##  $ regDate   : int  201512 201506 201306 201403 201411 201312 201506 201404 201406 201311 ...
 ##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
@@ -332,7 +331,7 @@ str(tran, max.level=1)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	28593030 obs. of  10 variables:
+## Classes 'data.table' and 'data.frame':	28593030 obs. of  10 variables:
 ##  $ partner   : chr  "B" "B" "B" "B" ...
 ##  $ receiptNum: int  8664000 8664000 8664000 8664000 8664001 8664001 8664002 8664002 8664002 8664003 ...
 ##  $ cate_1    : int  15 16 16 18 5 15 10 43 54 5 ...
@@ -343,8 +342,7 @@ str(tran, max.level=1)
 ##  $ date      : int  20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 20140222 ...
 ##  $ time      : int  20 20 20 20 22 22 23 23 23 21 ...
 ##  $ amount    : int  2420 1070 8060 6000 1120 1200 5290 5960 9900 970 ...
-##  - attr(*, "spec")=List of 2
-##   ..- attr(*, "class")= chr "col_spec"
+##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;
 ```
 
 ---
@@ -442,26 +440,8 @@ print(head(iris))
 
 ```r
 if (!require(devtools)) install.packages("devtools") 
-```
-
-```
-## Loading required package: devtools
-```
-
-```r
 if (!require(DBI)) devtools::install_github("rstats-db/DBI")
-```
-
-```
-## Loading required package: DBI
-```
-
-```r
 if (!require(RSQLite)) devtools::install_github("rstats-db/RSQLite")
-```
-
-```
-## Loading required package: RSQLite
 ```
 
 ---
@@ -473,7 +453,7 @@ R은 데이터를 사용하기 위해 메모리로 구성된 R 환경에 파일�
 &lt;br&gt;
 &lt;br&gt;
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/fileio.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/fileio.png)
 
 ---
 
@@ -502,7 +482,7 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 &lt;br&gt;
 &lt;br&gt;
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/conn.png) 
 
 ---
 
@@ -513,7 +493,7 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 &lt;br&gt;
 &lt;br&gt;
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn2.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/conn2.png) 
 
 ---
 
@@ -544,13 +524,13 @@ library(data.table)
 
 
 ```r
-conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "../ForderForClass2/class2.sqlite")
+conn &lt;- dbConnect(RSQLite::SQLite(), dbname = "../FolderForClass2/class2.sqlite")
 conn
 ```
 
 ```
 ## &lt;SQLiteConnection&gt;
-##   Path: C:\Users\mrchypark\Documents\project\dabrp_classnote3\ForderForClass2\class2.sqlite
+##   Path: C:\Users\mrchypark\Documents\project\dabrp_classnote3\FolderForClass2\class2.sqlite
 ##   Extensions: TRUE
 ```
 

@@ -74,7 +74,7 @@ class: center, middle, title-slide
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/dplyr.png) 
 
 ---
 
@@ -118,7 +118,7 @@ class: center, middle, title-slide
 1. 열 결합 - left_join()
 ]
 .pull-right[
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/dplyr.png) 
 ]
 
 ---
@@ -623,7 +623,7 @@ class: center, middle, title-slide
 
 ## 함수를 연결하는 파이프 연산자(%>%)
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/pipes.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/pipes.png)
 
 ---
 
