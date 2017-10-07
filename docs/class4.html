@@ -600,8 +600,6 @@ apropos : Environment에 보여주지 않는 기본 객체들을 보여줌
 
 ---
 
-# 주요 사용예
-
 ## 우편번호
 
 우리나라는 새로운 방식인 "12345"와 "123-456"의 두 가지 방식으로 우편번호를 사용하고 있습니다.
@@ -685,11 +683,15 @@ gsub("^\\(?([0-9]{2,3})\\)?[-. ]?([0-9]{3,4})[-. ]?([0-9]{4})$",
 
 ---
 
-# stringr
+class: center, middle, title-slide
+
+![](https://github.com/tidyverse/stringr/raw/master/man/figures/logo.png)
+
+---
 
 ## 소개
 
-stringr은 tidyverse 패키지에 포함되어 있는 글자 조작용 패키지로 [ICU](http://site.icu-project.org/)라고 불리는 C library의 wrapper인 [stringi](https://github.com/gagolews/stringi) 패키지를 기반으로 하고 있습니다.
+[stringr](https://github.com/tidyverse/stringr)은 tidyverse 패키지에 포함되어 있는 글자 조작용 패키지로 [ICU](http://site.icu-project.org/)라고 불리는 C library의 wrapper인 [stringi](https://github.com/gagolews/stringi) 패키지를 기반으로 하고 있습니다.
 
 총 패턴 매칭, 공백 관리, 로케일에 따라 동작이 다른 함수, 헬퍼의 4가지 카테고리의 함수를 제공합니다.
 
@@ -774,9 +776,9 @@ library(stringr)
 
 ---
 
-## 길이 비교
+## 글자의 길이
 
-
+nchar()와 같이 길이를 결과로 주는 함수를 제공합니다. 한글도 지원하고, vector, factor 입력도 다 지원합니다.
 
 
 ```r
@@ -789,9 +791,12 @@ str_length(c("abc","한글","ㅎㄱㅏ"))
 
 ---
 
+## 글자의 일부만 가져오기
+
+위치(시작점와 끝점)를 기준으로 일부만 가져오는(subset) 기능을 제공합니다. 왼쪽의 첫번째 글자가 1의 위치이고 이후로 글자당 위치가 지정되며 오른쪽의 글자를 기준으로 세고 싶으면 음수로 지정하면 됩니다.
+
 
 ```r
-# subset
 x &lt;- c("abcdef", "ghifjk")
 str_sub(x, 3, 3)
 ```
@@ -801,18 +806,29 @@ str_sub(x, 3, 3)
 ```
 
 ```r
-str_sub(x, 2, -2)
+str_sub(x, 3, 4)
 ```
 
 ```
-## [1] "bcde" "hifj"
+## [1] "cd" "if"
+```
+
+```r
+str_sub(x, -4, -2)
+```
+
+```
+## [1] "cde" "ifj"
 ```
 
 ---
 
+## 일부분 바꾸기
+
+일반적인 data.frame의 subset 동작처럼 일부분을 지정하고, 값을 선언함으로써 바꾸는 것이 동작합니다.
+
 
 ```r
-# replace subset
 str_sub(x, 3, 3) &lt;- "X"
 x
 ```
@@ -823,22 +839,50 @@ x
 
 ---
 
+## 글자 반복해서 생성
+
 
 ```r
-# duplicate
+x &lt;- c("abcdef", "ghifjk")
 str_dup(x, c(2, 3))
 ```
 
 ```
-## [1] "abXdefabXdef"       "ghXfjkghXfjkghXfjk"
+## [1] "abcdefabcdef"       "ghifjkghifjkghifjk"
 ```
-
 
 ---
 
+## 공백문자 제거
+
+글자를 다루는데 가장 많이 쓰는 기능으로 좌우의 공백문자(띄어쓰기, 엔터 등)를 제거해줍니다. 좌 또는 우를 선택할 수 있습니다.
+
 
 ```r
-# padding
+x &lt;- c("  a   ", "b   ",  "   c", "  c \n","\t   c  \n")
+str_trim(x)
+```
+
+```
+## [1] "a" "b" "c" "c" "c"
+```
+
+```r
+str_trim(x, "left")
+```
+
+```
+## [1] "a   "  "b   "  "c"     "c \n"  "c  \n"
+```
+
+---
+
+## 패딩
+
+character vector의 length를 맞추기 위해서 띄어쓰기를 추가합니다.
+
+
+```r
 x &lt;- c("abc", "defghi")
 str_pad(x, 10)
 ```
@@ -865,45 +909,29 @@ str_pad(x, 4)
 
 ---
 
+## 말줄임표현 만들기
+
+truncated 란 잘라낸이라는 뜻이 있습니다. 텍스트가 길면 몇자 이상은 잘라내고 "..."으로 말줄임 표현을 사용할 수 있습니다. 텍스트에서는 이미지의 thumbnail과 비슷한 역할을 합니다.
+
 
 ```r
-# truncate text
 x &lt;- c("Short", "This is a long string")
 x %&gt;% 
-  str_trunc(10) %&gt;% 
-  str_pad(10, "right")
+  str_trunc(10)
 ```
 
 ```
-## [1] "Short     " "This is..."
-```
-
----
-
-
-```r
-# remove blank
-x &lt;- c("  a   ", "b   ",  "   c")
-str_trim(x)
-```
-
-```
-## [1] "a" "b" "c"
-```
-
-```r
-str_trim(x, "left")
-```
-
-```
-## [1] "a   " "b   " "c"
+## [1] "Short"      "This is..."
 ```
 
 ---
 
+## 알파벳 조절
+
+대소문자를 3가지 함수로 조절할 수 있습니다.
+
 
 ```r
-# locale sensitive function
 x &lt;- "I like horses."
 str_to_upper(x)
 ```
@@ -930,9 +958,12 @@ str_to_lower(x)
 
 ---
 
+## 글자 순서
+
+order와 sort가 글자를 기준으로 동작합니다.
+
 
 ```r
-# ordering
 x &lt;- c("y", "i", "k")
 str_order(x)
 ```
@@ -951,9 +982,12 @@ str_sort(x)
 
 ---
 
+## 패턴 매칭
+
+정규표현식과 함께 쓰이는 패턴 매칭 함수들입니다. 
+
 
 ```r
-# set sample data
 strings &lt;- c(
   "apple", 
   "219 733 8965", 
@@ -961,13 +995,6 @@ strings &lt;- c(
   "Work: 579-499-7527; Home: 543.355.3679"
 )
 phone &lt;- "([2-9][0-9]{2})[- .]([0-9]{3})[- .]([0-9]{4})"
-```
-
----
-
-
-```r
-# match functions
 str_subset(strings, phone)
 ```
 
@@ -995,9 +1022,12 @@ str_count(strings, phone)
 
 ---
 
+## 위치 정보
+
+패턴에 해당하는 글자의 위치를 시작과 끝으라는 형태로 결과를 줍니다. `str_locate_all(strings, phone)`를 실행해서 아래와 어떻게 결과가 다른지 확인해 보세요.
+
 
 ```r
-# which locate
 str_locate(strings, phone)
 ```
 
@@ -1009,56 +1039,19 @@ str_locate(strings, phone)
 ## [4,]     7  18
 ```
 
-```r
-str_locate_all(strings, phone)
-```
-
-```
-## [[1]]
-##      start end
-## 
-## [[2]]
-##      start end
-## [1,]     1  12
-## 
-## [[3]]
-##      start end
-## [1,]     1  12
-## 
-## [[4]]
-##      start end
-## [1,]     7  18
-## [2,]    27  38
-```
-
 ---
 
+## 패턴 추출
+
+정규표현식을 활용하여 해당되는 패턴의 텍스트만 가져오는 함수 입니다. simplify 옵션이 어떻게 동작한 것인지 `str_extract_all(strings, phone)`를 실행하여 비교해 보세요.
+
 
 ```r
-# extract matching text
 str_extract(strings, phone)
 ```
 
 ```
 ## [1] NA             "219 733 8965" "329-293-8753" "579-499-7527"
-```
-
-```r
-str_extract_all(strings, phone)
-```
-
-```
-## [[1]]
-## character(0)
-## 
-## [[2]]
-## [1] "219 733 8965"
-## 
-## [[3]]
-## [1] "329-293-8753"
-## 
-## [[4]]
-## [1] "579-499-7527" "543.355.3679"
 ```
 
 ```r
@@ -1075,9 +1068,12 @@ str_extract_all(strings, phone, simplify = TRUE)
 
 ---
 
+## 그룹정보 보기
+
+str_extract()는 해당되는 텍스트를 가져오는 함수라면 str_match()를 해당되는 것의 정보를 보여주는 함수입니다. 그래서 그룹으로 묶인 텍스트의 정보를 함께 파악할 수 있습니다.
+
 
 ```r
-# return match and matching group
 str_match(strings, phone)
 ```
 
@@ -1111,11 +1107,15 @@ str_match_all(strings, phone)
 ## [2,] "543.355.3679" "543" "355" "3679"
 ```
 
+
 ---
+
+## 글자 바꾸기
+
+sub()와 gsub()에 해당하는 함수로 데이터가 맨 앞에 쓰인다는 점때문에 파이프연산자와 상성이 좋습니다.
 
 
 ```r
-# replace
 str_replace(strings, phone, "XXX-XXX-XXXX")
 ```
 
@@ -1139,9 +1139,12 @@ str_replace_all(strings, phone, "XXX-XXX-XXXX")
 
 ---
 
+## 글자 나누기
+
+하나의 데이터 상태로 있는 character를 기준 글자로 나누어 여러 개의 데이터로 바꾸는 동작입니다. 
+
 
 ```r
-# split strings
 str_split("a-b-c", "-")
 ```
 
@@ -1158,211 +1161,6 @@ str_split_fixed("a-b-c", "-", n = 2)
 ##      [,1] [,2] 
 ## [1,] "a"  "b-c"
 ```
-
----
-
-
-```r
-if (!require(nycflights13)) install.packages("nycflights13")
-library(nycflights13)
-head(airports, 3)
-```
-
-```
-## # A tibble: 3 x 8
-##     faa                          name      lat       lon   alt    tz   dst
-##   &lt;chr&gt;                         &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;
-## 1   04G             Lansdowne Airport 41.13047 -80.61958  1044    -5     A
-## 2   06A Moton Field Municipal Airport 32.46057 -85.68003   264    -6     A
-## 3   06C           Schaumburg Regional 41.98934 -88.10124   801    -6     A
-## # ... with 1 more variables: tzone &lt;chr&gt;
-```
-
-```r
-grep("^New", airports$name, value = T)
-```
-
-```
-##  [1] "New Bedford Regional Airport"   "Newton City-County Airport"    
-##  [3] "Newark Liberty Intl"            "New Castle"                    
-##  [5] "New Century AirCenter Airport"  "New Stuyahok Airport"          
-##  [7] "New Orleans Nas Jrb"            "Newport Municipal Airport"     
-##  [9] "Newport News Williamsburg Intl" "Newport State"                 
-## [11] "Newtok Airport"                 "Newark Penn Station"           
-## [13] "New Carrollton Rail Station"    "New Haven Rail Station"
-```
-
-```r
-airports[grep("^New", airports$name, value = T), "name"]
-```
-
-```
-## # A tibble: 14 x 1
-##     name
-##    &lt;chr&gt;
-##  1  &lt;NA&gt;
-##  2  &lt;NA&gt;
-##  3  &lt;NA&gt;
-##  4  &lt;NA&gt;
-##  5  &lt;NA&gt;
-##  6  &lt;NA&gt;
-##  7  &lt;NA&gt;
-##  8  &lt;NA&gt;
-##  9  &lt;NA&gt;
-## 10  &lt;NA&gt;
-## 11  &lt;NA&gt;
-## 12  &lt;NA&gt;
-## 13  &lt;NA&gt;
-## 14  &lt;NA&gt;
-```
-
-```r
-grep("[0-9]$", airports$name, value = T)
-```
-
-```
-## [1] "Palmdale Rgnl Usaf Plt 42"
-```
-
-```r
-grep("[[:digit:]]$", airports$name, value = T)
-```
-
-```
-## [1] "Palmdale Rgnl Usaf Plt 42"
-```
-
-```r
-x &lt;- c("apple", "banana", "pear", "aple", "abble","appppppppple")
-grep("app*", x)
-```
-
-```
-## [1] 1 4 6
-```
-
-```r
-grep("app?", x)
-```
-
-```
-## [1] 1 4 6
-```
-
-```r
-grep("app+", x)
-```
-
-```
-## [1] 1 6
-```
-
-```r
-y &lt;- c("a","aa","aaa","aaaa","aaaaa")
-grep("a{3}", y)
-```
-
-```
-## [1] 3 4 5
-```
-
-```r
-stri&lt;-"&lt;p&gt; &lt;em&gt;안녕&lt;/em&gt;하세요 &lt;/p&gt;&lt;p&gt;테스트입니다.&lt;/p&gt;"
-sub("&lt;p&gt;.*&lt;/p&gt;","tar",stri)
-```
-
-```
-## [1] "tar"
-```
-
-```r
-sub("&lt;p&gt;.*?&lt;/p&gt;","tar",stri)
-```
-
-```
-## [1] "tar&lt;p&gt;테스트입니다.&lt;/p&gt;"
-```
-
-```r
-gsub("&lt;p&gt;.*?&lt;/p&gt;","tar",stri)
-```
-
-```
-## [1] "tartar"
-```
-
----
-
-
-```r
-gsub(",", "", "100,000,000,000,000,000") %&gt;%
-  as.numeric
-```
-
-```
-## [1] 1e+17
-```
-
-```r
-?regexpr
-```
-
-```
-## starting httpd help server ... done
-```
-
-```r
-?apropos
-apropos("air*")
-```
-
-```
-##  [1] "AIC"                  "airlines"             "airmiles"            
-##  [4] "AirPassengers"        "airports"             "airquality"          
-##  [7] "as.pairlist"          "available.packages"   "bindtextdomain"      
-## [10] "cairo_pdf"            "cairo_ps"             "contains"            
-## [13] "db_explain"           "explain"              "extractAIC"          
-## [16] "failwith"             "faithful"             "faithfuld"           
-## [19] "HairEyeColor"         "is.pairlist"          "maintainer"          
-## [22] "mosaicplot"           "na.fail"              "pairlist"            
-## [25] "pairs"                "pairs.default"        "pairwise.prop.test"  
-## [28] "pairwise.t.test"      "pairwise.table"       "pairwise.wilcox.test"
-## [31] "rainbow"              "repair_names"         "tail"                
-## [34] "tail.matrix"          "tail_while"           "terrain.colors"      
-## [37] "waiver"
-```
-
-```r
-apropos("air+")
-```
-
-```
-##  [1] "airlines"             "airmiles"             "AirPassengers"       
-##  [4] "airports"             "airquality"           "as.pairlist"         
-##  [7] "cairo_pdf"            "cairo_ps"             "HairEyeColor"        
-## [10] "is.pairlist"          "pairlist"             "pairs"               
-## [13] "pairs.default"        "pairwise.prop.test"   "pairwise.t.test"     
-## [16] "pairwise.table"       "pairwise.wilcox.test" "repair_names"
-```
-
-```r
-apropos("^air+")
-```
-
-```
-## [1] "airlines"      "airmiles"      "AirPassengers" "airports"     
-## [5] "airquality"
-```
-
-```r
-postcodes &lt;- c("155-030", "23078", "324-686")
-grep("^[0-9]{3}([0-9]{2}|-[0-9]{3})$", postcodes)
-```
-
-```
-## [1] 1 2 3
-```
-
 
 ---
 
