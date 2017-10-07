@@ -27,37 +27,22 @@ class: center, middle, title-slide
 
 ## 목차
 
-  - 정규표현식
-    - 소개
-    - 메타문자
-    - 함께 사용하는 함수
-    - 예시
-  - stringr
-    - 패키지 소개
-    - 실습
-  - apply family
-    - apply 실습
-    - for &gt; apply
-
----
-
-## 목차
-
 0. 과제 질답
 
 1. 수업의 목표
 
-2. 데이터를 다루는 주요 7가지 동작
-    - 데이터 소개 : nycflights13
-    - dplyr을 활용한 주요 7가지 동작
+2. 정규표현식
+    - 메타 문자
+    - 함께 사용하는 함수
 
-3. tidy data, long form과 wide form
-    - 함수를 연결하는 파이프 연산자
-    - tidyr로 데이터를 tidy하게 만들기
+3. 정규표현식과 함께 stringr
+    - Pattern matching functions
+    - Character manipulation
+    - Whitespace tools
 
-4. 데이터 소스에 연결하기
-    - 데이터 소스 소개와 연결 패키지 dbplyr, dtplyr
-    - 데이터 소스와 함께 사용하는 dplyr 함수
+4. apply family와 vectorize
+    - apply 동작
+    - Vectorize
 
 5. 과제
 
@@ -65,16 +50,28 @@ class: center, middle, title-slide
 
 ## 과제 확인
 
-[예시 코드](https://github.com/mrchypark/dabrp_classnote3/blob/master/assign3.R)
+[예시 코드](https://github.com/mrchypark/dabrp_classnote3/blob/master/Rscript/assign3.R)
 
 ---
 
-# 정규표현식
+## 수업의 목표
+
+### 1. 정규표현
+
+### 2. 
+
+### 3. 
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/dplyr.png) 
+
+---
 
 ## 정규표현식이란
-
+.pull-center[.set[
 ![](http://cfile26.uf.tistory.com/image/2358834252D034FF1E4FE5)
-
+]]
 ---
 
 ## 정규표현식이란
@@ -440,6 +437,7 @@ grep("app*", x)
 
 `a{3}`은 `a`가 3개 연속하는 경우를 뜻합니다. 하지만 `aaaa`또한 3개 연속하는 경우가 그 안에 있기 때문에 조건을 만족하게 됩니다. 이렇기 때문에 항상 생각하는 대로 동작하는지 확인해야 합니다.
 
+.pull-left[
 
 ```r
 x &lt;- c("a","aa","aaa","aaaa","aaaaa")
@@ -457,6 +455,8 @@ grep("^a{3}$", x)
 ```
 ## [1] 3
 ```
+]
+.pull-right[
 
 ```r
 grep("a{3,}", x)
@@ -481,7 +481,7 @@ grep("a{2,3}", x)
 ```
 ## [1] 2 3 4 5
 ```
-
+]
 ---
 
 ## `?`를 활용한 조절
@@ -611,7 +611,8 @@ apropos : Environment에 보여주지 않는 기본 객체들을 보여줌
 ^[0-9]{3}([0-9]{2}|-[0-9]{3})&amp;
 ```
 
-[시각화 보러가기](https://regexper.com/#%5E%5B0-9%5D%7B3%7D(%5B0-9%5D%7B2%7D%7C-%5B0-9%5D%7B3%7D)%26)
+[시각화 보러가기][100]
+[100]: https://regexper.com/#%5E%5B0-9%5D%7B3%7D(%5B0-9%5D%7B2%7D%7C-%5B0-9%5D%7B3%7D)%26
 
 ---
 
@@ -624,7 +625,9 @@ apropos : Environment에 보여주지 않는 기본 객체들을 보여줌
 ^([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01]))-[1-4][0-9]{6}$
 ```
 
-[시각화 보러가기](https://regexper.com/#%5E(%5B0-9%5D%7B2%7D(0%5B1-9%5D%7C1%5B0-2%5D)(0%5B1-9%5D%7C%5B12%5D%5B0-9%5D%7C3%5B01%5D))-%5B1-4%5D%5B0-9%5D%7B6%7D%24)
+[시각화 보러가기][101]
+
+[101]: https://regexper.com/#%5E(%5B0-9%5D%7B2%7D(0%5B1-9%5D%7C1%5B0-2%5D)(0%5B1-9%5D%7C%5B12%5D%5B0-9%5D%7C3%5B01%5D))-%5B1-4%5D%5B0-9%5D%7B6%7D%24
 
 ---
 
@@ -637,7 +640,11 @@ apropos : Environment에 보여주지 않는 기본 객체들을 보여줌
 ^\\(?[0-9]{2,3}\\)?[-. ]?[0-9]{3,4}[-. ]?[0-9]{4}$
 ```
 
-[시각화 보러가기](https://regexper.com/#%5E%5C(%3F%5B0-9%5D%7B2%2C3%7D%5C)%3F%5B-.%20%5D%3F%5B0-9%5D%7B3%2C4%7D%5B-.%20%5D%3F%5B0-9%5D%7B4%7D%24)
+[시각화 보러가기][103]    
+
+[103]: https://regexper.com/#%5E%5C(%3F%5B0-9%5D%7B2%2C3%7D%5C)%3F%5B-.%20%5D%3F%5B0-9%5D%7B3%2C4%7D%5B-.%20%5D%3F%5B0-9%5D%7B4%7D%24    
+
+
 
 그룹과 `gsub`로 양식을 통일시킬 수도 있습니다.
 
@@ -657,7 +664,9 @@ gsub("^\\(?([0-9]{2,3})\\)?[-. ]?([0-9]{3,4})[-. ]?([0-9]{4})$",
 /^([a-z0-9_\\.-]+)@([0-9a-z\\.-]+)\.([a-z\\.]{2,6})$/
 ```
 
-[시각화 보러가기](https://regexper.com/#%2F%5E(%5Ba-z0-9_%5C%5C.-%5D%2B)%40(%5B0-9a-z%5C%5C.-%5D%2B)%5C.(%5Ba-z%5C%5C.%5D%7B2%2C6%7D)%24%2F)
+[시각화 보러가기][104]
+
+[104]: https://regexper.com/#%2F%5E(%5Ba-z0-9_%5C%5C.-%5D%2B)%40(%5B0-9a-z%5C%5C.-%5D%2B)%5C.(%5Ba-z%5C%5C.%5D%7B2%2C6%7D)%24%2F
 
 ---
 
@@ -670,7 +679,9 @@ gsub("^\\(?([0-9]{2,3})\\)?[-. ]?([0-9]{3,4})[-. ]?([0-9]{4})$",
 /^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/[[:word:]]_\\.-]*)*\\/?$/
 ```
 
-[시각화 보러가기](https://regexper.com/#%2F%5E(https%3F%3A%5C%2F%5C%2F)%3F(%5B0-9a-z%5C.-%5D%2B)%5C.(%5Ba-z%5C.%5D%7B2%2C6%7D)(%5B%5C%2F%5Cw_%5C.-%5D*)*%5C%2F%3F%24%2F)
+[시각화 보러가기][105]
+
+[105]: https://regexper.com/#%2F%5E(https%3F%3A%5C%2F%5C%2F)%3F(%5B0-9a-z%5C.-%5D%2B)%5C.(%5Ba-z%5C.%5D%7B2%2C6%7D)(%5B%5C%2F%5Cw_%5C.-%5D*)*%5C%2F%3F%24%2F
 
 ---
 
@@ -680,7 +691,7 @@ gsub("^\\(?([0-9]{2,3})\\)?[-. ]?([0-9]{3,4})[-. ]?([0-9]{4})$",
 
 stringr은 tidyverse 패키지에 포함되어 있는 글자 조작용 패키지로 [ICU](http://site.icu-project.org/)라고 불리는 C library의 wrapper인 [stringi](https://github.com/gagolews/stringi) 패키지를 기반으로 하고 있습니다.
 
-총 패턴 매칭, 공백 관리, 지역 문자, 헬퍼의 4가지 카테고리의 함수를 제공합니다.
+총 패턴 매칭, 공백 관리, 로케일에 따라 동작이 다른 함수, 헬퍼의 4가지 카테고리의 함수를 제공합니다.
 
 ---
 
@@ -707,7 +718,7 @@ str_trim : 글자의 좌, 우 혹은 양쪽에 있는 공백문자를 제거
 
 ---
 
-## 지역 문자
+## 로케일에 따라 동작이 다른 함수
 
 str_order str_sort : 순서를 정렬    
 str_to_upper str_to_lower str_to_title : 알파벳의 경우 변경    
@@ -726,11 +737,637 @@ str_sub : 글자의 시작점과 끝점을 지정하여 추출
 
 ---
 
-## 예시
+## 설치
 
-[예시 코드](https://github.com/mrchypark/dabrp_classnote2/blob/master/codeForClass4.R)
+stringr 패키지는 tidyverse 패키지에 포함되어 있는 패키지입니다.
+
+
+```r
+if (!require(tidyverse)) install.packages("tidyverse") 
+```
+
+```
+## Loading required package: tidyverse
+```
+
+```
+## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr
+```
+
+```
+## Conflicts with tidy packages ----------------------------------------------
+```
+
+```
+## filter(): dplyr, stats
+## lag():    dplyr, stats
+```
+
+```r
+library(stringr)
+```
 
 ---
+
+## 길이 비교
+
+
+
+
+```r
+str_length(c("abc","한글","ㅎㄱㅏ"))
+```
+
+```
+## [1] 3 2 3
+```
+
+---
+
+
+```r
+# subset
+x &lt;- c("abcdef", "ghifjk")
+str_sub(x, 3, 3)
+```
+
+```
+## [1] "c" "i"
+```
+
+```r
+str_sub(x, 2, -2)
+```
+
+```
+## [1] "bcde" "hifj"
+```
+
+---
+
+
+```r
+# replace subset
+str_sub(x, 3, 3) &lt;- "X"
+x
+```
+
+```
+## [1] "abXdef" "ghXfjk"
+```
+
+---
+
+
+```r
+# duplicate
+str_dup(x, c(2, 3))
+```
+
+```
+## [1] "abXdefabXdef"       "ghXfjkghXfjkghXfjk"
+```
+
+
+---
+
+
+```r
+# padding
+x &lt;- c("abc", "defghi")
+str_pad(x, 10)
+```
+
+```
+## [1] "       abc" "    defghi"
+```
+
+```r
+str_pad(x, 10, "both")
+```
+
+```
+## [1] "   abc    " "  defghi  "
+```
+
+```r
+str_pad(x, 4)
+```
+
+```
+## [1] " abc"   "defghi"
+```
+
+---
+
+
+```r
+# truncate text
+x &lt;- c("Short", "This is a long string")
+x %&gt;% 
+  str_trunc(10) %&gt;% 
+  str_pad(10, "right")
+```
+
+```
+## [1] "Short     " "This is..."
+```
+
+---
+
+
+```r
+# remove blank
+x &lt;- c("  a   ", "b   ",  "   c")
+str_trim(x)
+```
+
+```
+## [1] "a" "b" "c"
+```
+
+```r
+str_trim(x, "left")
+```
+
+```
+## [1] "a   " "b   " "c"
+```
+
+---
+
+
+```r
+# locale sensitive function
+x &lt;- "I like horses."
+str_to_upper(x)
+```
+
+```
+## [1] "I LIKE HORSES."
+```
+
+```r
+str_to_title(x)
+```
+
+```
+## [1] "I Like Horses."
+```
+
+```r
+str_to_lower(x)
+```
+
+```
+## [1] "i like horses."
+```
+
+---
+
+
+```r
+# ordering
+x &lt;- c("y", "i", "k")
+str_order(x)
+```
+
+```
+## [1] 2 3 1
+```
+
+```r
+str_sort(x)
+```
+
+```
+## [1] "i" "k" "y"
+```
+
+---
+
+
+```r
+# set sample data
+strings &lt;- c(
+  "apple", 
+  "219 733 8965", 
+  "329-293-8753", 
+  "Work: 579-499-7527; Home: 543.355.3679"
+)
+phone &lt;- "([2-9][0-9]{2})[- .]([0-9]{3})[- .]([0-9]{4})"
+```
+
+---
+
+
+```r
+# match functions
+str_subset(strings, phone)
+```
+
+```
+## [1] "219 733 8965"                          
+## [2] "329-293-8753"                          
+## [3] "Work: 579-499-7527; Home: 543.355.3679"
+```
+
+```r
+str_detect(strings, phone)
+```
+
+```
+## [1] FALSE  TRUE  TRUE  TRUE
+```
+
+```r
+str_count(strings, phone)
+```
+
+```
+## [1] 0 1 1 2
+```
+
+---
+
+
+```r
+# which locate
+str_locate(strings, phone)
+```
+
+```
+##      start end
+## [1,]    NA  NA
+## [2,]     1  12
+## [3,]     1  12
+## [4,]     7  18
+```
+
+```r
+str_locate_all(strings, phone)
+```
+
+```
+## [[1]]
+##      start end
+## 
+## [[2]]
+##      start end
+## [1,]     1  12
+## 
+## [[3]]
+##      start end
+## [1,]     1  12
+## 
+## [[4]]
+##      start end
+## [1,]     7  18
+## [2,]    27  38
+```
+
+---
+
+
+```r
+# extract matching text
+str_extract(strings, phone)
+```
+
+```
+## [1] NA             "219 733 8965" "329-293-8753" "579-499-7527"
+```
+
+```r
+str_extract_all(strings, phone)
+```
+
+```
+## [[1]]
+## character(0)
+## 
+## [[2]]
+## [1] "219 733 8965"
+## 
+## [[3]]
+## [1] "329-293-8753"
+## 
+## [[4]]
+## [1] "579-499-7527" "543.355.3679"
+```
+
+```r
+str_extract_all(strings, phone, simplify = TRUE)
+```
+
+```
+##      [,1]           [,2]          
+## [1,] ""             ""            
+## [2,] "219 733 8965" ""            
+## [3,] "329-293-8753" ""            
+## [4,] "579-499-7527" "543.355.3679"
+```
+
+---
+
+
+```r
+# return match and matching group
+str_match(strings, phone)
+```
+
+```
+##      [,1]           [,2]  [,3]  [,4]  
+## [1,] NA             NA    NA    NA    
+## [2,] "219 733 8965" "219" "733" "8965"
+## [3,] "329-293-8753" "329" "293" "8753"
+## [4,] "579-499-7527" "579" "499" "7527"
+```
+
+```r
+str_match_all(strings, phone)
+```
+
+```
+## [[1]]
+##      [,1] [,2] [,3] [,4]
+## 
+## [[2]]
+##      [,1]           [,2]  [,3]  [,4]  
+## [1,] "219 733 8965" "219" "733" "8965"
+## 
+## [[3]]
+##      [,1]           [,2]  [,3]  [,4]  
+## [1,] "329-293-8753" "329" "293" "8753"
+## 
+## [[4]]
+##      [,1]           [,2]  [,3]  [,4]  
+## [1,] "579-499-7527" "579" "499" "7527"
+## [2,] "543.355.3679" "543" "355" "3679"
+```
+
+---
+
+
+```r
+# replace
+str_replace(strings, phone, "XXX-XXX-XXXX")
+```
+
+```
+## [1] "apple"                                 
+## [2] "XXX-XXX-XXXX"                          
+## [3] "XXX-XXX-XXXX"                          
+## [4] "Work: XXX-XXX-XXXX; Home: 543.355.3679"
+```
+
+```r
+str_replace_all(strings, phone, "XXX-XXX-XXXX")
+```
+
+```
+## [1] "apple"                                 
+## [2] "XXX-XXX-XXXX"                          
+## [3] "XXX-XXX-XXXX"                          
+## [4] "Work: XXX-XXX-XXXX; Home: XXX-XXX-XXXX"
+```
+
+---
+
+
+```r
+# split strings
+str_split("a-b-c", "-")
+```
+
+```
+## [[1]]
+## [1] "a" "b" "c"
+```
+
+```r
+str_split_fixed("a-b-c", "-", n = 2)
+```
+
+```
+##      [,1] [,2] 
+## [1,] "a"  "b-c"
+```
+
+---
+
+
+```r
+if (!require(nycflights13)) install.packages("nycflights13")
+library(nycflights13)
+head(airports, 3)
+```
+
+```
+## # A tibble: 3 x 8
+##     faa                          name      lat       lon   alt    tz   dst
+##   &lt;chr&gt;                         &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1   04G             Lansdowne Airport 41.13047 -80.61958  1044    -5     A
+## 2   06A Moton Field Municipal Airport 32.46057 -85.68003   264    -6     A
+## 3   06C           Schaumburg Regional 41.98934 -88.10124   801    -6     A
+## # ... with 1 more variables: tzone &lt;chr&gt;
+```
+
+```r
+grep("^New", airports$name, value = T)
+```
+
+```
+##  [1] "New Bedford Regional Airport"   "Newton City-County Airport"    
+##  [3] "Newark Liberty Intl"            "New Castle"                    
+##  [5] "New Century AirCenter Airport"  "New Stuyahok Airport"          
+##  [7] "New Orleans Nas Jrb"            "Newport Municipal Airport"     
+##  [9] "Newport News Williamsburg Intl" "Newport State"                 
+## [11] "Newtok Airport"                 "Newark Penn Station"           
+## [13] "New Carrollton Rail Station"    "New Haven Rail Station"
+```
+
+```r
+airports[grep("^New", airports$name, value = T), "name"]
+```
+
+```
+## # A tibble: 14 x 1
+##     name
+##    &lt;chr&gt;
+##  1  &lt;NA&gt;
+##  2  &lt;NA&gt;
+##  3  &lt;NA&gt;
+##  4  &lt;NA&gt;
+##  5  &lt;NA&gt;
+##  6  &lt;NA&gt;
+##  7  &lt;NA&gt;
+##  8  &lt;NA&gt;
+##  9  &lt;NA&gt;
+## 10  &lt;NA&gt;
+## 11  &lt;NA&gt;
+## 12  &lt;NA&gt;
+## 13  &lt;NA&gt;
+## 14  &lt;NA&gt;
+```
+
+```r
+grep("[0-9]$", airports$name, value = T)
+```
+
+```
+## [1] "Palmdale Rgnl Usaf Plt 42"
+```
+
+```r
+grep("[[:digit:]]$", airports$name, value = T)
+```
+
+```
+## [1] "Palmdale Rgnl Usaf Plt 42"
+```
+
+```r
+x &lt;- c("apple", "banana", "pear", "aple", "abble","appppppppple")
+grep("app*", x)
+```
+
+```
+## [1] 1 4 6
+```
+
+```r
+grep("app?", x)
+```
+
+```
+## [1] 1 4 6
+```
+
+```r
+grep("app+", x)
+```
+
+```
+## [1] 1 6
+```
+
+```r
+y &lt;- c("a","aa","aaa","aaaa","aaaaa")
+grep("a{3}", y)
+```
+
+```
+## [1] 3 4 5
+```
+
+```r
+stri&lt;-"&lt;p&gt; &lt;em&gt;안녕&lt;/em&gt;하세요 &lt;/p&gt;&lt;p&gt;테스트입니다.&lt;/p&gt;"
+sub("&lt;p&gt;.*&lt;/p&gt;","tar",stri)
+```
+
+```
+## [1] "tar"
+```
+
+```r
+sub("&lt;p&gt;.*?&lt;/p&gt;","tar",stri)
+```
+
+```
+## [1] "tar&lt;p&gt;테스트입니다.&lt;/p&gt;"
+```
+
+```r
+gsub("&lt;p&gt;.*?&lt;/p&gt;","tar",stri)
+```
+
+```
+## [1] "tartar"
+```
+
+---
+
+
+```r
+gsub(",", "", "100,000,000,000,000,000") %&gt;%
+  as.numeric
+```
+
+```
+## [1] 1e+17
+```
+
+```r
+?regexpr
+```
+
+```
+## starting httpd help server ... done
+```
+
+```r
+?apropos
+apropos("air*")
+```
+
+```
+##  [1] "AIC"                  "airlines"             "airmiles"            
+##  [4] "AirPassengers"        "airports"             "airquality"          
+##  [7] "as.pairlist"          "available.packages"   "bindtextdomain"      
+## [10] "cairo_pdf"            "cairo_ps"             "contains"            
+## [13] "db_explain"           "explain"              "extractAIC"          
+## [16] "failwith"             "faithful"             "faithfuld"           
+## [19] "HairEyeColor"         "is.pairlist"          "maintainer"          
+## [22] "mosaicplot"           "na.fail"              "pairlist"            
+## [25] "pairs"                "pairs.default"        "pairwise.prop.test"  
+## [28] "pairwise.t.test"      "pairwise.table"       "pairwise.wilcox.test"
+## [31] "rainbow"              "repair_names"         "tail"                
+## [34] "tail.matrix"          "tail_while"           "terrain.colors"      
+## [37] "waiver"
+```
+
+```r
+apropos("air+")
+```
+
+```
+##  [1] "airlines"             "airmiles"             "AirPassengers"       
+##  [4] "airports"             "airquality"           "as.pairlist"         
+##  [7] "cairo_pdf"            "cairo_ps"             "HairEyeColor"        
+## [10] "is.pairlist"          "pairlist"             "pairs"               
+## [13] "pairs.default"        "pairwise.prop.test"   "pairwise.t.test"     
+## [16] "pairwise.table"       "pairwise.wilcox.test" "repair_names"
+```
+
+```r
+apropos("^air+")
+```
+
+```
+## [1] "airlines"      "airmiles"      "AirPassengers" "airports"     
+## [5] "airquality"
+```
+
+```r
+postcodes &lt;- c("155-030", "23078", "324-686")
+grep("^[0-9]{3}([0-9]{2}|-[0-9]{3})$", postcodes)
+```
+
+```
+## [1] 1 2 3
+```
+
+
+---
+
+## apply
+
 X&lt;-as.data.frame(matrix(1:64, ncol=4, dimnames=list(seq(1:16), c("a", "b", "c", "d"))))
 
 X$a[c(1,3,10)]&lt;-0
@@ -876,8 +1513,8 @@ sapply(listData, sum)
     - html의 주석 `&lt;!-- 주석내용 --&gt;`    
     - [IPv4](https://ko.wikipedia.org/wiki/IPv4)    
 
-4. dabrp_class2 프로젝트를 연 후 `dir` 함수를 이용해서 아래 질문에 답해주세요.    
-    - `class2assignment` 폴더의 `db` 확장자 파일의 갯수    
+4. dabrp_class3 프로젝트를 연 후 `dir` 함수를 이용해서 아래 질문에 답해주세요.    
+    - `FolderForClass2` 폴더의 `db` 확장자 파일의 갯수    
     - working diractory 에서 `R` 확장자 파일의 리스트    
     - 모든 곳에서 `R` 확장자 파일의 리스트 (recursive 인자 참고)
     </textarea>
