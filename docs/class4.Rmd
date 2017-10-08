@@ -42,15 +42,10 @@ class: center, middle, title-slide
     - 함께 사용하는 함수
 
 3. 정규표현식과 함께 stringr
-    - Pattern matching functions
-    - Character manipulation
-    - Whitespace tools
+    - 텍스트를 다루는 함수
+    - 정규표현식과 함께 사용하는 함수
 
-4. apply family와 vectorize
-    - apply 동작
-    - Vectorize
-
-5. 과제
+4. 과제
 
 ---
 
@@ -62,11 +57,11 @@ class: center, middle, title-slide
 
 ## 수업의 목표
 
-### 1. 정규표현
+### 1. 정규표현식의 문법을 이해하고 동작을 예상할 수 있다.
 
-### 2. 
+### 2. 많이 사용하는 정규표현식을 이해하고 응용할 수 있다.
 
-### 3. 
+### 3. stringr 패키지와 함께 전처리에 정규표현식을 사용할 수 있다.
 
 ---
 
@@ -742,132 +737,6 @@ str_replace_all(strings, phone, "XXX-XXX-XXXX")
 str_split("a-b-c", "-")
 str_split_fixed("a-b-c", "-", n = 2)
 ```
-
----
-
-## apply
-
-X<-as.data.frame(matrix(1:64, ncol=4, dimnames=list(seq(1:16), c("a", "b", "c", "d"))))
-
-X$a[c(1,3,10)]<-0
-
-
-for (i in 1:nrow(X)){
-  if (X$a[i]==0) {
-    X$e[i]<-(-999) 
-  } else {
-    X$e[i]<-X$b[i]/X$c[i]
-  }
-}
-X
-
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-
-times<-c(100,1000,10000,30000,50000,100000)
-tData<-c()
-for(tm in times){
-  
-  X<-as.data.frame(matrix(1:tm, ncol=4, dimnames=list(seq(1:(tm/4)), c("a", "b", "c", "d"))))
-  
-  X$a[c(1,3,10)]<-0
-  
-  forTime<-system.time(
-    for (i in 1:nrow(X)){
-      if (X$a[i]==0) {
-        X$e[i]<-(-999) 
-      } else {
-        X$e[i]<-X$b[i]/X$c[i]
-      }
-    }
-  )
-  ifelseTime<-system.time(X$e <- ifelse(X$a == 0, -999, X$b/X$c))
-  
-  forTime<-cbind(data.frame(tm,cate="forTime"),t(as.matrix(forTime)))
-  ifelseTime<-cbind(data.frame(tm,cate="ifelseTime"),t(as.matrix(ifelseTime)))
-  tData<-rbind(tData,forTime,ifelseTime)
-  
-}
-
-tData<-tData %>% select(tm:elapsed) %>% gather(tm,cate)
-names(tData)<-c("iter","cate","timeName","time")
-ggplot(tData,aes(x=iter,y=time,fill=cate,color=cate)) + geom_point(stat="identity")
-
-tm<-1000000
-X<-as.data.frame(matrix(1:tm, ncol=4, dimnames=list(seq(1:(tm/4)), c("a", "b", "c", "d"))))
-ifelseTime<-system.time(X$e <- ifelse(X$a == 0, -999, X$b/X$c))
-ifelseTime
-
-
-set.seed(1)
-( myMat <- matrix(round(rnorm(16,10),2),4,4) )
-
-mean(myMat[,1])
-mean(myMat[,2])
-mean(myMat[,3])
-mean(myMat[,4])
-
-for(i in 1:4){
-  mean(myMat[,i])
-}
-
-myMean <- c(
-  mean(myMat[,1]),
-  mean(myMat[,2]),
-  mean(myMat[,3]),
-  mean(myMat[,4])
-)
-myMean
-
-myMean <- c()
-for(i in 1:4){
-  myMean<-c(myMean,mean(myMat[,i]))
-}
-myMean
-
-myLoop <- function(somemat) {
-  myMean <- c()
-  for(i in 1:ncol(somemat)){
-    myMean<-c(myMean,mean(myMat[,i]))
-  }
-  return(myMean)
-}
-
-myLoop(myMat)
-
-apply(myMat, 2, mean)
-
-identical(myLoop(myMat),apply(myMat, 2, mean))
-
-apply(mymat,2,class)
-apply(mymat,2,sum) 
-apply(mymat,2,quantile) 
-
-myMat[1,4]<-NA
-apply(myMat,2,sum)
-apply(myMat,2,sum, na.rm = TRUE)
-
-naSum <- function(x){
-  return(sum(x,na.rm = TRUE))
-}
-
-apply(myMat,2,naSum)
-apply(myMat,2,function(x) sum(x,na.rm = TRUE))
-
-
-(listData <- list(a = 1, b = 1:3, c = 10:100) )
-lapply(listData, length) 
-lapply(listData, sum)
-
-(listData <- list(a = 1, b = 1:3, c = 10:100) )
-unlist(lapply(listData, length))
-unlist(lapply(listData, sum))
-
-(listData <- list(a = 1, b = 1:3, c = 10:100) )
-sapply(listData, length)
-sapply(listData, sum)
-
 
 ---
 
