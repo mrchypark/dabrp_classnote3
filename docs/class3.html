@@ -21,7 +21,7 @@ class: center, middle, title-slide
 
 ### 박찬엽
 
-### 2017년 9월 21일
+### 2017년 9월 28일
 ---
 
 ## 목차
@@ -68,7 +68,7 @@ class: center, middle, title-slide
 
 ---
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/dplyr.png) 
 
 ---
 
@@ -79,6 +79,16 @@ class: center, middle, title-slide
 
 ```r
 if (!requireNamespace("nycflights13")) install.packages("nycflights13")
+```
+
+```
+## package 'nycflights13' successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+## 	C:\Users\mrchypark\AppData\Local\Temp\RtmpGkwJOm\downloaded_packages
+```
+
+```r
 library(nycflights13)
 nycflights13::flights
 ```
@@ -157,7 +167,7 @@ class: center, middle, title-slide
 1. 열 결합 - left_join()
 ]
 .pull-right[
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/dplyr.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/dplyr.png) 
 ]
 
 ---
@@ -1430,7 +1440,7 @@ class: center, middle, title-slide
 
 ## 함수를 연결하는 파이프 연산자(%&gt;%)
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/pipes.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/pipes.png)
 
 ---
 
@@ -2011,6 +2021,18 @@ if (!requireNamespace("dbplyr")) install.packages("dbplyr")
 ## Loading required namespace: dbplyr
 ```
 
+```
+## Installing package into 'C:/Users/mrchypark/Documents/R/win-library/3.4'
+## (as 'lib' is unspecified)
+```
+
+```
+## package 'dbplyr' successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+## 	C:\Users\mrchypark\AppData\Local\Temp\RtmpGkwJOm\downloaded_packages
+```
+
 ```r
 library(dbplyr)
 ```
@@ -2039,6 +2061,18 @@ if (!requireNamespace("dtplyr")) install.packages("dtplyr")
 
 ```
 ## Loading required namespace: dtplyr
+```
+
+```
+## Installing package into 'C:/Users/mrchypark/Documents/R/win-library/3.4'
+## (as 'lib' is unspecified)
+```
+
+```
+## package 'dtplyr' successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+## 	C:\Users\mrchypark\AppData\Local\Temp\RtmpGkwJOm\downloaded_packages
 ```
 
 ```r
@@ -2107,6 +2141,25 @@ tb_flights_idx &lt;- tbl(conn, "flights_idx")
 
 ```r
 if (!requireNamespace("microbenchmark")) install.packages("microbenchmark")
+```
+
+```
+## Loading required namespace: microbenchmark
+```
+
+```
+## Installing package into 'C:/Users/mrchypark/Documents/R/win-library/3.4'
+## (as 'lib' is unspecified)
+```
+
+```
+## package 'microbenchmark' successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+## 	C:\Users\mrchypark\AppData\Local\Temp\RtmpGkwJOm\downloaded_packages
+```
+
+```r
 library(microbenchmark)
 ```
 
@@ -2132,9 +2185,9 @@ microbenchmark(tbl(conn, 'flights') %&gt;%
 ##                                                                                          expr
 ##      tbl(conn, "flights") %&gt;% group_by(carrier) %&gt;% summarise(count = n()) %&gt;%      collect()
 ##  tbl(conn, "flights_idx") %&gt;% group_by(carrier) %&gt;% summarise(count = n()) %&gt;%      collect()
-##        min       lq      mean    median        uq      max neval
-##  288.90323 294.1410 343.82153 332.89751 365.40972 511.2587    10
-##   62.15311  66.1219  77.81052  71.42462  80.17741 133.9584    10
+##        min        lq      mean    median       uq       max neval
+##  159.51046 177.37830 205.03707 194.09691 234.1822 290.87159    10
+##   37.43287  37.84492  47.45835  44.17065  53.8540  68.35395    10
 ```
 
 ---
@@ -2185,7 +2238,7 @@ dbListTables(conn)
 ```
 
 ```
-## [1] "flights"      "sqlite_stat1" "sqlite_stat4"
+## [1] "flights"      "flights_idx"  "sqlite_stat1" "sqlite_stat4"
 ```
 
 ```r
@@ -2226,7 +2279,8 @@ dbListTables(conn)
 ```
 
 ```
-## [1] "flights"         "planes_distance" "sqlite_stat1"    "sqlite_stat4"
+## [1] "flights"         "flights_idx"     "planes_distance" "sqlite_stat1"   
+## [5] "sqlite_stat4"
 ```
 
 ```r

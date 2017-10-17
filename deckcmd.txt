@@ -1,3 +1,0 @@
-## start shell from rstudio
-cd decktape
-phantomjs decktape.js ../docs/class8.html ../Materials/class8.pdf

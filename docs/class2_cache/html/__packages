@@ -4,3 +4,4 @@ DBI
 RSQLite
 readr
 data.table
+RevoUtilsMath

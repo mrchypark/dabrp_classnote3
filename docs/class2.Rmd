@@ -371,7 +371,7 @@ R은 데이터를 사용하기 위해 메모리로 구성된 R 환경에 파일�
 <br>
 <br>
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/fileio.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/fileio.png)
 
 ---
 
@@ -400,7 +400,7 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 <br>
 <br>
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/conn.png) 
 
 ---
 
@@ -411,7 +411,7 @@ DBI(Database Interface) 패키지는 각 DBMS에 해당하는 드라이버 패�
 <br>
 <br>
 
-![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/img/conn2.png) 
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/conn2.png) 
 
 ---
 
@@ -440,7 +440,7 @@ library(data.table)
 `conn`은 관례적으로 연결 정보를 저장하는 객체의 이름이며 SQLite는 DB가 파일로 구성되어 있어서 권한(ID나 비밀번호) 설정이 없고 연결 정보도 단순(host 없음)함
 
 ```{r}
-conn <- dbConnect(RSQLite::SQLite(), dbname = "../ForderForClass2/class2.sqlite")
+conn <- dbConnect(RSQLite::SQLite(), dbname = "../FolderForClass2/class2.sqlite")
 conn
 
 # DB내에 있는 테이블의 이름을 확인함
