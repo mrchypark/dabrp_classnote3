@@ -26,6 +26,7 @@ class: center, middle, title-slide
 #### 	Step1. 분석결과를 효과적으로 보여주는 데이터 시각화
 ### <https://mrchypark.github.io/dabrp_classnote3/class5>
 
+#### [피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)    [pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class5.pdf)
 ### 박찬엽
 
 ### 2017년 10월 26일
