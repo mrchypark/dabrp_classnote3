@@ -27,7 +27,7 @@ class: center, middle, title-slide
 
 ### 박찬엽
 
-### 2017년 10월 12일
+### 2017년 10월 19일
 
 ---
 

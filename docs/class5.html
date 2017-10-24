@@ -1,30 +1,23 @@
----
-title: "데이터 시각화와 전처리"
-author: "박찬엽"
-date: "2017년 10월 26일"
-output:
-  xaringan::moon_reader:
-    seal: FALSE
-    css: ["default", "class.css"]
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
-      ratio: '16:9'
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>데이터 시각화와 전처리</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-library(tidyverse)
-knitr::opts_chunk$set(cache = F, fig.height = 5)
-```
+
+
 
 class: center, middle, title-slide
 
 ## 멋진 보고와 설득을 위한 데이터 시각화
 #### 	Step1. 분석결과를 효과적으로 보여주는 데이터 시각화
-### <https://mrchypark.github.io/dabrp_classnote3/class5>
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class5&gt;
 
 ### 박찬엽
 
@@ -69,7 +62,8 @@ class: center, middle
 [The Grammar of Graphics](http://www.springer.com/us/book/9780387245447)를 따르는 방식으로 차트를 출력물 수준으로 만들 수 있게 보조해주는 패키지. 그래서 `GG`plot 이라고 이름을 지은 것이고, 상세한 동작방식은 [여기](http://vita.had.co.nz/papers/layered-grammar.pdf)를 참고하세요. 데이터를 기하 객체(geometric object)의 미적 속성(aesthetic attributes)에 연결하는 방법을 사용합니다. 
 
 .pull-left[
-```{r, eval=FALSE, message=FALSE, warning=FALSE, include=T}
+
+```r
 library(ggplot2)
 ggplot(data=mpg) + 
   geom_point(aes(displ, hwy, 
@@ -78,12 +72,7 @@ ggplot(data=mpg) +
 ]
 --
 .pull-right[
-```{r ,echo=F, fig.height=5}
-library(ggplot2)
-
-ggplot(mpg, aes(displ, hwy, colour = class)) + 
-  geom_point()
-```
+![](class5_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 ]
 ---
 ## 공부 자료
@@ -102,7 +91,7 @@ ggplot(mpg, aes(displ, hwy, colour = class)) +
 - 연결(mapping) : 데이터의 컬럼을 필요한 미적 속성에 해당함을 명시적으로 작성하는 것.
 - ggplot 자료형 : ggplot()함수로 생성하는 R 객체로 그림을 그리기 위한 정보를 포함하고 있음.
 - 계층(layer) : 제공된 데이터와 연결 정보를 바탕으로 그려진 그림. + 연산자를 통해 계층을 추가하여 겹쳐서 그리는 것이 가능.
-- `+` 연산자 : 계층을 추가할 때 데이터와 연결 정보, 지금까지 작성된 계층 정보를 전달하는 연산자. 파이프 연산자(`%>%`)와 비슷함.
+- `+` 연산자 : 계층을 추가할 때 데이터와 연결 정보, 지금까지 작성된 계층 정보를 전달하는 연산자. 파이프 연산자(`%&gt;%`)와 비슷함.
 - 좌표계(coordinate system) : 대표적인 x-y 좌표계를 사용하며 극좌표계(polar) 등으로 파이차트를 작성할 수 있음.
 - 축척(scale) : 데이터를 표시하는 방식으로 연속형 자료형에서 고려함.
 
@@ -113,13 +102,13 @@ ggplot(mpg, aes(displ, hwy, colour = class)) +
 `ggplot`은 그림 그리는 정보를 가지는 layer들을 겹쳐서 차트를 그리는 방식을 이용합니다. 대부분은 자동으로 지정을 해주고, 필수로 작성해야 하는 layer의 요소는 데이터, 연결정보, 기하 객체 입니다.
 
 ```
-layer = ggplot(data, aes(<mapping>)) + geom_*
+layer = ggplot(data, aes(&lt;mapping&gt;)) + geom_*
 ```
 --
 여러 layer를 겹칠 때 데이터와 연결정보 중에 공통으로 사용하는 것은 ggplot()함수로 작성하여 geom_요소만 `+` 연산자로 연결하여 layer를 겹치는 방식을 사용합니다.
 
 ```
-ggplot(data, aes(<mapping>) ) +  # 공통 정보
+ggplot(data, aes(&lt;mapping&gt;) ) +  # 공통 정보
   geom_요소1 +                   # 레이어 1의 구성
   geom_요소2                     # 레이어 2의 구성
 
@@ -129,12 +118,30 @@ ggplot(data, aes(<mapping>) ) +  # 공통 정보
 
 ## gapminder 데이터 소개
 
-gapminder는 [움직이는 버블 차트](http://www.gapminder.org/tools/#_locale_id=en;&chart-type=bubbles)로 유명한 데이터셋입니다. [코드북](https://github.com/jennybc/gapminder)과 `str`을 확인하면서 데이터를 확인하겠습니다.
+gapminder는 [움직이는 버블 차트](http://www.gapminder.org/tools/#_locale_id=en;&amp;chart-type=bubbles)로 유명한 데이터셋입니다. [코드북](https://github.com/jennybc/gapminder)과 `str`을 확인하면서 데이터를 확인하겠습니다.
 
-```{r}
+
+```r
 if (!require("gapminder")){install.packages("gapminder")}
+```
+
+```
+## Loading required package: gapminder
+```
+
+```r
 library(gapminder)
 str(gapminder)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	1704 obs. of  6 variables:
+##  $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+##  $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
+##  $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+##  $ gdpPercap: num  779 821 853 836 740 ...
 ```
 
 
@@ -143,15 +150,46 @@ str(gapminder)
 ## ggplot 객체 만들기
 
 .pull-left[
-```{r fig.height=5}
-p <-ggplot(gapminder, 
+
+```r
+p &lt;-ggplot(gapminder, 
            aes(x = gdpPercap, y = lifeExp))
 p
 ```
+
+![](class5_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
-```{r}
+
+```r
 summary(p)
+```
+
+```
+## data: country, continent, year, lifeExp, pop, gdpPercap [1704x6]
+## mapping:  x = gdpPercap, y = lifeExp
+## faceting: &lt;ggproto object: Class FacetNull, Facet&gt;
+##     compute_layout: function
+##     draw_back: function
+##     draw_front: function
+##     draw_labels: function
+##     draw_panels: function
+##     finish_data: function
+##     init_scales: function
+##     map: function
+##     map_data: function
+##     params: list
+##     render_back: function
+##     render_front: function
+##     render_panels: function
+##     setup_data: function
+##     setup_params: function
+##     shrink: TRUE
+##     train: function
+##     train_positions: function
+##     train_scales: function
+##     vars: function
+##     super:  &lt;ggproto object: Class FacetNull, Facet&gt;
 ```
 ]
 
@@ -160,10 +198,13 @@ summary(p)
 ## geom 추가 하기 point
 
 .pull-left[
-```{r fig.height=5}
-p_point <- p + geom_point()
+
+```r
+p_point &lt;- p + geom_point()
 p_point
 ```
+
+![](class5_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 ]
 
 --
@@ -183,9 +224,7 @@ p_point
 
 .pull-right[
 
-```{r echo=F, fig.height=5}
- ggplot(gapminder[gapminder$country=="Afghanistan",], aes(x=year, y=lifeExp)) + geom_line()
-```
+![](class5_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -212,18 +251,24 @@ p_point
 
 ## scale 변경하기 
 .pull-left[
-```{r}
+
+```r
 p_point
 ```
+
+![](class5_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 ]
 
 
 .pull-right[
-```{r}
+
+```r
 ggplot(gapminder) +
   geom_point(aes(x = log10(gdpPercap),
                  y = lifeExp))
 ```
+
+![](class5_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -231,16 +276,22 @@ ggplot(gapminder) +
 ## scale_* 함수로 변경하기
 
 .pull-left[
-```{r }
+
+```r
 p_point
 ```
+
+![](class5_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 ]
 
 
 .pull-right[
-```{r}
-(p_point_log10 <- p_point + scale_x_log10())
+
+```r
+(p_point_log10 &lt;- p_point + scale_x_log10())
 ```
+
+![](class5_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -262,10 +313,13 @@ ggplot [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-c
 ## color 정보를 aes를 이용해서 mapping 하기
 
 .pull-left[
-```{r }
-(p_point_color <- p + 
+
+```r
+(p_point_color &lt;- p + 
   geom_point(aes(color = continent)))
 ```
+
+![](class5_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -286,9 +340,12 @@ summary(p + geom_point(aes(alpha = (1/3), size = 3) ))
 ```
 ]
 .pull-right[
-```{r }
+
+```r
 p + geom_point(alpha = (1/3), size = 3)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 ]
 ---
 ## stat_*() 함수로 layer 추가하기
@@ -302,30 +359,46 @@ p + geom_point(alpha = (1/3), size = 3)
 
 ## stat_smooth로 간단히 추세선 추가하기
 .pull-left[
-```{r }
+
+```r
 p_point
 ```
+
+![](class5_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
-```{r message=F, warning=FALSE}
+
+```r
 p_point + stat_smooth()
 ```
+
+![](class5_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 ]
 
 ---
 ## method를 lm(선형회귀)로 변경
 .pull-left[
-```{r}
+
+```r
 p_point + stat_smooth()
 ```
+
+```
+## `geom_smooth()` using method = 'gam'
+```
+
+![](class5_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
-```{r}
+
+```r
 p_point + geom_smooth(lwd = 2, 
                       se = FALSE, 
                       method = "lm")
 ```
+
+![](class5_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 ]
 ---
 ## 색정보를 전체에 반영하기
@@ -333,17 +406,31 @@ p_point + geom_smooth(lwd = 2,
 layer를 추가할 때 작성한 mapping 정보는 이후에 더해지는 layer에는 반영되지 않습니다. 그렇기 때문에 공통으로 사용하는 mapping 정보는 최초 `ggplot` 객체 생성시 `aes()` 함수로 반영해야 합니다.
 
 .pull-left[
-```{r fig.height=3}
+
+```r
 p_point_color + 
   geom_smooth(lwd = 2, se = FALSE)
 ```
+
+```
+## `geom_smooth()` using method = 'gam'
+```
+
+![](class5_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 ]
 .pull-left[
-```{r fig.height=3}
+
+```r
 p + aes(color = continent) + 
   geom_point() + 
   geom_smooth(lwd = 1, se = FALSE)
 ```
+
+```
+## `geom_smooth()` using method = 'loess'
+```
+
+![](class5_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 ]
 ---
 ## group 과 color
@@ -351,18 +438,32 @@ p + aes(color = continent) +
 group과 color가 어떻게 다르게 동작하는지 확인하세요.
 
 .pull-left[
-```{r fig.height=3}
+
+```r
 p + aes(color = continent) + 
   geom_point() + 
   geom_smooth(lwd = 2, se = FALSE)
 ```
+
+```
+## `geom_smooth()` using method = 'loess'
+```
+
+![](class5_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
-```{r fig.height=3} 
+
+```r
 p + aes(group = continent) + 
   geom_point() + 
   geom_smooth(lwd = 2, se = FALSE)
 ```
+
+```
+## `geom_smooth()` using method = 'loess'
+```
+
+![](class5_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 ]
 ---
 
@@ -371,15 +472,21 @@ p + aes(group = continent) +
 대륙을 기준으로 차트를 그룹지어 나누어 그릴 수 있습니다. `facet_*()` 함수를 참고하세요.
 
 .pull-left[
-```{r}
-(lp <- ggplot(gapminder) + 
+
+```r
+(lp &lt;- ggplot(gapminder) + 
    geom_jitter(aes(x = year, y = lifeExp )))
 ```
+
+![](class5_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
-```{r}
+
+```r
 lp + facet_wrap(~ continent)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -393,24 +500,7 @@ lp + facet_wrap(~ continent)
 
 .pull-right[
 
-```{r echo=F, warning=F, message=F, fig.height=6}
-library(gridExtra)
-library(dplyr)
-
-p <- ggplot(gapminder)
-
-plot1 <- p + aes(x=pop) + geom_histogram()
-plot2 <- p + aes(x=continent, y=lifeExp) + geom_violin() + stat_summary(color="blue")
-continent_freq <- gapminder %>% count(continent)
-plot3 <- ggplot(continent_freq, aes(x = continent, y = n)) + geom_bar(stat = "identity")
-
-jCountries <- c("Canada", "Rwanda", "Cambodia", "Mexico")
-plot4 <- gapminder %>% filter(country %in% jCountries) %>%
-  ggplot(aes(x = year, y = lifeExp, color = country)) +
-  geom_line() + geom_point()
-
-grid.arrange(plot1, plot2, plot3, plot4, nrow=2, ncol=2)
-```
+![](class5_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -421,15 +511,15 @@ grid.arrange(plot1, plot2, plot3, plot4, nrow=2, ncol=2)
 library(gridExtra)
 library(dplyr)
 
-p <- ggplot(gapminder)
+p &lt;- ggplot(gapminder)
 
-plot1 <- p + aes(x=pop) + geom_histogram()
-plot2 <- p + aes(x=continent, y=lifeExp) + geom_violin() + stat_summary(color="blue")
-continent_freq <- gapminder %>% count(continent)
-plot3 <- ggplot(continent_freq, aes(x = continent, y = n)) + geom_bar(stat = "identity")
+plot1 &lt;- p + aes(x=pop) + geom_histogram()
+plot2 &lt;- p + aes(x=continent, y=lifeExp) + geom_violin() + stat_summary(color="blue")
+continent_freq &lt;- gapminder %&gt;% count(continent)
+plot3 &lt;- ggplot(continent_freq, aes(x = continent, y = n)) + geom_bar(stat = "identity")
 
-jCountries <- c("Canada", "Rwanda", "Cambodia", "Mexico")
-plot4 <- gapminder %>% filter(country %in% jCountries) %>%
+jCountries &lt;- c("Canada", "Rwanda", "Cambodia", "Mexico")
+plot4 &lt;- gapminder %&gt;% filter(country %in% jCountries) %&gt;%
   ggplot(aes(x = year, y = lifeExp, color = country)) +
   geom_line() + geom_point()
 
@@ -444,9 +534,14 @@ ggplot2을 이용해 출력한 차트는 2가지 방식으로 저장할 수 있�
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote2/master/notegen/img/img_export.png) 
 ]
 .pull-right[
-```{r}
+
+```r
 dir.create("../ggsave", showWarnings = F)
 ggsave("../ggsave/last.png")
+```
+
+```
+## Saving 7 x 5 in image
 ```
 ]
 
@@ -456,16 +551,16 @@ ggsave("../ggsave/last.png")
 
 계속 만드는 차트를 여러 번 저장해야 할 때 가 있습니다. 역시 `for` 문을 사용해서 저장해야 하는데, 이름을 바꾸면서 저장해야 해서 코드를 작성해 보았습니다.
 
-```{r, eval=F}
+
+```r
 dir.create("../ggsave", showWarnings = F)
 for(i in 1:length(unique(gapminder$country))){
-  gapminder %>% filter(country == gapminder$country[i]) %>%
+  gapminder %&gt;% filter(country == gapminder$country[i]) %&gt;%
      ggplot(aes(x = year, y = lifeExp, color = country)) +
      geom_line() + geom_point() +
     ggsave(paste0("./ggsave/",gapminder$country[i],".png"))
   # print(paste0(i," / ",length(unique(gapminder$country))))
 }
-
 ```
 
 ---
@@ -498,19 +593,7 @@ class: center, middle
 
 [ggmap](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf)은 구글 지도를 배경으로 ggplot을 사용할 수 있게 해주는 패키지로 내부적으로 모두 ggplot의 함수를 사용해서 문법이 호환됩니다.
 
-```{r warning=F, message=F, echo=F}
-if (!require("ggmap")){
-  install.packages("ggmap")}
-library(ggmap)
-# for mac
-loc<-"서울"
-tar<-"서울시청"
-# for windows
-loc<-URLencode(enc2utf8("서울"))
-tar<-URLencode(enc2utf8("서울시청"))
-geocityhall<-geocode(tar)
-get_googlemap(loc,maptype = "roadmap",markers = geocityhall) %>% ggmap()
-```
+![](class5_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -540,25 +623,29 @@ geocode(location, output = "latlon", source = "google")
 
 `get_googlemap()` 함수는 google 지도를 `ggmap 객체`로 가져오는 함수입니다. 그래서 추가적으로 `ggmap()`함수를 이용해서 `ggplot 객체`로 변환해야 합니다. windows는 인코딩 문제가 있어서 `URLencode(enc2utf8("장소"))`의 형태로 사용해야 합니다.
 
-```{r warning=F, message=F}
+
+```r
 library(ggmap)
 # for mac
-loc<-"서울"
-tar<-"서울시청"
+loc&lt;-"서울"
+tar&lt;-"서울시청"
 # for windows
-loc<-URLencode(enc2utf8("서울"))
-tar<-URLencode(enc2utf8("서울시청"))
-geocityhall<-geocode(tar)
+loc&lt;-URLencode(enc2utf8("서울"))
+tar&lt;-URLencode(enc2utf8("서울시청"))
+geocityhall&lt;-geocode(tar)
 ```
 ]
 .pull-right[
-```{r warning=F, message=F}
-geocityhall<-geocode(tar)
+
+```r
+geocityhall&lt;-geocode(tar)
 get_googlemap(loc,
               maptype = "roadmap", 
-              markers = geocityhall) %>% 
+              markers = geocityhall) %&gt;% 
   ggmap()
 ```
+
+![](class5_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
 ]
 ---
 
@@ -569,24 +656,14 @@ get_googlemap(loc,
 
 - google 지도 위에 ggplot 객체를 추가하려면 아래와 같이 작성하면 됩니다.
 ```
-get_googlemap(loc, maptype = "roadmap") %>% 
+get_googlemap(loc, maptype = "roadmap") %&gt;% 
   ggmap() + 
   geom_point(data, aes(x=lon, y=lat))
 ```
 ]
 
 .pull-right[
-```{r warning=F, message=F, echo=F}
-library(data.table)
-wifi<-fread("../data/wifi.csv", encoding = "UTF-8")
-sw<-wifi[grep("서울", `소재지도로명주소`),.(`관리기관명`,`위도`,`경도`)]
-sw<-unique(sw)
-names(sw)<-c("ser","lat","lon")
-sw<-data.frame(sw)
-
-get_googlemap(loc, maptype = "roadmap", zoom = 11) %>% ggmap() + 
-  geom_point(data=sw, aes(x=lon, y=lat, color=ser)) + theme(legend.position="none")
-```
+![](class5_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -595,13 +672,13 @@ get_googlemap(loc, maptype = "roadmap", zoom = 11) %>% ggmap() +
 
 ```
 library(data.table)
-wifi<-fread("../data/wifi.csv")
-sw<-wifi[grep("서울", 소재지도로명주소),.(관리기관명,위도,경도)]
-sw<-unique(sw)
-names(sw)<-c("ser","lat","lon")
-sw<-data.frame(sw)
+wifi&lt;-fread("../data/wifi.csv")
+sw&lt;-wifi[grep("서울", 소재지도로명주소),.(관리기관명,위도,경도)]
+sw&lt;-unique(sw)
+names(sw)&lt;-c("ser","lat","lon")
+sw&lt;-data.frame(sw)
 
-get_googlemap(loc, maptype = "roadmap", zoom = 11) %>% ggmap() + 
+get_googlemap(loc, maptype = "roadmap", zoom = 11) %&gt;% ggmap() + 
   geom_point(data=sw, aes(x=lon, y=lat, color=ser)) + theme(legend.position="none")
 ```
 
@@ -629,18 +706,26 @@ Kormaps는 설치 및 사용이 까다로워서 함께 진행하도록 하겠습
 
 [ggsci](https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html)는 유명 색조합이 미리 준비되어 있는 패키지 
 
-```{r}
+
+```r
 if (!require(ggsci)) devtools::install_github("road2stat/ggsci")
+```
+
+```
+## Loading required package: ggsci
+```
+
+```r
 library(ggsci)
 library(gridExtra)
 data("diamonds")
-p1 = ggplot(subset(diamonds, carat >= 2.2),
+p1 = ggplot(subset(diamonds, carat &gt;= 2.2),
             aes(x = table, y = price, colour = cut)) +
   geom_point(alpha = 0.7) +
   geom_smooth(method = "loess", alpha = 0.05, size = 1, span = 1) +
   theme_bw()
 
-p2 = ggplot(subset(diamonds, carat > 2.2 & depth > 55 & depth < 70),
+p2 = ggplot(subset(diamonds, carat &gt; 2.2 &amp; depth &gt; 55 &amp; depth &lt; 70),
             aes(x = depth, fill = cut)) +
   geom_histogram(colour = "black", binwidth = 1, position = "dodge") +
   theme_bw()
@@ -650,9 +735,12 @@ p2_aaas = p2 + scale_fill_aaas()
 ```
 ---
 
-```{r fig.width=12}
+
+```r
 grid.arrange(p1_aaas, p2_aaas, ncol = 2)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -660,24 +748,34 @@ grid.arrange(p1_aaas, p2_aaas, ncol = 2)
 
 [ggthemes](https://github.com/jrnold/ggthemes) 또한 `ggsci`와 같이 유명한 테마를 미리 만들어서 함수화한 패키지입니다. `ggsci`가 저널들의 디자인 테마 모음이라면 `ggthemes`는 다양한 제품 테마 모음이라고 할 수 있습니다.
 .pull-left[
-```{r}
+
+```r
 if (!require(ggthemes)){
 devtools::install_github("jrnold/ggthemes")}
+```
 
+```
+## Loading required package: ggthemes
+```
+
+```r
 library("ggthemes")
 
-p1_th1 <- p1 + 
+p1_th1 &lt;- p1 + 
   theme_hc() +
   scale_colour_hc()
-p2_th2 <- p2 + 
+p2_th2 &lt;- p2 + 
   theme_hc(bgcolor = "darkunica") +
   scale_fill_hc("darkunica")
 ```
 ]
 .pull-right[
-```{r fig.height=4}
+
+```r
 grid.arrange(p1_th1, p2_th2, ncol = 2)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
 ]
 ---
 
@@ -685,31 +783,45 @@ grid.arrange(p1_th1, p2_th2, ncol = 2)
 
 [ggrepel](https://github.com/slowkow/ggrepel/blob/master/vignettes/ggrepel.md)는 글자를 겹치지 않게 그려주는 패키지로 보고서를 작성할 때 매우 유용합니다.
 
-```{r}
+
+```r
 if (!require(ggrepel)){
   devtools::install_github("slowkow/ggrepel")}
+```
+
+```
+## Loading required package: ggrepel
+```
+
+```r
 library(ggrepel)
 ```
 
 ---
 
 .pull-left[
-```{r}
+
+```r
 ggplot(mtcars) +
   geom_point(aes(wt, mpg), color = 'red') +
   geom_text(aes(wt, mpg, 
                 label = rownames(mtcars))) +
   theme_classic(base_size = 16)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
-```{r}
+
+```r
 ggplot(mtcars) +
   geom_point(aes(wt, mpg), color = 'red') +
   geom_text_repel(aes(wt, mpg, 
                 label = rownames(mtcars))) +
   theme_classic(base_size = 16)
 ```
+
+![](class5_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -743,7 +855,7 @@ gui 클릭으로 ggplot 컨트롤할 수 있게 해주는 add-ond으로 rstudio�
 ```
 install.packages("ggedit")
 library(ggedit)
-p <- ggplot(mtcars, aes(x = hp, y = wt)) + 
+p &lt;- ggplot(mtcars, aes(x = hp, y = wt)) + 
   geom_point() + geom_smooth(method = 'loess')
 p
 ggedit(p)
@@ -762,20 +874,7 @@ ggedit(p)
     - [링크](https://cran.r-project.org/web/packages/ggfortify/vignettes/plot_lm.html)를 참고해서 `fit` 객체를 시각화해주세요. 링크의 2번째 그림을 따라하면 됩니다.
 ]
 .pull-right[
-```{r warning=F, message=F, echo=F, fig.height=3}
-library(ggfortify)
-library(data.table)
-chen<-fread("../data/recomen/chennel.csv")
-comp<-fread("../data/recomen/competitor.csv")
-comp$useDate <- comp$useDate %>% paste0(.,"01") %>% as.Date(format="%Y%m%d")
-p1 <- chen[,sum(useCnt),by=(chennel)] %>% ggplot(aes(chennel, V1)) + geom_bar(stat = "identity")
-p2 <- ggplot(comp[,.N,by=(useDate)], aes(x=useDate, y=N)) + geom_line() + scale_x_date(date_breaks="6 months")
-p3 <- ggplot(comp[,.N,by=.(useDate,partner)], aes(x=useDate, y=N, color=partner)) + geom_line() + scale_x_date(date_breaks="6 months") + theme(legend.position = "top")
-m <- lm(Petal.Width ~ ., data = iris)
-p4 <- autoplot(m, which = 1:6, ncol = 3, label.size = 3)
-grid.arrange(p1, p2, p3, ncol=3)
-p4
-```
+![](class5_files/figure-html/unnamed-chunk-38-1.png)&lt;!-- --&gt;![](class5_files/figure-html/unnamed-chunk-38-2.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -789,120 +888,36 @@ p4
     - `서비스제공사명`을 기준으로 통신 3사가 아닌 제공사는 기타로 처리하고, 여러 개로 작성된 것은 각 개수 만큼 분리하여 독립 wifi로 처리하여 위의 차트를 `서비스제공사명`으로 그룹지어서 그려주세요. 총 4개 차트가 함께 나오면 됩니다.
 ]
 .pull-right[
-```{r warning=F, message=F, echo=F, fig.height=6}
-library(gridExtra)
-library(tidyverse)
-wifi<-fread("../data/wifi.csv", encoding="UTF-8")
-
-sw <- wifi[grep("^서울",`소재지도로명주소`), ]
-tar <- sw[,`설치시군구명`] %>% unique %>% paste0("서울특별시 ",.)
-latlon<-c()
-for (i in 1:length(tar)){
-  latlon<-rbind(latlon, geocode(tar[i]))
-}
-
-sw<-sw[,.N,by=(`설치시군구명`)]
-tar<-cbind(tar,latlon) %>%
-  separate(tar, into=c("city","tar", sep=" ")) %>%
-  select(tar, lon, lat)
-
-names(sw)<-c("tar", "N")
-sw <- sw %>% left_join(tar)
-loc<-URLencode(enc2utf8("서울"))
-
-pg <- get_googlemap(loc, maptype = "roadmap", zoom = 11) %>% ggmap()
-p1<-pg + geom_point(data=sw, aes(x=lon, y=lat, size=N), color="blue", alpha=0.3)
-
-
-sw <- wifi
-sw[`설치시도명`=="겅상남도",`설치시도명`:="경상남도"]
-tar <- sw[,`설치시도명`] %>% unique
-latlon<-c()
-for (i in 1:length(tar)){
-  latlon<-rbind(latlon, geocode(tar[i]))
-}
-
-sw<-sw %>% 
-  group_by(`설치시도명`) %>%
-  summarise(N=n())
-tar<-cbind(tar,latlon)
-
-names(sw)<-c("tar", "N")
-sw <- sw %>% left_join(tar)
-loc<-URLencode(enc2utf8("대한민국"))
-
-pg <- get_googlemap(loc, maptype = "roadmap", zoom = 7) %>% ggmap()
-p2<-pg + geom_point(data=sw, aes(x=lon, y=lat, size=N), color="blue", alpha=0.3)
-
-library(lubridate)
-
-sw<-wifi
-dat<-sw$설치년월 %>% unique
-da<-dat
-da[nchar(da)==7]<-paste0(da[nchar(da)==7],"-01")
-da[nchar(da)==10]<-gsub("\\.","-",da[nchar(da)==10])
-da[da=="190001"]<-""
-da[nchar(da)==4]<-paste0(da[nchar(da)==4],"-01-01")
-da[nchar(da)==6 & grepl("^[[:digit:]]*$",da)]<-paste0(da[nchar(da)==6 & grepl("^[[:digit:]]*$",da)],"01")
-da[nchar(da)==6& grepl("[a-z]$",da)]<-paste0(da[nchar(da)==6& grepl("[a-z]$",da)],"-01")
-da[nchar(da)==6]<-paste0(substr(da[nchar(da)==6],5,6),"-",substr(da[nchar(da)==6],1,3),"-01")
-da[da=="2013-Sep"]<-"2013-Sep-01"
-da <- data.frame(ori=dat,tar=ymd(da))
-
-swc <- sw %>% left_join(da,by=c(`설치년월`="ori"))
-swc <- swc[!is.na(swc$tar),]
-
-p3<-swc %>%
-  select(`설치시도명`,tar) %>%
-  mutate(ym=paste0(year(tar),sprintf("%02d",month(tar)))) %>%
-  group_by(`설치시도명`,ym) %>%
-  summarise(N=n()) %>%
-  mutate(ym=as.Date(paste0(ym,"01"),format="%Y%m%d")) %>%
-  as.data.frame() %>%
-  ggplot(aes(x=ym, y=N, color=`설치시도명`)) +
-  geom_line(aes(y = cumsum(N))) 
-
-
-sw<-wifi
-dat<-sw$서비스제공사명 %>% unique
-dac<-dat
-dac<-data.frame(ori=dat,tar=dac,sk=NA,kt=NA,lg=NA,etc=NA)
-dac$tar<-tolower(dac$tar)
-dac$tar<-gsub("skt","skcom",dac$tar)
-dac[grep("sk",dac$tar),"sk"]<-T
-dac[grep("kt|케이티",dac$tar),"kt"]<-T
-dac[grep("lg|u\\+|엘지",dac$tar),"lg"]<-T
-dac[is.na(dac$sk)&is.na(dac$kt)&is.na(dac$lg),"etc"]<-T
-
-swc <- sw %>% left_join(dac[,-2],by=c(`서비스제공사명`="ori"))
-
-tem<-swc %>%
-  select(`설치시도명`,
-         `와이파이SSID`,
-         `설치년월`,
-         sk:etc) %>%
-  gather(key="comp",
-         value="TF",
-         -c(`설치년월`,
-            `설치시도명`,
-            `와이파이SSID`))
-
-tem<-tem[!is.na(tem$TF),]
-
-temc <- tem %>% 
-  left_join(da,by=c(`설치년월`="ori"))
-
-p4<-temc %>%
-  select(`설치시도명`,tar,comp) %>%
-  mutate(ym=paste0(year(tar),sprintf("%02d",month(tar)))) %>%
-  group_by(`설치시도명`,comp,ym) %>%
-  summarise(N=n()) %>%
-  mutate(ym=as.Date(paste0(ym,"01"),format="%Y%m%d")) %>%
-  as.data.frame() %>%
-  ggplot(aes(x=ym, y=N, color=`설치시도명`)) +
-  geom_line(aes(y = cumsum(N))) +
-  facet_wrap(~ comp)
-
-grid.arrange(p1, p2, p3, p4, nrow=2, ncol=2)
-```
+![](class5_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
 ]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

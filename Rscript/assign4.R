@@ -1,6 +1,8 @@
 if (!require(tidyverse)) install.packages("tidyverse") 
+if (!require(dtplyr)) install.packages("dtplyr") 
 if (!require(data.table)) install.packages("data.table") 
 library(tidyverse)
+library(dtplyr)
 library(data.table)
 
 ## 과제 1 데이터 준비
