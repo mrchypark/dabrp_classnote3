@@ -32,7 +32,6 @@ class: center, middle, title-slide
 ### 2017년 11월 2일
 ---
 
-
 목차
 
 1. 과제 확인
@@ -43,7 +42,6 @@ class: center, middle, title-slide
     - Rmd에서 다른 점
     - html 문서 만들기
     - word 문서로 만들기
-    - pdf 문서로 만들기
 
 1. 스케줄러
 
@@ -413,7 +411,7 @@ warning : 경고
 #### 실습 1
 
 1. rstudio > File > New File > R MarkDown... 으로 rmd 파일을 만드세요.
-1. code chunk를 만들고 수업 6에 과제 1.3의 코드를 넣어주세요.
+1. code chunk를 만들고 [수업 5에 과제 1.3](https://mrchypark.github.io/dabrp_classnote3/class5#53)의 코드를 넣어주세요.
 1. 결과를 확인하고, 그림만 출력, 코드만 출력을 진행해주세요.
 
 ---
