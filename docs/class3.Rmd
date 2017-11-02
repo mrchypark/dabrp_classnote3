@@ -25,6 +25,7 @@ class: center, middle, title-slide
 #### Step1. 데이터 전처리를 위한 기초 학습하기
 ### <https://mrchypark.github.io/dabrp_classnote3/class3>
 
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class3.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
 ### 박찬엽
 
 ### 2017년 9월 28일
