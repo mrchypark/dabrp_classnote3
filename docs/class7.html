@@ -44,9 +44,11 @@ class: center, middle, title-slide
 
 ## slack
 
-&lt;https://dabrp.slack.com&gt;
+- 실습용 슬랙을 만들었습니다. 
+    - &lt;https://dabrp.slack.com&gt;
 
-실습용 슬랙을 만들었습니다. 
+- 실습용 코드를 만들었습니다.
+    - &lt;https://github.com/mrchypark/slackr_example&gt;
 
 ---
 
@@ -72,6 +74,159 @@ class: center, middle, title-slide
 slack의 web api를 쉽게 사용할 수 있게 제작된 패키지로 httr를 기본으로 동작
 
 ![](https://github.com/hrbrmstr/slackr/raw/master/slackr.png)
+
+---
+
+## slackr setup
+
+setup 에 필요한 정보
+
+1. incoming_webhook_url
+    1. app 만들기
+1. api_token
+
+---
+
+## slack 앱 만들기
+
+slack의 api를 사용하기 위해 앱을 만듭니다.
+
+&lt;https://api.slack.com/apps?new_app=1&gt;
+
+---
+
+## 앱 이름 설정
+
+---
+
+## incoming webhook 설정
+
+---
+
+## 권한 설정
+
+slack 에서는 앱의 권한에 대해서 [Scopes](https://api.slack.com/docs/oauth-scopes)이라고 합니다.
+모든 권한을 한번에 가지는 것은 위험하므로 read로 되어 있는 권한들 전부와 *chat.write.user* 라는 권한을 설정합니다.
+
+---
+
+## OAuth
+
+OAuth 페이지에 *api_token*이 있습니다.
+
+---
+class: center, middle, title-slide
+
+## 경고!
+
+*api_token* 을 다른 사람이 볼 수 있게 하지마세요!
+
+---
+
+## 패키지 설치
+
+
+```r
+if (!requireNamespace("devtools")){
+  install.packages("devtools")
+}
+if (!requireNamespace("texPreview")){
+  install.packages("texPreview")
+}
+```
+
+```
+## Loading required namespace: texPreview
+```
+
+```r
+if (!requireNamespace("slackr")){
+  devtools::install.packages("hrbrmstr/slackr")
+}
+```
+
+```
+## Loading required namespace: slackr
+```
+
+```r
+library(slackr)
+packageVersion("slackr")
+```
+
+```
+## [1] '1.4.3'
+```
+
+---
+
+## setup
+
+주요 설정들을 기본 저장합니다. slackr_setup() 함수로 기본값들을 지정해주면 slackr 패키지의 함수를 사용할 때 인자 설정을 하지 않아도 됩니다.
+
+
+```r
+slackr_setup(channel="#general", 
+            incoming_webhook_url="https://hooks.slack.com/services/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",
+            api_token = "xoxp-269321413747-270276742422-269447398836-d72d9f5b6148a077cae69aa13b5519df",
+            username = "bot_test")
+```
+
+
+---
+
+## 함수 설명
+
+슬랙에서 사용할 중요 함수는 아래와 같습니다.
+
+- slackr() : markdown의 코드배경으로 실행 명령과 결과를 전송
+- dev_slackr() : 차트등 plots 패널에 현재 있는 그림을 전송
+- ggslackr() : ggplot 객체를 그림으로 바로 전송
+- slackr_upload() : 파일을 전송
+- slackr_msg() : 사람이 직접 작성하는 것과 같은 동작을 수행
+
+---
+
+## channel과 DM
+
+슬랙에서 channel은 `#`(샵)으로, Direct Message를 보내기 위한 개인 아이디는 `@`(닷)으로 표기합니다.
+
+
+```{}
+body&lt;-enc2utf8("안녕하세요")
+
+## general 체널에 전송
+slackr_msg(txt=body, channel="#general")
+
+## id가 mrchypark인 사람에게 전송
+slackr_msg(txt=body, channel="@mrchypark")
+
+```
+
+
+---
+
+## 파일 전송
+
+파일 전송에는 slack_upload() 함수를 사용합니다. slack_upload() 함수는 filename 이라는 인자로 파일의 경로를 받아서 사용합니다.
+
+```{}
+slackr_upload(channels = "#general", filename = "./README.md")
+```
+
+---
+
+## 실습
+
+1. 기본 R markdown 파일을 만듭니다. File &gt; New Files &gt; R Markdown... 선택 후 ok 선택
+1. 기본 R markdown 파일을 저장합니다.
+1. 새로운 R script 파일을 만듭니다. File &gt; New Files &gt; R Script 선택
+1. slackr 패키지의 설치와 불러오기, setup script를 작성합니다.
+1. 위에서 만든 마크다운 파일을 render 하는 script를 작성합니다.
+1. slackr_upload() 함수로 render의 결과인 html 파일을 업로드하는 script를 작성합니다.
+1. 위 작성된 스크립트를 저장합니다.
+1. taskscheduleR addin를 실행합니다.
+1. 위 저장한 스크립트를 등록합니다.
 
 ---
     </textarea>
