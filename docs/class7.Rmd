@@ -325,35 +325,47 @@ class: center, middle, title-slide
 ## 구글 클라우드에서 서버 빌리기
 
 ---
+구글 클라우드에서 Compute Engine 선택
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc01.png)
 
 ---
+인스턴스 만들기
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc02.png)
 
 ---
+머신 유형 : **초소형**
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc03.png)
 
 ---
+http 트래픽 허용
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc04.png)
 
 ---
+만들기 클릭
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc05.png)
 
 ---
+기다림
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc06.png)
 
 ---
-빌린 서버에 접속하기
+빌린 서버에 접속하기(ssh 클릭)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/ssh.png)
+---
+기다림
+
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc07.png)
 
 ---
 ssh 화면
+
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc08.png)
 
 ---
@@ -361,3 +373,10 @@ ssh 화면
 ## R 설치등 환경 설정
 
 <https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/start.sh>
+
+---
+
+## 예시 챗봇(날씨봇)
+
+<https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/app.R>
+
