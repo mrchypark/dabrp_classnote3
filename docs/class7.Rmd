@@ -313,9 +313,11 @@ API형 만들기
 
 ## 만들기 전에
 
-간단히 jug 만들기 복습
+- 간단히 jug 만들기 복습
+    - <mrchypark.github.io/apiR>
 
-<mrchypark.github.io/apiR>
+- 실습용 코드를 만들었습니다.
+    - <https://github.com/mrchypark/wthr_chatr>
 
 ---
 class: center, middle, title-slide
@@ -345,3 +347,17 @@ class: center, middle, title-slide
 ---
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc06.png)
+
+---
+빌린 서버에 접속하기
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc07.png)
+
+---
+ssh 화면
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc08.png)
+
+---
+
+## R 설치등 환경 설정
+
+<https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/start.sh>
