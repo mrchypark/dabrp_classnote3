@@ -82,7 +82,6 @@ slack의 web api를 쉽게 사용할 수 있게 제작된 패키지로 httr를 �
 setup 에 필요한 정보
 
 1. incoming_webhook_url
-    1. app 만들기
 1. api_token
 
 ---
@@ -95,11 +94,63 @@ slack의 api를 사용하기 위해 앱을 만듭니다.
 
 ---
 
-## 앱 이름 설정
+앱 만들기(workspace는 해당 슬랙 선택)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr01.png)
 
 ---
 
-## incoming webhook 설정
+income webhook 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr02.png)
+
+---
+
+income webhook 화면
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr03.png)
+
+---
+
+income webhook on 설정
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr04.png)
+
+---
+
+Add New webhook to Workspace 클릭
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr05.png)
+
+---
+
+Post to 에서 기본 체널 설정(#general)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr06.png)
+
+---
+
+Authorize 클릭
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr07.png)
+
+---
+
+설정된 webhook 주소 확인
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr09.png)
+
+---
+
+OAuth &amp; Permissions 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr10.png)
+
+---
+
+Scopes 설정
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr11.png)
 
 ---
 
@@ -112,7 +163,9 @@ slack 에서는 앱의 권한에 대해서 [Scopes](https://api.slack.com/docs/o
 
 ## OAuth
 
-OAuth 페이지에 *api_token*이 있습니다.
+OAuth 페이지에 *api_token*(=OAuth Access Token)이 있습니다.
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr10.png)
 
 ---
 class: center, middle, title-slide
@@ -227,6 +280,48 @@ slackr_upload(channels = "#general", filename = "./README.md")
 1. 위 작성된 스크립트를 저장합니다.
 1. taskscheduleR addin를 실행합니다.
 1. 위 저장한 스크립트를 등록합니다.
+
+---
+class: center, middle, title-slide
+
+## 카카오톡 플러스 친구 챗봇 만들기
+
+---
+
+## [플러스 친구](https://center-pf.kakao.com/)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus.png)
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus01.png)
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus02.png)
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus03.png)
+
+---
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus04.png)
+
+
+---
+
+## API 명세
+
+&lt;https://github.com/plusfriend/auto_reply&gt;
+
+---
+
+## 만들기 전에
+
+간단히 jug 만들기 복습
+
+&lt;mrchypark.github.io/apiR&gt;
 
 ---
     </textarea>
