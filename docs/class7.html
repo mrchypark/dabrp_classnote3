@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>(7주차)배운 내용을 내 것으로 만드는 미니프로젝트</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: center, middle, title-slide
+
+## 미니프로젝트
+#### 슬랙 알림, 카카오톡 챗봇
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class7&gt;
+
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class7.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
+### 박찬엽
+
+### 2017년 11월 9일
+---
+
+목차
+
+1. slack
+    - slackr 소개
+    - 환경설정 
+    - slackr_setup
+    - 메세지, ggplot, 파일 보내기
+    - 스케줄러에 등록하기
+
+1. 플러스 친구 챗봇
+    - api 문서 확인
+    - jug로 서버 만들기
+    - 구글 컴퓨트 엔진 사용하기
+    - 구글 폼으로 로그 남기기
+
+---
+
+## slack
+
+&lt;https://dabrp.slack.com&gt;
+
+실습용 슬랙을 만들었습니다. 
+
+---
+
+## slack 의 필요성
+
+1. 작업 완료 알림(비동기적 작업 환경 구성)
+1. 정기 보고(반복작업 자동화)
+
+--
+
+## 기타 서비스
+
+1. [pushbullet](https://www.pushbullet.com/)
+    - 개인적인 알람의 허브 역할을 위한 서비스로 여러 기기의 알람을 공유
+1. [Telegram](https://telegram.org/)
+    - 보안으로 유명해진 메신저로써 다양한 클라이언트와 고기능성의 API를 제공함
+1. 그외 메신저 서비스 등 다수
+
+---
+
+## [slackr](https://github.com/hrbrmstr/slackr)
+
+slack의 web api를 쉽게 사용할 수 있게 제작된 패키지로 httr를 기본으로 동작
+
+![](https://github.com/hrbrmstr/slackr/raw/master/slackr.png)
+
+---
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

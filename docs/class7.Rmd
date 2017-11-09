@@ -1,0 +1,83 @@
+---
+title: "(7주차)배운 내용을 내 것으로 만드는 미니프로젝트"
+author: "박찬엽"
+date: "2017년 11월 9일"
+output:
+  xaringan::moon_reader:
+    seal: FALSE
+    css: ["default", "class.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = T, fig.height = 5)
+```
+
+class: center, middle, title-slide
+
+## 미니프로젝트
+#### 슬랙 알림, 카카오톡 챗봇
+### <https://mrchypark.github.io/dabrp_classnote3/class7>
+
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class7.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
+### 박찬엽
+
+### 2017년 11월 9일
+---
+
+목차
+
+1. slack
+    - slackr 소개
+    - 환경설정 
+    - slackr_setup
+    - 메세지, ggplot, 파일 보내기
+    - 스케줄러에 등록하기
+
+1. 플러스 친구 챗봇
+    - api 문서 확인
+    - jug로 서버 만들기
+    - 구글 컴퓨트 엔진 사용하기
+    - 구글 폼으로 로그 남기기
+
+---
+
+## slack
+
+<https://dabrp.slack.com>
+
+실습용 슬랙을 만들었습니다. 
+
+---
+
+## slack 의 필요성
+
+1. 작업 완료 알림(비동기적 작업 환경 구성)
+1. 정기 보고(반복작업 자동화)
+
+--
+
+## 기타 서비스
+
+1. [pushbullet](https://www.pushbullet.com/)
+    - 개인적인 알람의 허브 역할을 위한 서비스로 여러 기기의 알람을 공유
+1. [Telegram](https://telegram.org/)
+    - 보안으로 유명해진 메신저로써 다양한 클라이언트와 고기능성의 API를 제공함
+1. 그외 메신저 서비스 등 다수
+
+---
+
+## [slackr](https://github.com/hrbrmstr/slackr)
+
+slack의 web api를 쉽게 사용할 수 있게 제작된 패키지로 httr를 기본으로 동작
+
+![](https://github.com/hrbrmstr/slackr/raw/master/slackr.png)
+
+---
