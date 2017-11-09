@@ -314,7 +314,7 @@ API형 만들기
 ## 만들기 전에
 
 - 간단히 jug 만들기 복습
-    - <mrchypark.github.io/apiR>
+    - <https://mrchypark.github.io/apiR/>
 
 - 실습용 코드를 만들었습니다.
     - <https://github.com/mrchypark/wthr_chatr>
