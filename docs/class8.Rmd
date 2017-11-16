@@ -1,0 +1,155 @@
+---
+title: "(8주차)shiny를 활용한 웹앱 개발"
+author: "박찬엽"
+date: "2017년 11월 16일"
+output:
+  xaringan::moon_reader:
+    seal: FALSE
+    css: ["default", "class.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = T, fig.height = 5)
+```
+
+class: center, middle, title-slide
+
+## 더욱 프로답게 만드는 동적 문서화 및 시각화
+#### Step2. 클릭에 실시간으로 반응하는 Shiny Application 학습하기
+### <https://mrchypark.github.io/dabrp_classnote3/class8>
+
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class8.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
+### 박찬엽
+
+### 2017년 11월 16일
+---
+
+목차
+
+1. 공부를 위한 자료
+    - 문서
+    - 예시 어플리케이션
+
+1. shiny
+    - 웹 어플리케이션 기초
+    - 입출력 구조
+    - 반응형을 위한 도구
+
+1. shiny-ext
+    - 지도를 그리는 leaflet
+    - 차트에 마우스 동작을 추가하는 ggriaph
+    - 네트워크 시각화의 끝판왕 visNetwork
+    - 종합 대쉬보드 패키지 shinydashboard
+    
+---
+
+## 참고하면 좋은 자료
+
+- [공식 페이지의 갤러리](http://shiny.rstudio.com/gallery/)
+- [공식 페이지의 튜토리얼](http://shiny.rstudio.com/tutorial/)
+- [공식 페이지의 정보글](http://shiny.rstudio.com/articles/)
+- [통계 분석 너머 R의 무궁무진한 활용(도서)](http://www.acornpub.co.kr/book/infinite-r)
+
+---
+
+## shiny
+
+.pull-left[
+[shiny][901]는 R로 웹 어플리케이션을 만들 수 있게 해주는 프레임워크입니다. shiny는 `ui`라고 불리는 화면, `server`라고 불리는 데이터 처리 및 관리, 그 안에 입출력과 `render`와 배포로 구성되어 있습니다.
+]
+
+.pull-right[
+![](https://www.analyticsvidhya.com/wp-content/uploads/2016/10/shiny.png)
+]
+
+---
+
+## 설치
+
+패키지를 설치하는 방법은 다음과 같습니다.
+
+```{}
+## cran에서 설치
+install.packages("shiny")
+
+## github에서 설치
+if (!requireNamespace("devtools"))
+  install.packages("devtools")
+devtools::install_packages("rstudio/shiny")
+```
+
+---
+
+## shiny 앱 예시
+
+shiny는 개발이 어려운 만큼 생태계 활성화를 위해 다양한 예시를 쉽게 접할 수 있게 준비되어 있습니다.
+
+```{r}
+library(shiny)
+runExample()
+```
+
+```{r, include=FALSE}
+library(rvest)
+url<-"https://github.com/rstudio/shiny-examples"
+tem<- read_html(url)
+fold<-tem %>% html_nodes("tr td span a.js-navigation-open") %>% html_text
+cnt <- grep("^[0-9]",fold) %>% length
+```
+
+위 코드는 실행해 볼 수 있는 예제를 보여줍니다. 아래처럼 실행하시면 바로 실행되는 `shiny` 앱 예제를 확인하 실 수 있습니다. [shiny github][904]에는 예제 `repo`가 있고, 활용할 수 있는 예제는 `r Sys.Date()` 기준 `r cnt`개 입니다.
+
+
+---
+
+## 예시 실행
+
+runExample() 함수로 리스트 내의 예시들을 실행해 볼 수 있습니다.
+
+```{}
+runExample("01_hello")
+```
+
+---
+
+## 다른 앱 실행방법
+
+
+
+```{}
+# 압축파일이 있는 url 주소로 앱 실행
+runUrl()
+
+# 깃헙의 예시 앱 실행
+runGitHub()
+
+# 기스트의 예시 앱 실행
+runGist()
+```
+
+
+---
+
+[901]: http://shiny.rstudio.com/
+[902]: http://shiny.rstudio.com/gallery/unicode-characters.html
+[903]: http://shiny.rstudio.com/gallery/widget-gallery.html
+[904]: https://github.com/rstudio/shiny-examples
+[905]: http://shiny.rstudio.com/articles/layout-guide.html
+[906]: http://bootstrapk.com/
+[907]: http://shiny.rstudio.com/articles/html-tags.html
+[908]: http://bootswatch.com/
+[909]: http://leafletjs.com/
+[910]: http://www.htmlwidgets.org/
+[911]: https://rstudio.github.io/leaflet/
+[912]: http://davidgohel.github.io/ggiraph/
+[913]: http://datastorm-open.github.io/visNetwork/
+[914]: https://rstudio.github.io/shinydashboard/
+[915]: https://github.com/almasaeed2010/AdminLTE
