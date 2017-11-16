@@ -35,6 +35,8 @@ class: center, middle, title-slide
     - 웹 어플리케이션 기초
     - 최소 동작 앱과 UI
     - 입출력 구조
+    - 반응성 조절
+    - shinyapps에 배포
 
 1. shiny-ext
     - 지도를 그리는 leaflet
@@ -622,6 +624,55 @@ output$sample &lt;- randerPlot({
 ```
 
 `R`의 세계 내에서 처리하는 것은 계속 사용할 수 있어서 `data` 변수에 선언한 내용을 `plot`함수가 사용할 수 있습니다. 여기서 `input$`이 활용될 때 반응형으로 작성할 수 있는 것입니다.
+
+
+---
+
+## render*() 함수
+
+*output() 함수에 대응되는 render*() 함수가 모두 있습니다.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Output.func &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; render.func &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Inserts &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; dataTableOutput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderDataTable() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 인터렉티브 테이블 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; imageOUtput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderImage() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 그림 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; plotOutput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderPlot() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 차트 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; tableOutput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderTable() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 테이블 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; textOutput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderText() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 글자 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; verbatimTextOutput() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; renderText() &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 코드 글자 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 ---
 
