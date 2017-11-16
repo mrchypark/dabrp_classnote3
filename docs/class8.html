@@ -944,7 +944,7 @@ class: center, middle, title-slide
 
 ---
 
-## shinyapps.io
+## [shinyapps.io](http://www.shinyapps.io/)
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps.png)
 
@@ -956,6 +956,79 @@ class: center, middle, title-slide
 - [가이드](http://docs.rstudio.com/shiny-server/)
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyserver.png)
+
+---
+
+## shinyapps 사용하기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps01.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps01.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps02.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps03.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps04.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps05.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps06.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps07.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps08.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps09.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps10.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps11.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps12.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps13.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps14.png)
+---
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps15.png)
+
+
+
+---
+## encoding 문제
+
+[이곳][902]를 참고하세요. 이런 문제의 대부분은 중국어도 같이 가지고 있어서 중국쪽의 해결책이 많이 도움이 됩니다. 일본어 역시 마찬가지입니다.
+
+---
+class: center, middle, title-slide
+
+## shiny가 지원하는 js 패키지들의 활용
+
+---
+
+### 지도를 지원하는 leaflet
+
+[leaflet][909]은 `javascript` 언어로 이루어진 지도에 대한 패키지입니다. `shiny`는 [htmlwidget][910]을 이용해서 `javascript`를 `R`로 변환하여 사용하는 것이 매우 많습니다. `leaflet` 역시 마찬가지로 [이곳][911]에 상세한 코드 예시들과 함께 소개가 준비되어 있습니다.
+
+---
+
+### 마우스 이벤트를 추가적으로 지원하는 ggiraph
+
+[ggiraph][912]는 `ggplot`의 `geom`계 함수들에게 뒤에 `_interactive`를 붙여 활용함으로써 조금더 표가 사용자와 상호작용 할 수 있는 부분을 추가해줍니다. 효과로는 `click`, `hover`, `zoom`, `data_id` 등이 있습니다.
+
+---
+
+### 상호작용 network 화면을 만드는 visNetwork
+
+[visNetwork][913]는 네트워크 시각화를 위한 패키지로 상호작용에 대해 유연하게 작성할 수 있게 설계되었습니다. `node`와 `edge`, `group`에 대한 개념만 이해하시면 멋진 네트워크 시각화 화면을 만들어 볼 수 있습니다.
+
+---
+
+### dashboard를 shiny로 만들어 보자 shinydashboard
+
+[shinydashboard][914]는 대쉬보드를 `shiny`로 제작할 수 있게 대쉬보드 제작 프레임워크인 [AdminLTE][915]을 기반으로 작성했습니다. 유료 템플릿을 판매하는 기반을 가진 오픈소스인 만큼 프레임워크의 질이 `product ready` 수준이라 사용하기 매우 좋습니다.
+
 
 
 ---
