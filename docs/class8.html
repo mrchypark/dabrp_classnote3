@@ -712,6 +712,19 @@ fluidPage(
 
 ---
 
+## 실습 2
+
+1. &lt;https://mrchypark.github.io/dabrp_classnote2/class6#29&gt;의 4번 그래프 함수를 바탕으로 shiny 앱을 만들겠습니다.
+    1. [Checkbox group input](https://gallery.shinyapps.io/069-widget-check-group/) 으로 나라를 선택하도록 만들겠습니다.
+    1. 나라는 어떤 나라던 10개만 사용하겠습니다.
+    
+    
+.footnote[- 그래프 코드는 &lt;https://mrchypark.github.io/dabrp_classnote2/class6#30&gt; 입니다.
+- 데이터는 &lt;https://mrchypark.github.io/dabrp_classnote2/class6#11&gt; 입니다.
+]
+
+---
+
 ## reactive한 현 상황
 
 reactive는 반응성으로 번역하기도 합니다. 반응성이라고 하는 이유는 input$bins의 값이 변하는 순간을 render({  })가 감지해서 변한 값을 반영하여 output$distPlot에 저장하고, 그것을 plotOutput("distPlot")으로 전달하여 그림을 새로 그리기 때문입니다. input의 변화에 `반응`하여 output이 변화하니 간단한 반응성으로 연결된 것입니다.
@@ -864,13 +877,23 @@ shinyApp(ui,server)
 
 ---
 
-## isolate()로 대기
+## reactive({})의 동작
 
-지금까지는 input이 변하는 대로 일일이 반응하는 형태의 반응성을 구현했습니다. 그런데 타이핑 같이 계속 빠른 변화가 있는 경우 오히려 성능의 저하를 가져오기 때문에 일일이 반응하지 말라고 해줘야 할 때도 있습니다. isolate()은 render*({})나 reactive({}) 안쪽에서 사용해서 input의 변화가 output 쪽으로 전달되지 않고 값만 가지고 있게 할 수 있습니다.
+1. input$ 값을 주시
+1. 변화한 값을 저장
+1. 변화한 값을 전달
+
+reactive({})와 render*({})는 내부에 품고 있는 input$ 변수의 변화를 계속 지켜보고 있습니다. 그리고 변화에 따라 순서대로 위 동작을 수행합니다. 전달 때문에 화면에 결과물이 변경되어서 보여지는 것입니다.
 
 ---
 
-## 
+## isolate()로 대기
+
+지금까지는 input이 변하는 대로 일일이 반응하는 형태의 반응성을 구현했습니다. 그런데 타이핑 같이 계속 빠른 변화가 있는 경우 오히려 성능의 저하를 가져오기 때문에 일일이 반응하지 말라고 해줘야 할 때도 있습니다. isolate()은 render*({})나 reactive({}) 안쪽에서 사용해서 input의 변화가 output 쪽으로 전달되지 않고 값만 가지고 있게 할 수 있습니다. 즉, reactive({})의 동작 중에 isolate() 함수 내부의 input$은 2번 저장까지만 진행되고 3번의 전달은 진행되지 않습니다. isolate() 함수 밖의 다른 input$이 변화하여 값을 전달하는 일이 발생할 때 그 전까지 저장해둔 모든 값이 전달됩니다.
+
+---
+
+## 반응성과 isolate() 함수 적용 비교
 
 .pull-left[
 ```{}
@@ -914,7 +937,25 @@ shinyApp(ui,server)
 
 ]
 
+---
+class: center, middle, title-slide
 
+## shiny의 배포
+
+---
+
+## shinyapps.io
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyapps.png)
+
+---
+
+## shiny server 구축
+
+- 오픈소스 버전 [다운로드](https://www.rstudio.com/products/shiny/download-server/)
+- [가이드](http://docs.rstudio.com/shiny-server/)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/shinyserver.png)
 
 
 ---
