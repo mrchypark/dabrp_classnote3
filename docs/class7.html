@@ -392,6 +392,66 @@ ssh 화면
 ## 예시 챗봇(날씨봇)
 
 &lt;https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/app.R&gt;
+
+---
+
+## googleformr
+
+[googleformr](https://github.com/data-steve/googleformr)는 구글 form 기능을 이용해서 api 호출 없이 구글 sheet에 데이터를 입력하는 방법을 제공합니다.
+
+
+```r
+if (!requireNamespace("googleformr")){
+  devtools::install_github("data-steve/googleformr", dependencies = TRUE)
+}
+```
+
+```
+## Loading required namespace: googleformr
+```
+
+```r
+library(googleformr)
+```
+
+---
+
+## 구글 폼 만들기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr1.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr2.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr3.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr4.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr5.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr6.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr7.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr8.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr9.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr10.png)
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr11.png)
+
+
+
+
+
+---
+
+## 폼 입력 url 확인
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr12.png)
+---
+
+## 폼 입력 url로 입력 함수 만들기
+
+위에서 복사한 url(/edit은 제외)을 이용해서 입력하는 함수를 작성합니다. body의 list 내 데이터 이름은 설문 항목명이어야 합니다.
+
+```{}
+form &lt;- "https://docs.google.com/forms/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+ping &lt;- googleformr::gformr(form)
+body&lt;-list(user_key=body$user_key,
+           type=body$type,
+           content=body$content)
+ping(body)
+```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
