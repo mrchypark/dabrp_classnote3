@@ -516,7 +516,7 @@ fluidPage(
 
 ## 어렵다면 *Panel() 사용
 
-*Panel() 함수는 기본적으로 3가지(titlePanel(), sidebarPanel(), mainPanel())를 제공하며 구조는 아래와 같습니다. sidebarLayout() 은 sidebarPanel()의 위치(왼쪽이 기본, 오른쪽)를 지정하기 위해 감싸는 함수로 왼쪽으로 되어 있다면 필요하지 않습니다.
+*Panel() 함수는 기본적으로 3가지(titlePanel(), sidebarPanel(), mainPanel())를 제공하며 구조는 아래와 같습니다. 
 
 .pull-left[
 ```{}
@@ -533,7 +533,9 @@ fluidPage(
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/panel.png)
 ]
 
-
+.footnote[
+sidebarLayout() 은 sidebarPanel()의 위치(왼쪽이 기본, 오른쪽)를 지정하기 위해 감싸는 함수로 왼쪽으로 되어 있다면 필요하지 않습니다.
+]
 ---
 
 [901]: http://shiny.rstudio.com/
