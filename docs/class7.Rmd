@@ -398,24 +398,39 @@ library(googleformr)
 ## 구글 폼 만들기
 
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr1.png)
+---
+새로만들기
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr2.png)
+---
+더보기
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr3.png)
+---
+Google 설문지 선택
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr4.png)
+---
+설문지 작성 화면
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr5.png)
+---
+질문 세팅 - 질문 제목으로 값을 받음
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr6.png)
+---
+응답탭 선택
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr7.png)
+---
+스프레드시트 만들기 클릭
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr8.png)
+---
+새스프레드시트 만들기로 선택후 만들기
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr9.png)
+---
+스프레드시트로 연결 완료
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr10.png)
+---
+설문지 파일과 스프레드시트 파일 확인
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr11.png)
 
-
-
-
-
 ---
-
-## 폼 입력 url 확인
+폼 입력 url 확인 - /edit을 제외한 전체 url
 ![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr12.png)
 ---
 
@@ -426,12 +441,20 @@ library(googleformr)
 ```{}
 form <- "https://docs.google.com/forms/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ping <- googleformr::gformr(form)
-body<-list(user_key=body$user_key,
-           type=body$type,
-           content=body$content)
+body<-list(question1=data1,
+           question2=data2,
+           question3=data3)
 ping(body)
 ```
 
+--
+
+### 설문지 질문 이름을 파악하고 싶을 때
+
+```{}
+form <- "https://docs.google.com/forms/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+form %>% get_form() %>% get_form_questions()
+```
 
 
 
