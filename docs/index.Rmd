@@ -48,5 +48,3 @@ class: middle, title-slide, inverse
   
 5. 배운 내용을 내 것으로 만드는 미니프로젝트    
   [Step1. slack봇과 카카오톡봇 만들기](https://mrchypark.github.io/dabrp_classnote3/class7)    
-
----
