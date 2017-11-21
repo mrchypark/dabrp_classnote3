@@ -1,0 +1,52 @@
+---
+title: "데이터 분석을 위한 중급 R 프로그래밍 3기 자료"
+author: "박찬엽"
+date: "2017년 11월 2일"
+output:
+  xaringan::moon_reader:
+    seal: FALSE
+    css: ["default", "class.css"]
+    lib_dir: libs
+    includes:
+      in_header: google_analytics.html
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+class: center, middle, title-slide, inverse
+
+## 데이터 분석을 위한 중급 R 프로그래밍 3기 자료
+### <https://mrchypark.github.io/dabrp_classnote3/>
+
+#### [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
+### 박찬엽
+
+---
+class: middle, title-slide, inverse 
+1. 중급으로 나아가기 위한 Level UP Skill    
+	[Step1. 코드 작성과 관리를 위한 도구 연습](https://mrchypark.github.io/dabrp_classnote3/class1)    
+	[Step2. 하나의 문법으로 다양한 소스의 데이터를 다뤄보기](https://mrchypark.github.io/dabrp_classnote3/class2)    
+
+2. 데이터 분석의 기본이 되는 데이터전처리    
+  [Step1. 데이터 전처리를 위한 SQL기초 학습하기](https://mrchypark.github.io/dabrp_classnote3/class3)    
+  [Step2. 데이터 전처리에 유용한 정규표현식과 유용한 함수 학습하기](https://mrchypark.github.io/dabrp_classnote3/class4)    
+
+3. 멋진 보고와 설득을 위한 데이터시각화    
+  [Step1. 분석결과를 효과적으로 보여주는 데이터 시각화](https://mrchypark.github.io/dabrp_classnote3/class5)    
+
+4. 더욱 프로답게 만드는 동적 문서화 및 시각화    
+  [Step1. 복사-붙여넣기해도 서식이 깨지지 않는 문서화 방법 익히기](https://mrchypark.github.io/dabrp_classnote3/class6)    
+  [Step2. 클릭에 실시간으로 반응하는 Shiny Application 학습하기](https://mrchypark.github.io/dabrp_classnote3/class8)    
+  
+5. 배운 내용을 내 것으로 만드는 미니프로젝트    
+  [Step1. slack봇과 카카오톡봇 만들기](https://mrchypark.github.io/dabrp_classnote3/class7)    
+
+---
