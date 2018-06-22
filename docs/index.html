@@ -4,7 +4,7 @@
     <title>데이터 분석을 위한 중급 R 프로그래밍 3기 자료</title>
     <meta charset="utf-8">
     <meta name="author" content="박찬엽" />
-    <link href="libs/remark-css-0.0.1/example.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -33,6 +33,7 @@ class: middle, title-slide, inverse
 
 #### 박찬엽    
 .small[
+- 현 코빗 재무팀 데이터 담당
 - 서울도시가스 선행연구팀 연구원
   * 챗봇 엔진 개발 및 서버 구축
 - 패스트 캠퍼스 데이터 분석 R 강의
@@ -52,7 +53,7 @@ class: middle, title-slide, inverse
 	[Step2. 하나의 문법으로 다양한 소스의 데이터를 다뤄보기](https://mrchypark.github.io/dabrp_classnote3/class2)    
 
 2. 데이터 분석의 기본이 되는 데이터전처리    
-  [Step1. 데이터 전처리를 위한 SQL기초 학습하기](https://mrchypark.github.io/dabrp_classnote3/class3)    
+  [Step1. 데이터 전처리를 위한 기초 학습하기](https://mrchypark.github.io/dabrp_classnote3/class3)    
   [Step2. 데이터 전처리에 유용한 정규표현식과 유용한 함수 학습하기](https://mrchypark.github.io/dabrp_classnote3/class4)    
 
 3. 멋진 보고와 설득을 위한 데이터시각화    
@@ -73,15 +74,33 @@ class: middle, title-slide, inverse
 "countIncrementalSlides": false,
 "ratio": "16:9"
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
-(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-  }
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
 });
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

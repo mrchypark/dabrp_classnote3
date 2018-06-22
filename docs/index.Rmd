@@ -1,7 +1,7 @@
 ---
 title: "데이터 분석을 위한 중급 R 프로그래밍 3기 자료"
 author: "박찬엽"
-date: "2017년 11월 2일"
+date: "2018년 6월 22일"
 output:
   xaringan::moon_reader:
     seal: FALSE
@@ -33,6 +33,7 @@ class: middle, title-slide, inverse
 
 #### 박찬엽    
 .small[
+- 현 코빗 재무팀 데이터 담당
 - 서울도시가스 선행연구팀 연구원
   * 챗봇 엔진 개발 및 서버 구축
 - 패스트 캠퍼스 데이터 분석 R 강의
