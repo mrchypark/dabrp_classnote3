@@ -7,6 +7,8 @@ output:
     seal: false
     css: ["default", "class.css"]
     lib_dir: libs
+    includes:
+      in_header: google_analytics.html
     nature:
       highlightStyle: github
       highlightLines: true
@@ -25,9 +27,10 @@ class: center, middle, title-slide
 #### 	Step2. 데이터 전처리에 유용한 정규표현식과 유용한 함수 학습하기
 ### <https://mrchypark.github.io/dabrp_classnote3/class4>
 
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class4.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
 ### 박찬엽
 
-### 2017년 10월 12일
+### 2017년 10월 19일
 
 ---
 

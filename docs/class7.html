@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>(7주차)배운 내용을 내 것으로 만드는 미니프로젝트</title>
+    <meta charset="utf-8">
+    <meta name="author" content="박찬엽" />
+    <link href="libs/remark-css/example.css" rel="stylesheet" />
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-47822682-14', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <link rel="stylesheet" href="class.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: center, middle, title-slide
+
+## 미니프로젝트
+#### 슬랙 알림, 카카오톡 챗봇
+### &lt;https://mrchypark.github.io/dabrp_classnote3/class7&gt;
+
+#### [[pdf다운로드](https://github.com/mrchypark/dabrp_classnote3/raw/master/Materials/class7.pdf)] [[문의하기](http://pf.kakao.com/_RXANd)] [[피드백하기](https://github.com/mrchypark/dabrp_classnote3/issues/new)]
+### 박찬엽
+
+### 2017년 11월 9일
+---
+
+목차
+
+1. slack
+    - slackr 소개
+    - 환경설정 
+    - slackr_setup
+    - 메세지, ggplot, 파일 보내기
+    - 스케줄러에 등록하기
+
+1. 플러스 친구 챗봇
+    - api 문서 확인
+    - jug로 서버 만들기
+    - 구글 컴퓨트 엔진 사용하기
+    - 구글 폼으로 로그 남기기
+
+---
+
+## slack
+
+- 실습용 슬랙을 만들었습니다. 
+    - &lt;https://dabrp.slack.com&gt;
+
+- 실습용 코드를 만들었습니다.
+    - &lt;https://github.com/mrchypark/slackr_example&gt;
+
+---
+
+## slack 의 필요성
+
+1. 작업 완료 알림(비동기적 작업 환경 구성)
+1. 정기 보고(반복작업 자동화)
+
+--
+
+## 기타 서비스
+
+1. [pushbullet](https://www.pushbullet.com/)
+    - 개인적인 알람의 허브 역할을 위한 서비스로 여러 기기의 알람을 공유
+1. [Telegram](https://telegram.org/)
+    - 보안으로 유명해진 메신저로써 다양한 클라이언트와 고기능성의 API를 제공함
+1. 그외 메신저 서비스 등 다수
+
+---
+
+## [slackr](https://github.com/hrbrmstr/slackr)
+
+slack의 web api를 쉽게 사용할 수 있게 제작된 패키지로 httr를 기본으로 동작
+
+![](https://github.com/hrbrmstr/slackr/raw/master/slackr.png)
+
+---
+
+## slackr setup
+
+setup 에 필요한 정보
+
+1. incoming_webhook_url
+1. api_token
+
+---
+
+## slack 앱 만들기
+
+slack의 api를 사용하기 위해 앱을 만듭니다.
+
+&lt;https://api.slack.com/apps?new_app=1&gt;
+
+---
+
+앱 만들기(workspace는 해당 슬랙 선택)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr01.png)
+
+---
+
+income webhook 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr02.png)
+
+---
+
+income webhook 화면
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr03.png)
+
+---
+
+income webhook on 설정
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr04.png)
+
+---
+
+Add New webhook to Workspace 클릭
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr05.png)
+
+---
+
+Post to 에서 기본 체널 설정(#general)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr06.png)
+
+---
+
+Authorize 클릭
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr07.png)
+
+---
+
+설정된 webhook 주소 확인
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr09.png)
+
+---
+
+OAuth &amp; Permissions 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr10.png)
+
+---
+
+Scopes 설정
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr11.png)
+
+---
+
+## 권한 설정
+
+slack 에서는 앱의 권한에 대해서 [Scopes](https://api.slack.com/docs/oauth-scopes)이라고 합니다.
+모든 권한을 한번에 가지는 것은 위험하므로 read로 되어 있는 권한들 전부와 *chat.write.user* 라는 권한을 설정합니다.
+
+---
+
+## OAuth
+
+OAuth 페이지에 *api_token*(=OAuth Access Token)이 있습니다.
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/slackr10.png)
+
+---
+class: center, middle, title-slide
+
+## 경고!
+
+*api_token* 을 다른 사람이 볼 수 있게 하지마세요!
+
+---
+
+## 패키지 설치
+
+
+```r
+if (!requireNamespace("devtools")){
+  install.packages("devtools")
+}
+if (!requireNamespace("texPreview")){
+  install.packages("texPreview")
+}
+```
+
+```
+## Loading required namespace: texPreview
+```
+
+```r
+if (!requireNamespace("slackr")){
+  devtools::install.packages("hrbrmstr/slackr")
+}
+```
+
+```
+## Loading required namespace: slackr
+```
+
+```r
+library(slackr)
+packageVersion("slackr")
+```
+
+```
+## [1] '1.4.3'
+```
+
+---
+
+## setup
+
+주요 설정들을 기본 저장합니다. slackr_setup() 함수로 기본값들을 지정해주면 slackr 패키지의 함수를 사용할 때 인자 설정을 하지 않아도 됩니다.
+
+
+```r
+slackr_setup(channel="#general", 
+            incoming_webhook_url="https://hooks.slack.com/services/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",
+            api_token = "xoxp-269321413747-270276742422-269447398836-d72d9f5b6148a077cae69aa13b5519df",
+            username = "bot_test")
+```
+
+
+---
+
+## 함수 설명
+
+슬랙에서 사용할 중요 함수는 아래와 같습니다.
+
+- slackr() : markdown의 코드배경으로 실행 명령과 결과를 전송
+- dev_slackr() : 차트등 plots 패널에 현재 있는 그림을 전송
+- ggslackr() : ggplot 객체를 그림으로 바로 전송
+- slackr_upload() : 파일을 전송
+- slackr_msg() : 사람이 직접 작성하는 것과 같은 동작을 수행
+
+---
+
+## channel과 DM
+
+슬랙에서 channel은 `#`(샵)으로, Direct Message를 보내기 위한 개인 아이디는 `@`(닷)으로 표기합니다.
+
+
+```{}
+body&lt;-enc2utf8("안녕하세요")
+
+## general 체널에 전송
+slackr_msg(txt=body, channel="#general")
+
+## id가 mrchypark인 사람에게 전송
+slackr_msg(txt=body, channel="@mrchypark")
+
+```
+
+
+---
+
+## 파일 전송
+
+파일 전송에는 slack_upload() 함수를 사용합니다. slack_upload() 함수는 filename 이라는 인자로 파일의 경로를 받아서 사용합니다.
+
+```{}
+slackr_upload(channels = "#general", filename = "./README.md")
+```
+
+---
+
+## 실습
+
+1. 기본 R markdown 파일을 만듭니다. File &gt; New Files &gt; R Markdown... 선택 후 ok 선택
+1. 기본 R markdown 파일을 저장합니다.
+1. 새로운 R script 파일을 만듭니다. File &gt; New Files &gt; R Script 선택
+1. slackr 패키지의 설치와 불러오기, setup script를 작성합니다.
+1. 위에서 만든 마크다운 파일을 render 하는 script를 작성합니다.
+1. slackr_upload() 함수로 render의 결과인 html 파일을 업로드하는 script를 작성합니다.
+1. 위 작성된 스크립트를 저장합니다.
+1. taskscheduleR addin를 실행합니다.
+1. 위 저장한 스크립트를 등록합니다.
+
+---
+class: center, middle, title-slide
+
+## 카카오톡 플러스 친구 챗봇 만들기
+
+---
+
+## [플러스 친구](https://center-pf.kakao.com/)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus.png)
+
+---
+
+플러스 친구 홈 화면
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus01.png)
+
+---
+
+스마트 채팅 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus02.png)
+
+---
+
+자동응답형 만들기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus03.png)
+
+---
+
+API형 만들기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/plus04.png)
+
+---
+
+## API 명세
+
+&lt;https://github.com/plusfriend/auto_reply&gt;
+
+---
+
+## 만들기 전에
+
+- 간단히 jug 만들기 복습
+    - &lt;https://mrchypark.github.io/apiR/&gt;
+
+- 실습용 코드를 만들었습니다.
+    - &lt;https://github.com/mrchypark/wthr_chatr&gt;
+
+---
+class: center, middle, title-slide
+
+## 구글 클라우드에서 서버 빌리기
+
+---
+구글 클라우드에서 Compute Engine 선택
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc01.png)
+
+---
+인스턴스 만들기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc02.png)
+
+---
+머신 유형 : **초소형**
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc03.png)
+
+---
+http 트래픽 허용
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc04.png)
+
+---
+만들기 클릭
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc05.png)
+
+---
+기다림
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc06.png)
+
+---
+빌린 서버에 접속하기(ssh 클릭)
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/ssh.png)
+---
+기다림
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc07.png)
+
+---
+ssh 화면
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/gc08.png)
+
+---
+
+## R 설치등 환경 설정
+
+&lt;https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/start.sh&gt;
+
+---
+
+## 예시 챗봇(날씨봇)
+
+&lt;https://raw.githubusercontent.com/mrchypark/wthr_chatr/master/app.R&gt;
+
+---
+
+## googleformr
+
+[googleformr](https://github.com/data-steve/googleformr)는 구글 form 기능을 이용해서 api 호출 없이 구글 sheet에 데이터를 입력하는 방법을 제공합니다.
+
+
+```r
+if (!requireNamespace("googleformr")){
+  devtools::install_github("data-steve/googleformr", dependencies = TRUE)
+}
+```
+
+```
+## Loading required namespace: googleformr
+```
+
+```r
+library(googleformr)
+```
+
+---
+
+## 구글 폼 만들기
+
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr1.png)
+---
+새로만들기
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr2.png)
+---
+더보기
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr3.png)
+---
+Google 설문지 선택
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr4.png)
+---
+설문지 작성 화면
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr5.png)
+---
+질문 세팅 - 질문 제목으로 값을 받음
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr6.png)
+---
+응답탭 선택
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr7.png)
+---
+스프레드시트 만들기 클릭
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr8.png)
+---
+새스프레드시트 만들기로 선택후 만들기
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr9.png)
+---
+스프레드시트로 연결 완료
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr10.png)
+---
+설문지 파일과 스프레드시트 파일 확인
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr11.png)
+
+---
+폼 입력 url 확인 - /edit을 제외한 전체 url
+![](https://raw.githubusercontent.com/mrchypark/dabrp_classnote3/master/docs/img/formr12.png)
+---
+
+## 폼 입력 url로 입력 함수 만들기
+
+위에서 복사한 url(/edit은 제외)을 이용해서 입력하는 함수를 작성합니다. body의 list 내 데이터 이름은 설문 항목명이어야 합니다.
+
+```{}
+form &lt;- "https://docs.google.com/forms/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+ping &lt;- googleformr::gformr(form)
+body&lt;-list(question1=data1,
+           question2=data2,
+           question3=data3)
+ping(body)
+```
+
+--
+
+### 설문지 질문 이름을 파악하고 싶을 때
+
+```{}
+form &lt;- "https://docs.google.com/forms/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+form %&gt;% get_form() %&gt;% get_form_questions()
+```
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
